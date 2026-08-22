@@ -1,0 +1,1660 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 1 — Plataformas Móveis, TypeScript e React Native</title>
+
+  <!--
+    ============================================================================
+    APRESENTAÇÃO DA AULA 1 — reveal.js
+    ============================================================================
+
+    COMO ABRIR
+      Basta dar duplo clique neste arquivo. Ele funciona offline: todas as
+      dependências estão em vendor/, nada é baixado da internet.
+
+    ATALHOS DE TECLADO
+      →  ou  espaço   avança
+      ←               volta
+      S               modo apresentador (notas + cronômetro + próximo slide)
+      F               tela cheia
+      O  ou  Esc      visão geral de todos os slides
+      B  ou  .        tela preta (para chamar atenção de volta)
+      Ctrl + clique   zoom em um ponto do slide
+      ?               ajuda com todos os atalhos
+
+    IMPRIMIR / GERAR PDF
+      Abra com ?print-pdf no final da URL e mande imprimir pelo navegador.
+      Ex.: file:///.../presentation.html?print-pdf
+
+    ONDE EDITAR O CONTEÚDO
+      Cada <section> é um slide. Notas do apresentador vão em <aside class="notes">.
+      Diagramas vão em <pre class="mermaid">.
+    ============================================================================
+  -->
+
+  <link rel="stylesheet" href="vendor/reveal/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/theme/white.css" id="theme">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    /* ---------------------------------------------------------------------
+       Identidade visual CESAR School (ver TEMPLATE.pdf / TEMPLATE.pptx):
+       fundo creme, laranja de marca, títulos em Barlow Condensed caixa-alta,
+       corpo de texto em Barlow, formas circulares decorativas.
+       Fontes embutidas em vendor/fonts/ para manter a aula 100% offline.
+       --------------------------------------------------------------------- */
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal; font-weight: 400; font-display: swap;
+      src: url('vendor/fonts/barlow-400.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal; font-weight: 500; font-display: swap;
+      src: url('vendor/fonts/barlow-500.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal; font-weight: 600; font-display: swap;
+      src: url('vendor/fonts/barlow-600.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal; font-weight: 700; font-display: swap;
+      src: url('vendor/fonts/barlow-700.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal; font-weight: 500; font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal; font-weight: 600; font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal; font-weight: 700; font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal; font-weight: 800; font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal; font-weight: 900; font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
+    }
+
+    :root {
+      --cor-fundo: #FEF7EE;
+      --cor-fundo-escuro: #232323;
+      --cor-preto: #191919;
+      --cor-destaque: #FF6002;
+      --cor-destaque2: #FB6B00;
+      --cor-amarelo: #FFB132;
+      --cor-alerta: #c62828;
+      --cor-ok: #2e7d32;
+      --cor-texto-fraco: #6b6459;
+      --cor-fundo-bloco: #F3E9DC;
+      --cor-borda: #E4D6C3;
+      --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      --fonte-corpo: 'Barlow', Arial, sans-serif;
+    }
+
+    .reveal { font-size: 30px; }
+    .reveal, .reveal .slides { background: var(--cor-fundo); }
+    .reveal, .reveal p, .reveal li, .reveal td, .reveal th, .reveal blockquote {
+      font-family: var(--fonte-corpo);
+      color: var(--cor-preto);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      color: var(--cor-preto);
+      letter-spacing: 0.01em;
+    }
+    .reveal h1, .reveal h2 { text-transform: uppercase; }
+
+    .reveal h1 { font-size: 1.9em; font-weight: 900; }
+    .reveal h2 { font-size: 1.35em; margin-bottom: 0.5em; }
+    .reveal h3 { font-size: 1.05em; margin-top: 0.6em; font-weight: 700; }
+
+    /* Altura cheia + centralização vertical, só na seção .present: com
+       center:false, por padrão a <section> só teria a altura do próprio
+       conteúdo (top-aligned) — o que grudava tudo no topo e fazia os acentos
+       decorativos em bottom:0/top:0 flutuarem soltos no meio do slide em vez
+       de ficarem presos às bordas reais do palco 1280x800.
+       IMPORTANTE: o seletor tem que incluir ".present" — reveal.css usa
+       "display: none" para esconder as seções não-atuais com esse MESMO
+       seletor base; um "display: flex !important" sem ".present" sobrescreve
+       esse display:none e deixa todos os 65 slides visíveis empilhados ao
+       mesmo tempo (efeito fantasma de texto duplicado). */
+    .reveal .slides > section.present,
+    .reveal .slides > section > section.present {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+    /* flex-shrink:0 nos filhos diretos: sem isso, o flexbox ENCOLHE blocos
+       de conteúdo (ex.: <pre> de código) para caber nos 800px do palco
+       quando o slide é denso — e o <pre> encolhido fica menor que o próprio
+       <code> lá dentro, que passa a vazar por cima do próximo elemento. */
+    .reveal .slides > section.present > *,
+    .reveal .slides > section > section.present > * { flex-shrink: 0; }
+    .reveal section { text-align: left; }
+    .reveal section.centro { text-align: center; }
+    .reveal h1, .reveal h2 { text-align: left; }
+    .reveal section.centro h1,
+    .reveal section.centro h2,
+    .reveal section.centro h3 { text-align: center; }
+
+    /* ---------------------------------------------------------------------
+       Formas decorativas — o motivo de semicírculos do template, aplicado
+       como acento discreto no canto superior direito dos slides de
+       conteúdo e como barra de base à esquerda. Ficam atrás do conteúdo
+       (z-index negativo) para nunca colidir com texto, tabelas ou código.
+       --------------------------------------------------------------------- */
+    .reveal .slides > section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides > section > section:not(.centro):not(:has(.tabela-larga))::before {
+      content: '';
+      position: absolute;
+      top: -70px; right: -50px;
+      width: 190px; height: 190px;
+      border-radius: 50%;
+      background: var(--cor-preto);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .reveal .slides > section:not(.centro)::after,
+    .reveal .slides > section > section:not(.centro)::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 15%; min-width: 120px; height: 10px;
+      background: var(--cor-destaque);
+      border-radius: 0 6px 6px 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slide de abertura e de fechamento — fundo escuro, à la capa do manual */
+    .reveal .slides > section.slide-capa {
+      background: var(--cor-fundo-escuro);
+    }
+    .reveal .slides > section.slide-capa h1,
+    .reveal .slides > section.slide-capa h2,
+    .reveal .slides > section.slide-capa h3,
+    .reveal .slides > section.slide-capa p { color: var(--cor-fundo); }
+    .reveal .slides > section.slide-capa .destaque { color: var(--cor-destaque2); }
+    .reveal .slides > section.slide-capa::before {
+      content: '';
+      position: absolute;
+      top: -18%; right: -12%;
+      width: 60%; height: 130%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .reveal .slides > section.slide-capa::after {
+      content: '';
+      position: absolute;
+      bottom: -22%; left: -8%;
+      width: 26%; height: 55%;
+      background: var(--cor-fundo);
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides de impacto — mesma pausa retórica dramática do "Por fim" do manual */
+    .reveal .slides > section.slide-impacto {
+      background: var(--cor-fundo-escuro);
+    }
+    .reveal .slides > section.slide-impacto h1,
+    .reveal .slides > section.slide-impacto h2,
+    .reveal .slides > section.slide-impacto h3,
+    .reveal .slides > section.slide-impacto p { color: var(--cor-fundo); }
+    .reveal .slides > section.slide-impacto .destaque { color: var(--cor-destaque2); }
+    .reveal .slides > section.slide-impacto::before {
+      content: '';
+      position: absolute;
+      top: -25%; right: -10%;
+      width: 34%; height: 60%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .reveal .slides > section.slide-impacto::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; right: 6%;
+      width: 20%; height: 45%;
+      border: 3px solid var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides divisores de Parte — bloco de círculos laranja, como as seções
+       numeradas do manual ("1. Princípios gerais...") */
+    .reveal .slides > section.divisor {
+      text-align: left;
+    }
+    .reveal .slides > section.divisor h1 { color: var(--cor-destaque); text-align: left; }
+    .reveal .slides > section.divisor h2,
+    .reveal .slides > section.divisor h3 { color: var(--cor-preto); text-align: left; }
+    .reveal .slides > section.divisor::before {
+      content: '';
+      position: absolute;
+      top: -12%; right: 6%;
+      width: 30%; height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .reveal .slides > section.divisor::after {
+      content: '';
+      position: absolute;
+      top: -12%; right: -8%;
+      width: 30%; height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Tabelas: o gargalo real de legibilidade numa aula comparativa */
+    .reveal table {
+      font-size: 0.62em;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.4em 0;
+    }
+    .reveal table th {
+      background: var(--cor-fundo-bloco);
+      font-weight: 700;
+      border-bottom: 2px solid var(--cor-borda);
+    }
+    .reveal table th,
+    .reveal table td {
+      padding: 0.35em 0.5em;
+      border: 1px solid var(--cor-borda);
+      vertical-align: top;
+    }
+    /* Tabela larga (o comparativo das 5 plataformas) rola sozinha */
+    .tabela-larga { overflow-x: auto; max-width: 100%; }
+    .tabela-larga table { font-size: 0.52em; min-width: 900px; }
+
+    /* Código */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      font-size: 0.48em;
+      margin: 0.4em 0;
+    }
+    .reveal pre code {
+      padding: 0.9em 1.1em;
+      max-height: 560px;
+      line-height: 1.35;
+      /* reveal.css define ".reveal .hljs { min-height: 100% }". Com a
+         seção agora em flex column, isso vira uma referência circular:
+         o <pre> (flex item, altura "auto") passa a ter uma altura
+         "definida" pelo algoritmo de flex, e o min-height:100% do
+         <code> lá dentro passa a resolver contra ESSA altura em vez de
+         crescer para caber no próprio conteúdo — o código fica cortado
+         menor que o necessário e vaza visualmente por cima do próximo
+         elemento do slide. */
+      min-height: 0 !important;
+    }
+    .reveal code:not(pre code) {
+      background: var(--cor-fundo-bloco);
+      color: var(--cor-preto);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    /* Diagramas Mermaid */
+    .reveal .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      margin: 0.3em 0;
+    }
+    /* O Mermaid grava `style="max-width: NNNpx"` INLINE no <svg>, e estilo
+       inline vence folha de estilo. Sem !important o diagrama ignora estes
+       limites e estoura o slide. */
+    .reveal .mermaid svg {
+      max-width: 100% !important;
+      max-height: 500px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+    /* Diagrama que ocupa o slide inteiro (slide sem texto de apoio) */
+    .reveal .mermaid-grande svg { max-height: 610px !important; }
+
+    /* Blocos de destaque */
+    .reveal blockquote {
+      width: 100%;
+      font-size: 0.8em;
+      background: var(--cor-fundo-bloco);
+      border-left: 5px solid var(--cor-destaque);
+      box-shadow: none;
+      padding: 0.7em 1em;
+      font-style: normal;
+      text-align: left;
+    }
+    .destaque { color: var(--cor-destaque); font-weight: 700; }
+    .alerta   { color: var(--cor-alerta);   font-weight: 700; }
+    .ok       { color: var(--cor-ok);       font-weight: 700; }
+    .fraco    { color: var(--cor-texto-fraco); }
+
+    .caixa-alerta {
+      background: #fdecea;
+      border-left: 5px solid var(--cor-alerta);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+    .caixa-ok {
+      background: #e8f5e9;
+      border-left: 5px solid var(--cor-ok);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    /* Duas colunas */
+    .colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2em;
+      align-items: start;
+    }
+    .colunas > div { min-width: 0; }
+
+    /* Marcadores em formato de pílula — o mesmo ícone laranja usado nas
+       colunas de conteúdo do manual, no lugar do disco padrão de lista */
+    .reveal ul, .reveal ol { display: block; margin-left: 1em; }
+    .reveal li { margin-bottom: 0.3em; }
+    .reveal section:not(.centro) ul { list-style: none; margin-left: 0.2em; }
+    .reveal section:not(.centro) ul > li {
+      position: relative;
+      padding-left: 0.85em;
+    }
+    .reveal section:not(.centro) ul > li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.32em;
+      width: 0.42em; height: 0.42em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+    }
+    .reveal section:not(.centro) ol {
+      list-style: none;
+      counter-reset: item;
+      margin-left: 0.2em;
+    }
+    .reveal section:not(.centro) ol > li {
+      counter-increment: item;
+      position: relative;
+      padding-left: 1.5em;
+    }
+    .reveal section:not(.centro) ol > li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0; top: 0;
+      width: 1.05em; height: 1.05em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: var(--cor-fundo);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.78em;
+      line-height: 1.05em;
+      text-align: center;
+    }
+
+    .logo-marca {
+      position: absolute;
+      top: 0.55em; left: 0.7em;
+      height: 1.5em;
+      width: auto;
+      z-index: 2;
+    }
+
+    .rodape-fonte {
+      position: absolute;
+      bottom: 0.4em;
+      left: 0;
+      right: 0;
+      font-size: 0.42em;
+      color: var(--cor-texto-fraco);
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Sem tema escuro automático: a identidade CESAR School é fixa
+       (fundo creme + laranja de marca), como no manual em PDF/PPTX.
+       Slides de impacto usam .slide-impacto / .slide-capa (ver acima).
+       --------------------------------------------------------------------- */
+  </style>
+</head>
+
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ==================== ABERTURA ==================== -->
+
+    <section class="centro slide-capa">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+      <h1>Desenvolvimento Mobile</h1>
+      <h3>Aula 1 — Plataformas Móveis, TypeScript e React Native</h3>
+      <p class="fraco">CESAR School · 2026.2</p>
+      <aside class="notes">
+        Gancho de abertura no próximo slide.
+        Antes de começar: confirmar que todo mundo tem Node instalado —
+        quem não tiver, resolver AGORA, não no bloco de hands-on.
+      </aside>
+    </section>
+
+    <section class="centro slide-impacto">
+      <h2>Vocês já sabem construir uma aplicação com TypeScript.</h2>
+      <h3 class="destaque">Hoje vamos levar isso para dentro do bolso de bilhões de pessoas.</h3>
+      <aside class="notes">
+        Enfatizar: o repertório deles transfere quase inteiro.
+        TS, componentes, estado, consumo de API — tudo continua valendo.
+        O que é novo é a PLATAFORMA, não a linguagem.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Agenda — 3 horas</h2>
+      <table>
+        <tr><th>Bloco</th><th>Tempo</th></tr>
+        <tr><td>Abertura: disciplina e projetos</td><td>15 min</td></tr>
+        <tr><td><b>1.</b> Panorama das plataformas móveis</td><td>45 min</td></tr>
+        <tr><td>☕ Intervalo</td><td>10 min</td></tr>
+        <tr><td><b>2.</b> TypeScript com olhos de mobile</td><td>35 min</td></tr>
+        <tr><td><b>3.</b> Checkpoint conceitual</td><td>10 min</td></tr>
+        <tr><td><b>4.</b> Introdução ao React Native</td><td>35 min</td></tr>
+        <tr><td><b>5.</b> Hands-on: criando o projeto</td><td>25 min</td></tr>
+        <tr><td>Fechamento</td><td>5 min</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Os dois projetos da disciplina</h2>
+      <p>Ao longo do semestre, cada grupo constrói <b>um</b> destes dois apps:</p>
+      <ul>
+        <li>🧘 <b>Rastreador de Micro-hábitos e Condicionamento Físico</b> — <code>habit-tracker-expo</code></li>
+        <li>🐾 <b>App de Gestão e Rotina Pet</b> — <code>pet-routine-expo</code></li>
+      </ul>
+      <h3 class="destaque">Hoje: todo mundo cria o projeto Expo que vai usar a partir da próxima aula.</h3>
+      <aside class="notes">
+        Cada repositório já existe com a branch feature/ads025_2026-2, README
+        e TODOs no App.tsx. Confirmar com a turma qual grupo ficou com qual
+        projeto.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Ao final da aula você deve conseguir</h2>
+      <ol>
+        <li><b>Comparar</b> as 5 plataformas: Android, iOS, HarmonyOS, Tizen, webOS</li>
+        <li><b>Justificar</b> nativo vs. cross-platform vs. web a partir de restrições reais</li>
+        <li><b>Modelar</b> um domínio em TypeScript: props, estado, unions, generics</li>
+        <li><b>Explicar</b> o que React Native é — e o que ele <b>não</b> é</li>
+        <li><b>Criar e rodar</b> um projeto React Native no seu próprio celular</li>
+      </ol>
+    </section>
+
+    <!-- ==================== PARTE 1 — PLATAFORMAS ==================== -->
+
+    <section class="centro divisor">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+      <h1>Parte 1</h1>
+      <h2>Plataformas Móveis</h2>
+    </section>
+
+    <section>
+      <h2>Quanto vale cada plataforma?</h2>
+      <div class="colunas">
+        <div>
+          <h3>StatCounter — jul/2026</h3>
+          <p class="fraco" style="font-size:0.7em">mede tráfego web</p>
+          <table>
+            <tr><th></th><th>Mundo</th><th>Brasil</th></tr>
+            <tr><td>Android</td><td><b>68,4%</b></td><td><b>77,6%</b></td></tr>
+            <tr><td>iOS</td><td>31,6%</td><td>22,4%</td></tr>
+          </table>
+        </div>
+        <div>
+          <h3>Counterpoint — Q1/2026</h3>
+          <p class="fraco" style="font-size:0.7em">mede vendas de aparelhos</p>
+          <table>
+            <tr><th>Android</th><th>iOS</th><th>HarmonyOS</th></tr>
+            <tr><td>~73%</td><td>~22%</td><td><b class="destaque">~5%</b></td></tr>
+          </table>
+        </div>
+      </div>
+      <aside class="notes">
+        NÃO explicar ainda. Mostrar os dois quadros e passar para o próximo slide.
+        A pergunta vem antes da resposta.
+      </aside>
+    </section>
+
+    <section>
+      <h2>O mesmo mercado, duas fotografias</h2>
+      <div class="colunas">
+        <div>
+          <pre class="mermaid">
+pie showData title StatCounter - trafego web
+    "Android" : 68.4
+    "iOS" : 31.6
+          </pre>
+        </div>
+        <div>
+          <pre class="mermaid">
+pie showData title Counterpoint - vendas
+    "Android" : 73
+    "iOS" : 22
+    "HarmonyOS" : 5
+          </pre>
+        </div>
+      </div>
+      <aside class="notes">
+        Perguntar apontando para o gráfico da esquerda:
+        "Onde está o HarmonyOS aqui?"
+        A AUSÊNCIA é o argumento. Deixar o silêncio trabalhar.
+      </aside>
+    </section>
+
+    <section class="centro">
+      <h1>Os dois estão certos.</h1>
+      <h1 class="destaque">Por que discordam?</h1>
+      <aside class="notes">
+        PAUSA de verdade — 60 segundos. Não entregar a resposta.
+        Conduzir com perguntas:
+         - "O que o StatCounter conta exatamente?"
+         - "Se eu navego mais, eu peso mais?"
+         - "Um aparelho Huawei sem serviços Google — como ele se identifica?"
+      </aside>
+    </section>
+
+    <section>
+      <h2>Metodologia</h2>
+      <ul>
+        <li><b>Tráfego web</b> conta <i>page views</i> — quem navega mais, pesa mais</li>
+        <li><b>Vendas</b> contam aparelhos que saíram da loja neste trimestre</li>
+        <li><b>Base instalada</b> seria uma terceira coisa, diferente das duas</li>
+      </ul>
+      <div class="caixa-alerta">
+        <b>StatCounter não desagrega HarmonyOS.</b><br>
+        Aparelhos Huawei são classificados como "Android" ou "outros" pelo <i>user-agent</i>.
+        Uma plataforma com ~5% do mercado global fica <b>invisível</b>.
+      </div>
+      <h3 class="destaque">🎯 Saiba o que o número mede antes de decidir com base nele.</h3>
+    </section>
+
+    <section>
+      <h2>Android</h2>
+      <table>
+        <tr><td><b>Dono</b></td><td>Google / AOSP — <b>open source</b></td></tr>
+        <tr><td><b>Versão</b></td><td>17 "Cinnamon Bun" · API 37 <span class="fraco">(jun/2026)</span></td></tr>
+        <tr><td><b>Linguagem</b></td><td><b>Kotlin</b> <span class="fraco">(Kotlin-first desde 2019)</span></td></tr>
+        <tr><td><b>UI</b></td><td>Jetpack Compose <span class="fraco">(declarativo)</span></td></tr>
+        <tr><td><b>IDE</b></td><td>Android Studio</td></tr>
+        <tr><td><b>Play Store</b></td><td><code>targetSdk</code> ≥ 36 a partir de 31/ago/2026</td></tr>
+      </table>
+      <h3>Dor característica: <span class="alerta">fragmentação</span></h3>
+      <p class="fraco">Muitos fabricantes · muitas versões em uso · muitos tamanhos de tela</p>
+    </section>
+
+    <section>
+      <h2>Android — arquitetura (AOSP atual: 7 camadas)</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    A7["7 · Aplicações"]
+    A6["6 · Android Framework — Java/Kotlin"]
+    A5["5 · ART — Android Runtime"]
+    A4["4 · System services"]
+    A3["3 · HAL — Hardware Abstraction Layer"]
+    A2["2 · Daemons e libs nativas"]
+    A1["1 · Kernel Linux"]
+
+    A7 --> A6 --> A5 --> A4 --> A3 --> A2 --> A1
+      </pre>
+      <p class="fraco">⚠️ Material antigo mostra <b>5</b> camadas. O AOSP hoje documenta <b>7</b>.</p>
+      <aside class="notes">
+        Destacar a HAL: é o contrato que permite o mesmo Android rodar em milhares
+        de aparelhos. O fabricante implementa a HAL; as camadas de cima não sabem
+        de nada. É a resposta técnica para "como um SO serve tanta gente".
+      </aside>
+    </section>
+
+    <section>
+      <h2>iOS</h2>
+      <table>
+        <tr><td><b>Dono</b></td><td>Apple — <b>fechado</b>, verticalmente integrado</td></tr>
+        <tr><td><b>Versão</b></td><td>26.6 <span class="fraco">(jul/2026)</span> · <b>iOS 27</b> em beta</td></tr>
+        <tr><td><b>Linguagem</b></td><td><b>Swift</b></td></tr>
+        <tr><td><b>UI</b></td><td>SwiftUI <span class="fraco">(UIKit segue suportado)</span></td></tr>
+        <tr><td><b>IDE</b></td><td>Xcode 26.6 — <b class="alerta">só roda em macOS</b></td></tr>
+        <tr><td><b>App Store</b></td><td>build com Xcode 26+ desde abr/2026</td></tr>
+      </table>
+      <p><b>Vantagem:</b> consistência — poucos aparelhos, atualização rápida<br>
+      <b>Restrição prática:</b> sem Mac, sem desenvolvimento nativo iOS</p>
+    </section>
+
+    <section>
+      <h2>⚠️ Sobre aquele diagrama de 4 camadas do iOS</h2>
+      <p>Você vai encontrar em todo lugar:</p>
+      <p class="centro" style="text-align:center; font-size:1.1em">
+        <code>Cocoa Touch</code> → <code>Media</code> → <code>Core Services</code> → <code>Core OS</code>
+      </p>
+      <div class="caixa-alerta">
+        Ele vem de um documento da Apple que está <b>arquivado</b>.
+        A documentação atual não organiza o iOS assim — descreve o núcleo
+        Darwin/XNU e os frameworks por domínio.
+      </div>
+      <blockquote>Use como <b>modelo conceitual histórico</b>, não como arquitetura vigente.</blockquote>
+      <aside class="notes">
+        Vale um minuto: mostra à turma que material didático envelhece, inclusive
+        o que "todo mundo" reproduz. Bom momento para incentivar checar a fonte.
+      </aside>
+    </section>
+
+    <section class="centro">
+      <h1>OpenHarmony / HarmonyOS</h1>
+      <h1 class="alerta">⚠️ São TRÊS coisas diferentes</h1>
+      <h3>Este é o erro mais comum do assunto.</h3>
+    </section>
+
+    <section>
+      <h2>Os três nomes</h2>
+      <table>
+        <tr><th>Nome</th><th>O que é</th><th>Roda APK?</th></tr>
+        <tr>
+          <td><b>OpenHarmony</b> (OHOS)</td>
+          <td>Projeto <b>open source</b>, OpenAtom Foundation <span class="fraco">(2020)</span> — a base técnica</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><b>HarmonyOS 1–4</b></td>
+          <td>Produto Huawei = OpenHarmony <b>+ core AOSP</b></td>
+          <td class="ok">✅ Sim</td>
+        </tr>
+        <tr>
+          <td><b>HarmonyOS NEXT</b> = HarmonyOS 5 <span class="fraco">(out/2024)</span> <b>e superiores</b></td>
+          <td>Produto Huawei <b>sem</b> AOSP</td>
+          <td class="alerta">❌ Não</td>
+        </tr>
+      </table>
+      <h3 class="alerta">A Huawei quebrou a compatibilidade com Android de propósito.</h3>
+      <p class="fraco">Sem ART, sem camada de compatibilidade. Todo app é <b>reescrito</b>.</p>
+    </section>
+
+    <section>
+      <h2>A diferença está em uma peça só</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    OH["OpenHarmony — OHOS<br/>projeto open source"]
+    AOSP["core AOSP<br/>inclui o runtime ART"]
+    H4["HarmonyOS 1 a 4"]
+    HN["HarmonyOS NEXT = 5, 6, 7…"]
+    SIM["✅ Roda APK"]
+    NAO["❌ NÃO roda APK"]
+
+    OH -->|"é a base de"| H4
+    OH -->|"é a base de"| HN
+    AOSP -->|"somado a"| H4
+    H4 --> SIM
+    HN --> NAO
+      </pre>
+      <aside class="notes">
+        Apontar para a caixa do AOSP: é a ÚNICA diferença estrutural.
+        Presente → roda APK. Ausente → não roda.
+      </aside>
+    </section>
+
+    <section>
+      <h2>HarmonyOS — a stack</h2>
+      <table>
+        <tr><td><b>Linguagem</b></td><td><b class="destaque">ArkTS</b> — <i>superset do TypeScript</i></td></tr>
+        <tr><td><b>UI</b></td><td>ArkUI <span class="fraco">(declarativo)</span></td></tr>
+        <tr><td><b>Compilador</b></td><td>ArkCompiler <span class="fraco">(AOT)</span></td></tr>
+        <tr><td><b>IDE</b></td><td>DevEco Studio <span class="fraco">(gratuita)</span></td></tr>
+        <tr><td><b>Versões</b></td><td>HarmonyOS 6 · SDK 6.1.1 (API 24) · <b>7 em dev beta</b></td></tr>
+        <tr><td><b>OpenHarmony</b></td><td>6.1 LTS <span class="fraco">(mar/2026)</span></td></tr>
+      </table>
+      <h3>Mercado</h3>
+      <p><b class="destaque">China, Q1/2026: ~19–20%</b> — à frente do iOS pelo <b>7º trimestre seguido</b><br>
+      <span class="fraco">Global: ~5%</span></p>
+    </section>
+
+    <section class="centro slide-impacto">
+      <h1>A plataforma móvel que cresce mais rápido no mundo</h1>
+      <h1 class="destaque">escolheu <u>TypeScript</u> como base da sua linguagem oficial.</h1>
+      <aside class="notes">
+        MOMENTO-CHAVE DA AULA. Amarra a Parte 1 na Parte 2 e dá peso real à
+        revisão de TS que vem a seguir. A aposta deles em TS não é sobre React
+        Native — é sobre uma tendência de indústria.
+        Pausar aqui. Deixar assentar.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Tizen (Samsung) — o que ele NÃO é mais</h2>
+      <div class="caixa-alerta">
+        <h3 style="margin-top:0">❌ Não é o sistema dos celulares Samsung</h3>
+        <p style="margin-bottom:0">Celulares Samsung rodam <b>Android</b>.</p>
+      </div>
+      <div class="caixa-alerta">
+        <h3 style="margin-top:0">❌ Não é mais o sistema dos smartwatches Samsung</h3>
+        <p style="margin-bottom:0">Desde o Galaxy Watch 4 <span class="fraco">(2021)</span>: <b>Wear OS</b>.
+        Suporte aos relógios Tizen encerrado no fim de 2025.</p>
+      </div>
+      <aside class="notes">
+        Esta é a correção factual mais provável de gerar surpresa na turma.
+        Perguntar antes: "Quem aqui acha que o Galaxy Watch roda Tizen?"
+      </aside>
+    </section>
+
+    <section>
+      <h2>Tizen — onde ele realmente vive</h2>
+      <h3 class="destaque">Smart TVs · monitores · signage · eletrodomésticos · IoT</h3>
+      <table>
+        <tr><td><b>Versão</b></td><td>Tizen 10.0 · SDK 10 <span class="fraco">(fev/2026)</span></td></tr>
+        <tr><td><b>Linguagem</b></td><td><b>Web</b> — HTML/CSS/JS <span class="fraco">(engine V8)</span></td></tr>
+        <tr><td><b>Também</b></td><td>.NET/Xamarin, C/C++ nativo</td></tr>
+        <tr><td><b>Tooling</b></td><td>migrou de Java para <b>Node.js + TypeScript</b>, em VS Code</td></tr>
+      </table>
+      <blockquote>Uma versão maior por ano, junto com a linha de TVs.</blockquote>
+    </section>
+
+    <section>
+      <h2>webOS (LG)</h2>
+      <table>
+        <tr><td><b>Onde vive</b></td><td>TVs LG, monitores, projetores, signage, automotivo</td></tr>
+        <tr><td><b>webOS Hub</b></td><td>licenciado para <b>200+ marcas</b> <span class="fraco">(Konka, Aiwa, Hyundai…)</span></td></tr>
+        <tr><td><b>Versão</b></td><td>webOS TV 26 · engine <b>Chromium 132</b></td></tr>
+        <tr><td><b>Linguagem</b></td><td><b>Web</b> — HTML/CSS/JS</td></tr>
+        <tr><td><b>Framework oficial</b></td><td><b class="destaque">Enact — construído sobre React</b></td></tr>
+        <tr><td><b>Novidade</b></td><td>Flutter para webOS agora suportado</td></tr>
+        <tr><td><b>SDK</b></td><td>webOS Studio <span class="fraco">(VS Code)</span>, CLI, Simulator</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Comparativo</h2>
+      <div class="tabela-larga">
+        <table>
+          <tr><th></th><th>Android</th><th>iOS</th><th>HarmonyOS</th><th>Tizen</th><th>webOS</th></tr>
+          <tr><td><b>Dono</b></td><td>Google</td><td>Apple</td><td>Huawei</td><td>Samsung</td><td>LG</td></tr>
+          <tr><td><b>Modelo</b></td><td>Aberto</td><td>Fechado</td><td>Misto</td><td>Aberto</td><td>OSE aberto</td></tr>
+          <tr><td><b>Linguagem</b></td><td>Kotlin</td><td>Swift</td><td><b>ArkTS</b></td><td><b>Web</b></td><td><b>Web</b></td></tr>
+          <tr><td><b>UI</b></td><td>Compose</td><td>SwiftUI</td><td>ArkUI</td><td>Web</td><td><b>Enact/React</b></td></tr>
+          <tr><td><b>Onde roda</b></td><td>Tudo</td><td>Apple</td><td>Celular, IoT</td><td><b>TV, IoT</b></td><td><b>TV, auto</b></td></tr>
+          <tr><td><b>Global</b></td><td>~68–73%</td><td>~22–32%</td><td>~5%</td><td>nicho</td><td>nicho</td></tr>
+          <tr><td><b>APK?</b></td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+        </table>
+      </div>
+      <aside class="notes">
+        Construir na lousa COM a turma antes de mostrar este slide.
+        Perguntar coluna por coluna. A tabela pronta é conferência, não descoberta.
+      </aside>
+    </section>
+
+    <section class="centro">
+      <h1>3 das 5 plataformas usam <span class="destaque">JS/TS</span></h1>
+      <p style="font-size:0.85em">
+        HarmonyOS → ArkTS <span class="fraco">(superset de TS)</span><br>
+        Tizen → apps web, tooling em TS<br>
+        webOS → <b>Enact, sobre React</b>
+      </p>
+      <h3>Não é coincidência. É a razão desta disciplina existir.</h3>
+    </section>
+
+    <section>
+      <h2>Uma linguagem, quatro destinos</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    TS["JavaScript / TypeScript<br/>modelo declarativo React-like"]
+    TS --> HM["HarmonyOS<br/>ArkTS + ArkUI"]
+    TS --> TZ["Tizen<br/>apps web"]
+    TS --> WO["webOS<br/>Enact, sobre React"]
+    TS --> RN["React Native<br/>Android + iOS"]
+      </pre>
+    </section>
+
+    <section>
+      <h2>Nativo, cross-platform ou web?</h2>
+      <table>
+        <tr><th></th><th>Nativo</th><th>Cross-platform</th><th>Web/PWA</th></tr>
+        <tr><td><b>Performance</b></td><td>máxima</td><td>muito boa</td><td>limitada</td></tr>
+        <tr><td><b>Código</b></td><td>2 bases</td><td><b>1 base</b></td><td>1 base</td></tr>
+        <tr><td><b>Custo</b></td><td>alto</td><td>médio</td><td>baixo</td></tr>
+        <tr><td><b>Hardware</b></td><td>total</td><td>quase total</td><td>restrito</td></tr>
+        <tr><td><b>Loja</b></td><td>sim</td><td>sim</td><td>não</td></tr>
+        <tr><td><b>Quando</b></td><td>jogos, câmera, áudio de baixa latência</td><td><b>maioria dos apps de produto</b></td><td>alcance máximo, orçamento mínimo</td></tr>
+      </table>
+      <h3 class="destaque">Escolha pela restrição mais dura — não pela tecnologia mais legal.</h3>
+    </section>
+
+    <section>
+      <h2>Árvore de decisão</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart LR
+    Q1{"Performance extrema?<br/>jogo 3D, áudio<br/>de baixa latência"}
+    Q2{"Precisa da loja e de<br/>câmera, GPS ou push?"}
+    Q3{"O time domina<br/>React e TypeScript?"}
+    Q4{"Há orçamento para<br/>dois times?"}
+    NAT["NATIVO"]
+    CROSS["CROSS-PLATFORM"]
+    WEB["WEB / PWA"]
+
+    Q1 -->|sim| NAT
+    Q1 -->|não| Q2
+    Q2 -->|não| WEB
+    Q2 -->|sim| Q3
+    Q3 -->|sim| CROSS
+    Q3 -->|não| Q4
+    Q4 -->|sim| NAT
+    Q4 -->|não| CROSS
+      </pre>
+      <aside class="notes">
+        Enfatizar: cada losango é uma RESTRIÇÃO do projeto, não uma preferência.
+        Avisar que esta árvore é a ferramenta da Atividade Aplicada 2.
+      </aside>
+    </section>
+
+    <!-- ==================== PARTE 2 — TYPESCRIPT ==================== -->
+
+    <section class="centro divisor">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+      <h1>Parte 2</h1>
+      <h2>TypeScript, com olhos de mobile</h2>
+      <h3>Vocês já usam TS com Node, Express e Next.<br>
+      A sintaxe é a mesma. O que muda é o <b>peso</b> de cada recurso.</h3>
+    </section>
+
+    <section>
+      <h2>Por que TS pesa mais no mobile</h2>
+      <div class="colunas">
+        <div>
+          <h3>No web, um bug em produção:</h3>
+          <p><code>git push</code> → resolvido em 10 minutos</p>
+        </div>
+        <div>
+          <h3>No mobile:</h3>
+          <ol style="font-size:0.85em">
+            <li>Corrige o código</li>
+            <li>Gera novo build</li>
+            <li>Submete para a loja</li>
+            <li><b>Espera a revisão</b> <span class="fraco">(horas a dias)</span></li>
+            <li>Espera o usuário <b>atualizar o app</b></li>
+          </ol>
+        </div>
+      </div>
+      <blockquote>
+        O mesmo <code>undefined is not an object</code> custa <b>uma semana</b>.<br>
+        E o usuário final não tem console para te contar o que aconteceu.
+      </blockquote>
+    </section>
+
+    <section>
+      <h2>O caminho de um bug até o usuário</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    subgraph W["WEB — minutos"]
+        direction LR
+        W1["Corrige"] --> W2["git push"] --> W3["Usuário já vê"]
+    end
+    subgraph M["MOBILE — dias"]
+        direction LR
+        M1["Corrige"] --> M2["Novo build"] --> M3["Submete à loja"] --> M4["Revisão"] --> M5["Usuário atualiza"]
+    end
+    W3 ~~~ M1
+      </pre>
+      <h3 class="alerta">Duas dessas etapas não dependem de você.</h3>
+    </section>
+
+    <section>
+      <h2><code>type</code> vs <code>interface</code></h2>
+      <pre><code class="language-typescript" data-trim>
+// interface — formas de objeto extensíveis
+interface Usuario {
+  id: string;
+  nome: string;
+}
+interface Instrutor extends Usuario {
+  especialidade: string;
+}
+
+// type — uniões, tuplas, funções, utilitários
+type StatusHabito = 'pendente' | 'concluido' | 'pulado';
+type Duracao = [inicio: string, fim: string];
+      </code></pre>
+      <p><b>Regra prática:</b> <code>interface</code> para objetos, <code>type</code> para o resto.<br>
+      <span class="fraco">Não é regra técnica — é <b>consistência</b>.</span></p>
+    </section>
+
+    <section>
+      <h2>Antes de ver a solução: uma analogia</h2>
+      <p>Num restaurante existem dois jeitos de pedir:</p>
+      <ul>
+        <li><b>Cardápio fechado</b> — você escolhe entre os pratos listados. Pediu algo que não existe? O garçom avisa <b>na hora</b>.</li>
+        <li><b>"Traga o que você tiver"</b> — o garçom aceita qualquer pedido e leva pra cozinha. Só lá — às vezes só quando chega errado à mesa — descobre-se que aquilo não existe.</li>
+      </ul>
+      <blockquote>Guarde essa imagem. Já voltamos a ela.</blockquote>
+      <aside class="notes">
+        Apresentar esta analogia ANTES do código, não como recurso de
+        emergência se a turma travar. É o gancho mental que sustenta o
+        conceito nos próximos dois slides.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Union literais — o recurso mais importante de hoje</h2>
+      <pre><code class="language-typescript" data-trim>
+// ❌ status: string — o "traga o que você tiver"
+habito.status = 'conclído';      // faltou um "u"
+habito.status = 'Pendente';      // maiúscula
+habito.status = 'em espera';     // 🤷 valor que ninguém combinou
+
+if (habito.status === 'finalizado') { /* nunca roda, ninguém avisa */ }
+      </code></pre>
+      <h3 class="alerta">Todos esses compilam sem reclamar.</h3>
+      <aside class="notes">
+        Perguntar: "Quantos de vocês já perderam uma tarde por causa de um
+        desses?" Quase todo mundo levanta a mão.
+      </aside>
+    </section>
+
+    <section>
+      <h2>A solução</h2>
+      <pre><code class="language-typescript" data-trim>
+type StatusHabito = 'pendente' | 'concluido' | 'pulado';
+
+interface Habito {
+  status: StatusHabito;
+}
+
+habito.status = 'conclído';  // 🔴 erro de compilação
+      </code></pre>
+      <div class="caixa-ok">
+        <h3 style="margin-top:0">🍽️ Analogia — o cardápio (retomando)</h3>
+        <p style="margin-bottom:0">
+          <code>string</code> = "traz o que eu pedir"<br>
+          Union literal = <b>cardápio fechado</b> — só 3 pratos, e o garçom
+          avisa <b>antes</b> da cozinha errar
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Bônus: exaustividade automática</h2>
+      <pre><code class="language-typescript" data-trim>
+function rotuloStatus(status: StatusHabito): string {
+  switch (status) {
+    case 'pendente':   return 'Pendente';
+    case 'concluido':  return 'Concluído';
+    case 'pulado':     return 'Pulado';
+  }
+}
+      </code></pre>
+      <h3>Amanhã alguém adiciona <code>'atrasado'</code> ao tipo…</h3>
+      <p>→ <b class="destaque">este <code>switch</code> passa a dar erro</b> até você tratar o novo caso.</p>
+      <blockquote>O compilador vira uma lista de tarefas automática.</blockquote>
+    </section>
+
+    <section>
+      <h2>Estado de tela — o jeito frágil</h2>
+      <pre><code class="language-typescript" data-trim>
+const [loading, setLoading] = useState(false);
+const [habito, setHabito]   = useState&lt;Habito | null&gt;(null);
+const [erro, setErro]       = useState&lt;string | null&gt;(null);
+      </code></pre>
+      <h3>Nada impede o estado impossível:</h3>
+      <p class="alerta" style="font-size:1.1em"><code>loading = true</code> &nbsp;E&nbsp; <code>erro = "falhou"</code> &nbsp;E&nbsp; <code>habito = {...}</code></p>
+      <h3>O que a tela mostra?</h3>
+      <aside class="notes">
+        Perguntar em voz alta. Deixar o silêncio incomodar um pouco.
+        Todos já escreveram esse bug.
+      </aside>
+    </section>
+
+    <section>
+      <h2>União discriminada — o jeito robusto</h2>
+      <pre><code class="language-typescript" data-trim>
+type EstadoTela&lt;T&gt; =
+  | { tipo: 'carregando' }
+  | { tipo: 'sucesso'; dados: T }
+  | { tipo: 'erro'; mensagem: string };
+
+const [estado, setEstado] =
+  useState&lt;EstadoTela&lt;Habito&gt;&gt;({ tipo: 'carregando' });
+      </code></pre>
+      <pre><code class="language-tsx" data-trim>
+switch (estado.tipo) {
+  case 'carregando': return &lt;ActivityIndicator /&gt;;
+  case 'sucesso':    return &lt;CardHabito habito={estado.dados} /&gt;;  // ✅
+  case 'erro':       return &lt;Erro texto={estado.mensagem} /&gt;;      // ✅
+}
+      </code></pre>
+      <blockquote>Os estados impossíveis deixaram de ser <b>representáveis</b>.</blockquote>
+    </section>
+
+    <section>
+      <h2>Três estados. Exatamente três.</h2>
+      <pre class="mermaid mermaid-grande">
+stateDiagram-v2
+    direction LR
+    state "carregando" as C
+    state "sucesso<br/>dados: T" as S
+    state "erro<br/>mensagem: string" as E
+
+    [*] --> C
+    C --> S: dados chegaram
+    C --> E: requisicao falhou
+    E --> C: tentar novamente
+    S --> [*]
+      </pre>
+      <h3 class="destaque">Não existe seta para "carregando <u>e</u> com erro".</h3>
+      <p class="fraco">Aqui <code>T</code> é <b>um único</b> <code>Habito</code> — sem lista, sem <code>FlatList</code>. Isso chega na Aula 2.</p>
+    </section>
+
+    <section>
+      <h2>Tipando props</h2>
+      <pre><code class="language-tsx" data-trim>
+type CardHabitoProps = {
+  titulo: string;
+  status: StatusHabito;
+  onPress: () =&gt; void;
+  destacado?: boolean;          // opcional
+};
+
+export function CardHabito({
+  titulo, status, onPress,
+  destacado = false,            // default
+}: CardHabitoProps) {
+  /* ... */
+}
+      </code></pre>
+      <ul>
+        <li><code>children: React.ReactNode</code> para componentes que envolvem outros</li>
+        <li>📌 <b>React 19:</b> <code>ref</code> é prop normal — <code>forwardRef</code> não é mais necessário</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Generics: os dois lugares onde você vai encontrá-los</h2>
+      <pre><code class="language-typescript" data-trim>
+// 1. useState&lt;T&gt; — quando o valor inicial não revela o tipo
+const [habito, setHabito]   = useState&lt;Habito | null&gt;(null);
+const [streak, setStreak]   = useState(0);   // aqui inferir basta
+
+// 2. Funções que embrulham chamadas de API
+async function buscarJson&lt;T&gt;(url: string): Promise&lt;T&gt; {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Falha: ${r.status}`);
+  return r.json() as Promise&lt;T&gt;;
+}
+
+const habito = await buscarJson&lt;Habito&gt;('/habito-do-dia');
+      </code></pre>
+      <p class="fraco">⚠️ Aquele <code>as Promise&lt;T&gt;</code> é uma <b>promessa</b>, não uma verificação.
+      <i>(Voltaremos a isso na integração com API — Zod/Valibot)</i></p>
+    </section>
+
+    <section>
+      <h2>Utility types — uma fonte de verdade</h2>
+      <pre><code class="language-typescript" data-trim>
+interface Habito {
+  id: string; titulo: string;
+  categoria: CategoriaHabito; frequencia: FrequenciaHabito;
+  status: StatusHabito; streakDias: number; criadoEm: string;
+}
+
+// o formulário não envia id/status/streakDias/criadoEm — o servidor gera
+type NovoHabito = Omit&lt;Habito, 'id' | 'status' | 'streakDias' | 'criadoEm'&gt;;
+
+// o card da tela só precisa de 4 campos
+type ResumoHabito = Pick&lt;Habito, 'id' | 'titulo' | 'status' | 'categoria'&gt;;
+
+type AtualizacaoHabito = Partial&lt;NovoHabito&gt;;
+      </code></pre>
+      <h3 class="destaque">Existe um tipo. Os outros são derivados.</h3>
+      <p class="fraco">Adicione um campo à entidade → os derivados acompanham sozinhos.</p>
+    </section>
+
+    <section>
+      <h2>O que evitar</h2>
+      <pre><code class="language-typescript" data-trim>
+// ❌ any desliga o compilador
+function processar(dados: any) {
+  return dados.qualquer.coisa;   // compila, explode em runtime
+}
+
+// ❌ assertion: "confia em mim" — não gera verificação nenhuma
+const habito = resposta as Habito;
+
+// ✅ type guard: "eu verifiquei" — gera verificação de verdade
+function ehHabito(v: unknown): v is Habito {
+  return typeof v === 'object' &amp;&amp; v !== null
+      &amp;&amp; 'id' in v &amp;&amp; 'titulo' in v &amp;&amp; 'status' in v;
+}
+      </code></pre>
+      <blockquote><code>any</code> não é um tipo flexível. É <b>abrir mão da verificação</b>.</blockquote>
+    </section>
+
+    <section>
+      <h2>⚠️ Aviso de ambiente: TypeScript 7</h2>
+      <h3>Julho/2026: compilador reescrito em <b>Go</b> — <b class="ok">8 a 12× mais rápido</b></h3>
+      <p class="fraco">Type-check do VS Code: ~126s → <b>~11s</b></p>
+      <div class="caixa-alerta">
+        <b>Mas: TS 7.0 ainda não expõe API programática.</b><br>
+        <code>typescript-eslint</code> · <code>ts-jest</code> · <code>ts-morph</code> ·
+        Vue/Svelte/Astro → <b>não funcionam</b><br>
+        <span class="fraco">(API prevista para o TS 7.1)</span>
+      </div>
+      <h3 class="destaque">👉 Nesta disciplina: fixe o TypeScript na linha 6.x</h3>
+      <blockquote>
+        Lição de engenharia: uma versão pode ser tecnicamente superior
+        e ainda <b>não estar pronta</b> para o seu projeto.
+      </blockquote>
+    </section>
+
+    <!-- ==================== PARTE 3 — CHECKPOINT ==================== -->
+
+    <section class="centro divisor">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+      <h1>Parte 3</h1>
+      <h2>Checkpoint</h2>
+      <h3>60 segundos em duplas para cada pergunta</h3>
+      <aside class="notes">
+        NÃO PULAR ESTE BLOCO mesmo se estiver atrasado.
+        Se a turma não souber responder 1 e 3, o resto da aula não gruda.
+        Melhor voltar 10 minutos do que avançar sobre areia.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Checkpoint</h2>
+      <ol>
+        <li>Diferença entre <b>OpenHarmony</b>, <b>HarmonyOS 4</b> e <b>HarmonyOS NEXT</b>?
+            Qual roda APK?</li>
+        <li>Startup, app de leitura de QR code, <b>2 devs que sabem TS</b>, prazo de <b>2 meses</b>.
+            Nativo, cross-platform ou web? Justifique com <b>duas</b> restrições.</li>
+        <li>Por que <code>status: 'aberta' | 'em_analise' | ...</code> é melhor que
+            <code>status: string</code>? <b>Dê um bug</b> que o primeiro previne.</li>
+        <li><b>Tizen roda em celulares hoje?</b></li>
+      </ol>
+    </section>
+
+    <!-- ==================== PARTE 4 — REACT NATIVE ==================== -->
+
+    <section class="centro divisor">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+      <h1>Parte 4</h1>
+      <h2>React Native</h2>
+    </section>
+
+    <section class="centro">
+      <h2>React Native é um framework que usa<br>
+      <span class="destaque">React e TypeScript</span> para descrever a interface,<br>
+      e renderiza <span class="destaque">componentes nativos reais</span>.</h2>
+      <h3>A parte que mais importa: <i>nativos reais</i>.</h3>
+    </section>
+
+    <section>
+      <h2>O que React Native NÃO é</h2>
+      <h3>Abordagem WebView <span class="fraco">(Cordova, Ionic clássico)</span></h3>
+      <p>Seu app é um navegador sem barra de endereço, exibindo o seu site.
+      <code>&lt;div&gt;</code> continua sendo <code>&lt;div&gt;</code>.</p>
+      <h3>React Native</h3>
+      <p class="alerta"><b>Não há DOM. Não há HTML. Não há CSS. Não há WebView.</b></p>
+      <pre><code class="language-tsx" data-trim>
+&lt;View /&gt;   →  android.view.ViewGroup   |   UIView
+&lt;Text /&gt;   →  TextView                 |   UILabel
+&lt;Image /&gt;  →  ImageView                |   UIImageView
+      </code></pre>
+      <blockquote>É o <b>mesmo</b> componente que um app em Kotlin ou Swift usaria.</blockquote>
+    </section>
+
+    <section>
+      <h2>Dois caminhos, dois destinos</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    subgraph WV["Híbrido / WebView"]
+        direction TB
+        W1["HTML + CSS + JS"] --> W2["WebView<br/>navegador embutido"] --> W3["div continua sendo div"]
+    end
+    subgraph RNA["React Native"]
+        direction TB
+        R1["React + TypeScript"] --> R2["JSI + Fabric"] --> R3["ViewGroup · UIView<br/>nativos reais"]
+    end
+      </pre>
+      <h3 class="destaque">À esquerda, um navegador desenha a tela. À direita, o sistema operacional.</h3>
+    </section>
+
+    <section class="centro">
+      <h2>🎙️ Analogia: o tradutor simultâneo</h2>
+      <p>Você escreve o discurso em <b>uma</b> língua — React + TypeScript.</p>
+      <p>Um intérprete o entrega, em tempo real, na língua de <b>cada plateia</b> —
+      Android, iOS.</p>
+      <h3 class="destaque">A plateia não lê legenda.</h3>
+      <h3 class="destaque">Ela ouve alguém falando a língua dela, com o sotaque dela.</h3>
+    </section>
+
+    <section>
+      <h2>Do web para o mobile</h2>
+      <table>
+        <tr><th>Web</th><th>React Native</th></tr>
+        <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;View&gt;</code></td></tr>
+        <tr><td><code>&lt;p&gt;</code>, <code>&lt;span&gt;</code>, <code>&lt;h1&gt;</code></td><td><code>&lt;Text&gt;</code> — <b>todo</b> texto vai aqui</td></tr>
+        <tr><td><code>&lt;img&gt;</code></td><td><code>&lt;Image&gt;</code></td></tr>
+        <tr><td><code>&lt;button&gt;</code>, <code>&lt;a&gt;</code></td><td><code>&lt;Pressable&gt;</code></td></tr>
+        <tr><td><code>&lt;input&gt;</code></td><td><code>&lt;TextInput&gt;</code></td></tr>
+        <tr><td>scroll da página</td><td><code>&lt;ScrollView&gt;</code></td></tr>
+        <tr><td><code>className</code> / CSS</td><td><code>StyleSheet.create({...})</code></td></tr>
+      </table>
+      <p class="fraco"><code>&lt;FlatList&gt;</code>/<code>&lt;SectionList&gt;</code> (listas grandes) chegam na Aula 2 — hoje é componente isolado.</p>
+    </section>
+
+    <section>
+      <h2>As 4 pegadinhas que pegam todo mundo</h2>
+      <pre><code class="language-tsx" data-trim>
+// 1 · texto solto quebra em RUNTIME  ← o erro nº 1
+&lt;View&gt;Olá&lt;/View&gt;                  // ❌
+&lt;View&gt;&lt;Text&gt;Olá&lt;/Text&gt;&lt;/View&gt;     // ✅
+
+// 2 · flexDirection default é 'column', não 'row'
+{ flexDirection: 'row' }          // precisa ser explícito
+
+// 3 · números não têm unidade (density-independent pixels)
+{ padding: 16 }      // ✅
+{ padding: '16px' }  // ❌
+{ width: '100%' }    // ✅ percentual em string funciona
+
+// 4 · não há herança de estilo de texto entre Views
+      </code></pre>
+      <h3>E não existe <code>:hover</code> — não há mouse.</h3>
+      <aside class="notes">
+        Demonstrar o erro nº 1 AO VIVO no projeto. Ver a tela vermelha
+        vale mais que o slide.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Por dentro: a Nova Arquitetura</h2>
+      <div class="colunas">
+        <div>
+          <h3><b>JSI</b> — JavaScript Interface</h3>
+          <p class="fraco">JS e C++ chamam um ao outro <b>direto e de forma síncrona</b>, por referência</p>
+          <h3><b>Fabric</b> — o renderizador</h3>
+          <p class="fraco">Cria e gerencia a árvore de views nativas</p>
+        </div>
+        <div>
+          <h3><b>TurboModules</b> — módulos nativos</h3>
+          <p class="fraco">Carregamento <i>lazy</i> + interface tipada, gerada por <b>Codegen</b> a partir de <b>TypeScript</b></p>
+          <h3><b>Hermes</b> — a engine JS</h3>
+          <p class="fraco">Bytecode pré-compilado no build → startup rápido, menos memória</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Como as peças se encaixam</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart LR
+    JS["Seu código<br/>React + TypeScript"]
+    HER["Hermes<br/>engine JS"]
+    CPP["Camada C++"]
+    FAB["Fabric<br/>renderizador"]
+    TM["TurboModules"]
+    NAT["Views nativas<br/>ViewGroup · UIView"]
+    API["APIs do sistema<br/>câmera, GPS"]
+
+    JS --> HER
+    HER &lt;--&gt;|"JSI<br/>direto e síncrono"| CPP
+    CPP --> FAB
+    CPP --> TM
+    FAB --> NAT
+    TM --> API
+      </pre>
+    </section>
+
+    <section>
+      <h2>🔴 A "bridge" não existe mais</h2>
+      <h3>Antes: um canal <b>assíncrono</b> que serializava <b>tudo</b> em JSON</h3>
+      <p class="fraco">Cada toque, cada atualização de layout → virava texto → atravessava a
+      ponte → desserializava do outro lado. Era o gargalo histórico do React Native.</p>
+      <div class="caixa-alerta">
+        A arquitetura legada foi <b>removida do código</b> na versão 0.84 <span class="fraco">(fev/2026)</span>.
+      </div>
+      <blockquote>
+        Se um artigo explica "a ponte assíncrona do React Native",
+        ele descreve software que <b>já não existe</b>.<br>
+        <b class="destaque">Excelente detector de material desatualizado.</b>
+      </blockquote>
+    </section>
+
+    <section>
+      <h2>Antes e depois</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart TB
+    subgraph OLD["Legada — REMOVIDA na 0.84"]
+        direction LR
+        O1["JavaScript"] -->|"serializa em JSON"| O2["Bridge assíncrona"] -->|"desserializa"| O3["Nativo"]
+    end
+    subgraph NEW["Nova Arquitetura — hoje"]
+        direction LR
+        N1["JavaScript"] &lt;--&gt;|"JSI: referência direta"| N2["Nativo"]
+    end
+    O3 ~~~ N1
+      </pre>
+    </section>
+
+    <section class="centro slide-impacto">
+      <h2>O Codegen gera código C++/Java/Objective-C<br>
+      a partir de uma especificação em <span class="destaque">TypeScript</span>.</h2>
+      <h1 class="destaque">O TypeScript de vocês gera código nativo.</h1>
+      <aside class="notes">
+        Pausar aqui. É o momento em que a Parte 2 e a Parte 4 se encontram.
+        Se alguém ainda achava que TS era "só pra pegar typo", é agora que cai a ficha.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Linha do tempo</h2>
+      <pre class="mermaid mermaid-grande">
+flowchart LR
+    V76["0.76<br/>New Architecture<br/>default"]
+    V78["0.78<br/>Bridgeless default<br/>React 19"]
+    V82["0.82 · out/25<br/>Único modo"]
+    V84["0.84 · fev/26<br/>Legada REMOVIDA<br/>Hermes default"]
+    V86["0.86 · jun/26<br/>Repo → org react"]
+
+    V76 --> V78 --> V82 --> V84 --> V86
+      </pre>
+      <h3>Hoje: <b class="destaque">React Native 0.86.2</b> com <b class="destaque">React 19.2</b></h3>
+      <p class="fraco">RN e React agora sob a React Foundation independente.</p>
+    </section>
+
+    <section>
+      <h2>Começando um projeto em 2026</h2>
+      <h3>A recomendação oficial: <b>use um framework</b>. O framework é o <b class="destaque">Expo</b>.</h3>
+      <pre><code class="language-bash" data-trim>
+npx create-expo-app@latest meu-app
+cd meu-app
+npx expo start
+      </code></pre>
+      <p>Abra o <b>Expo Go</b> no celular · escaneie o QR · o app roda <b>no seu aparelho</b></p>
+      <ul>
+        <li><b>Expo SDK 57</b> <span class="fraco">(jun/2026)</span> = RN 0.86 + React 19.2</li>
+        <li><b>Não precisa</b> de Android Studio nem Xcode para começar</li>
+        <li><b class="alerta">Requisito: Node.js 22.11+</b></li>
+      </ul>
+      <p class="fraco">Sem framework <i>(só p/ restrições incomuns)</i>:
+      <code>npx @react-native-community/cli@latest init</code></p>
+    </section>
+
+    <section class="centro">
+      <h1 class="alerta">❌ <code>npx react-native init</code></h1>
+      <h2 style="text-align:center">Depreciado na 0.75 · <b>REMOVIDO na 0.77</b> <span class="fraco">(jan/2025)</span></h2>
+      <blockquote style="text-align:center">
+        Use isso como filtro de qualidade:<br>
+        tutorial que usa esse comando tem 1,5 ano+<br>
+        e provavelmente ensina a arquitetura antiga.<br>
+        <b class="destaque">Confira sempre a data.</b>
+      </blockquote>
+      <aside class="notes">
+        Este slide economiza horas de frustração da turma.
+        Repetir em voz alta. Pedir para anotarem.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Primeiro componente: um card, não uma lista</h2>
+      <pre><code class="language-tsx" data-trim data-line-numbers="2-3|8|9-12">
+export default function App() {
+  const [status, setStatus] = useState&lt;StatusHabito&gt;(MOCK.status);
+  const concluido = status === 'concluido';
+
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Pressable
+        style={styles.card}
+        onPress={() =&gt; setStatus(concluido ? 'pendente' : 'concluido')}
+      &gt;
+        &lt;Text style={styles.titulo}&gt;{MOCK.titulo}&lt;/Text&gt;
+        &lt;View style={styles.linha}&gt;
+          &lt;Text style={styles.meta}&gt;{MOCK.categoria}&lt;/Text&gt;
+          &lt;Text style={styles.meta}&gt;{rotuloStatus(status)}&lt;/Text&gt;
+        &lt;/View&gt;
+      &lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}
+      </code></pre>
+      <h3 class="destaque">Sem lista, sem <code>FlatList</code> — isso é assunto da Aula 2.</h3>
+      <aside class="notes">
+        As setas → e ← navegam pelos destaques de linha antes de trocar de slide.
+        Destaque 1: estado tipado. Destaque 2: toque alternando status.
+        Destaque 3: View e Text de novo, sem lista nenhuma.
+      </aside>
+    </section>
+
+    <!-- ==================== PARTE 5 — HANDS-ON ==================== -->
+
+    <section class="centro divisor">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+      <h1>Parte 5</h1>
+      <h2>Hands-on</h2>
+      <h3>Ninguém sai da sala sem um app rodando no próprio celular.</h3>
+    </section>
+
+    <section>
+      <h2>Hands-on — 25 min</h2>
+      <pre><code class="language-bash" data-trim>
+node --version              # precisa ser 22.11+
+
+npx create-expo-app@latest sandbox-app
+cd sandbox-app
+npx expo start              # --tunnel se o Wi-Fi da sala isolar
+      </code></pre>
+      <ol>
+        <li>Abrir no celular com <b>Expo Go</b> <span class="fraco">(QR code)</span> ou emulador</li>
+        <li>Editar <code>App.tsx</code> → ver o <b>Fast Refresh</b></li>
+        <li>Exercícios guiados 1 a 3 <span class="fraco">(<code>exercises.md</code>)</span></li>
+      </ol>
+      <h3>Se travar, chame. Os erros previsíveis já estão mapeados.</h3>
+      <aside class="notes">
+        Erros esperados, com resposta pronta:
+         - Texto solto fora de &lt;Text&gt; → erro em runtime (o nº 1)
+         - Celular e notebook em redes diferentes → npx expo start --tunnel
+         - Esperar flexDirection 'row' por default
+         - Usar px/% em números de estilo
+         - Node desatualizado
+        CIRCULAR PELA SALA. Não ficar na frente.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Atividade aplicada</h2>
+      <h3>Modelar em TypeScript o domínio de <b class="destaque">Hábito</b> (ou <b class="destaque">Pet</b>)</h3>
+      <h3>e construir a tela do hábito do dia — uma única entidade, sem lista</h3>
+      <blockquote>
+        Enunciado completo, critérios de avaliação e prazo em <code>exercises.md</code>
+      </blockquote>
+    </section>
+
+    <section class="centro slide-impacto">
+      <h1>Vocês já sabiam modelar uma entidade com TypeScript.</h1>
+      <h1 class="destaque">Hoje o mesmo tipo passou a descrever uma tela nativa.</h1>
+      <h2 style="text-align:center">O tipo não mudou. A plataforma mudou.</h2>
+      <aside class="notes">
+        Fechar o arco da aula. Retomar literalmente o gancho da abertura.
+        É a última coisa que eles ouvem — vale entregar devagar.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Para a próxima aula</h2>
+      <h3>Leitura obrigatória</h3>
+      <ul>
+        <li>Cap. 1 — História do Desenvolvimento do React Native</li>
+        <li><a href="https://reactnative.dev/docs/components-and-apis">React Native — Core Components and APIs</a></li>
+      </ul>
+      <h3>Recomendada</h3>
+      <ul>
+        <li><a href="https://docs.expo.dev/get-started/introduction/">Expo — Get Started</a></li>
+        <li><a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html">TypeScript Handbook — Narrowing</a></li>
+      </ul>
+      <p><b>Notas completas, com fontes de todos os dados citados:</b> <code>student-notes.md</code></p>
+    </section>
+
+    <section class="centro slide-capa">
+      <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+      <h1>Perguntas?</h1>
+      <p class="fraco"><code>student-notes.md</code> · <code>exercises.md</code></p>
+      <p class="rodape-fonte">
+        Dados de versões e mercado verificados em 07/08/2026 ·
+        Fontes completas em student-notes.md
+      </p>
+    </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal/reveal.js"></script>
+<script src="vendor/reveal/plugin/highlight.js"></script>
+<script src="vendor/reveal/plugin/notes.js"></script>
+<script src="vendor/reveal/plugin/search.js"></script>
+<script src="vendor/reveal/plugin/zoom.js"></script>
+<script src="vendor/mermaid/mermaid.min.js"></script>
+
+<script>
+  // --------------------------------------------------------------------------
+  // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
+  // descobertas renderizando a página de verdade num navegador:
+  //
+  // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
+  //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
+  //    ainda vazios e os diagramas saem cortados.
+  //
+  // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
+  //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
+  //    dimensionar as caixas — dentro de um elemento `display: none` toda
+  //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
+  //    renderizam (a conta de layout estoura com dimensão zero).
+  //
+  //    Solução: forçar os slides visíveis SÓ durante a renderização dos
+  //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
+  //    e remover esse estilo antes de inicializar o reveal.
+  //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
+  //    inteiro, que é justamente o que precisamos medir.
+  // --------------------------------------------------------------------------
+
+  // Paleta fixa da CESAR School (não acompanha mais o tema do sistema —
+  // todos os diagramas ficam em slides de fundo creme).
+  mermaid.initialize({
+    startOnLoad: false,          // nós disparamos manualmente, abaixo
+    theme: 'base',
+    securityLevel: 'loose',      // permite <br/> dentro dos rótulos
+    themeVariables: {
+      fontSize: '18px',
+      fontFamily: 'Barlow, Helvetica, sans-serif',
+      primaryColor: '#FEF7EE',
+      primaryTextColor: '#191919',
+      primaryBorderColor: '#FF6002',
+      lineColor: '#232323',
+      secondaryColor: '#F3E9DC',
+      tertiaryColor: '#FFB132',
+      clusterBkg: '#F3E9DC',
+      clusterBorder: '#FF6002',
+      pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+      pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+      pieOuterStrokeColor: '#FEF7EE',
+      pieSectionTextColor: '#FEF7EE',
+    },
+    flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+  });
+
+  (async () => {
+    // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
+    const estiloMedicao = document.createElement('style');
+    estiloMedicao.textContent = `
+      .reveal { opacity: 0 !important; }
+      .reveal .slides,
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+      }
+    `;
+    document.head.appendChild(estiloMedicao);
+
+    try {
+      // Renderiza um a um: um diagrama com problema não pode impedir os outros
+      // de aparecerem no meio da aula.
+      for (const el of document.querySelectorAll('pre.mermaid')) {
+        try {
+          await mermaid.run({ nodes: [el] });
+        } catch (erro) {
+          console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+        }
+      }
+    } finally {
+      estiloMedicao.remove();
+    }
+
+    Reveal.initialize({
+      hash: true,              // URL acompanha o slide — dá para linkar um slide
+      slideNumber: 'c/t',      // "12 / 48" no canto
+      transition: 'slide',
+      transitionSpeed: 'fast',
+      controls: true,
+      progress: true,
+      overview: true,
+      center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
+      width: 1280,
+      height: 800,
+      margin: 0.06,
+      minScale: 0.2,
+      maxScale: 1.8,
+      pdfSeparateFragments: false,
+      plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+    });
+
+    // Slides marcados com .centro centralizam verticalmente também.
+    Reveal.on('ready', () => document.body.classList.add('pronto'));
+  })();
+</script>
+</body>
+</html>
