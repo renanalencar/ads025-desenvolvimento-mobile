@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,47 +50,73 @@
 
     @font-face {
       font-family: 'Barlow';
-      font-style: normal; font-weight: 400; font-display: swap;
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
       src: url('vendor/fonts/barlow-400.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow';
-      font-style: normal; font-weight: 500; font-display: swap;
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
       src: url('vendor/fonts/barlow-500.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow';
-      font-style: normal; font-weight: 600; font-display: swap;
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
       src: url('vendor/fonts/barlow-600.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow';
-      font-style: normal; font-weight: 700; font-display: swap;
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
       src: url('vendor/fonts/barlow-700.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow Condensed';
-      font-style: normal; font-weight: 500; font-display: swap;
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
       src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow Condensed';
-      font-style: normal; font-weight: 600; font-display: swap;
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
       src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow Condensed';
-      font-style: normal; font-weight: 700; font-display: swap;
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
       src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow Condensed';
-      font-style: normal; font-weight: 800; font-display: swap;
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
       src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
     }
+
     @font-face {
       font-family: 'Barlow Condensed';
-      font-style: normal; font-weight: 900; font-display: swap;
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
       src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
     }
 
@@ -109,24 +136,55 @@
       --fonte-corpo: 'Barlow', Arial, sans-serif;
     }
 
-    .reveal { font-size: 30px; }
-    .reveal, .reveal .slides { background: var(--cor-fundo); }
-    .reveal, .reveal p, .reveal li, .reveal td, .reveal th, .reveal blockquote {
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal,
+    .reveal .slides {
+      background: var(--cor-fundo);
+    }
+
+    .reveal,
+    .reveal p,
+    .reveal li,
+    .reveal td,
+    .reveal th,
+    .reveal blockquote {
       font-family: var(--fonte-corpo);
       color: var(--cor-preto);
     }
 
-    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
       font-family: var(--fonte-titulo);
       font-weight: 800;
       color: var(--cor-preto);
       letter-spacing: 0.01em;
     }
-    .reveal h1, .reveal h2 { text-transform: uppercase; }
 
-    .reveal h1 { font-size: 1.9em; font-weight: 900; }
-    .reveal h2 { font-size: 1.35em; margin-bottom: 0.5em; }
-    .reveal h3 { font-size: 1.05em; margin-top: 0.6em; font-weight: 700; }
+    .reveal h1,
+    .reveal h2 {
+      text-transform: uppercase;
+    }
+
+    .reveal h1 {
+      font-size: 1.9em;
+      font-weight: 900;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h3 {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+      font-weight: 700;
+    }
 
     /* Altura cheia + centralização vertical, só na seção .present: com
        center:false, por padrão a <section> só teria a altura do próprio
@@ -138,25 +196,41 @@
        seletor base; um "display: flex !important" sem ".present" sobrescreve
        esse display:none e deixa todos os slides visíveis empilhados ao
        mesmo tempo (efeito fantasma de texto duplicado). */
-    .reveal .slides > section.present,
-    .reveal .slides > section > section.present {
+    .reveal .slides>section.present,
+    .reveal .slides>section>section.present {
       height: 100% !important;
       display: flex !important;
       flex-direction: column;
       justify-content: center;
     }
+
     /* flex-shrink:0 nos filhos diretos: sem isso, o flexbox ENCOLHE blocos
        de conteúdo (ex.: <pre> de código) para caber nos 800px do palco
        quando o slide é denso — e o <pre> encolhido fica menor que o próprio
        <code> lá dentro, que passa a vazar por cima do próximo elemento. */
-    .reveal .slides > section.present > *,
-    .reveal .slides > section > section.present > * { flex-shrink: 0; }
-    .reveal section { text-align: left; }
-    .reveal section.centro { text-align: center; }
-    .reveal h1, .reveal h2 { text-align: left; }
+    .reveal .slides>section.present>*,
+    .reveal .slides>section>section.present>* {
+      flex-shrink: 0;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    .reveal section.centro {
+      text-align: center;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-align: left;
+    }
+
     .reveal section.centro h1,
     .reveal section.centro h2,
-    .reveal section.centro h3 { text-align: center; }
+    .reveal section.centro h3 {
+      text-align: center;
+    }
 
     /* ---------------------------------------------------------------------
        Formas decorativas — o motivo de semicírculos do template, aplicado
@@ -164,24 +238,30 @@
        conteúdo e como barra de base à esquerda. Ficam atrás do conteúdo
        (z-index negativo) para nunca colidir com texto, tabelas ou código.
        --------------------------------------------------------------------- */
-    .reveal .slides > section:not(.centro):not(:has(.tabela-larga))::before,
-    .reveal .slides > section > section:not(.centro):not(:has(.tabela-larga))::before {
+    .reveal .slides>section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides>section>section:not(.centro):not(:has(.tabela-larga))::before {
       content: '';
       position: absolute;
-      top: -70px; right: -50px;
-      width: 190px; height: 190px;
+      top: -70px;
+      right: -50px;
+      width: 190px;
+      height: 190px;
       border-radius: 50%;
       background: var(--cor-preto);
       opacity: 0.85;
       z-index: -1;
       pointer-events: none;
     }
-    .reveal .slides > section:not(.centro)::after,
-    .reveal .slides > section > section:not(.centro)::after {
+
+    .reveal .slides>section:not(.centro)::after,
+    .reveal .slides>section>section:not(.centro)::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 0;
-      width: 15%; min-width: 120px; height: 10px;
+      bottom: 0;
+      left: 0;
+      width: 15%;
+      min-width: 120px;
+      height: 10px;
       background: var(--cor-destaque);
       border-radius: 0 6px 6px 0;
       z-index: -1;
@@ -189,29 +269,41 @@
     }
 
     /* Slide de abertura e de fechamento — fundo escuro, à la capa do manual */
-    .reveal .slides > section.slide-capa {
+    .reveal .slides>section.slide-capa {
       background: var(--cor-fundo-escuro);
     }
-    .reveal .slides > section.slide-capa h1,
-    .reveal .slides > section.slide-capa h2,
-    .reveal .slides > section.slide-capa h3,
-    .reveal .slides > section.slide-capa p { color: var(--cor-fundo); }
-    .reveal .slides > section.slide-capa .destaque { color: var(--cor-destaque2); }
-    .reveal .slides > section.slide-capa::before {
+
+    .reveal .slides>section.slide-capa h1,
+    .reveal .slides>section.slide-capa h2,
+    .reveal .slides>section.slide-capa h3,
+    .reveal .slides>section.slide-capa p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-capa .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-capa::before {
       content: '';
       position: absolute;
-      top: -18%; right: -12%;
-      width: 60%; height: 130%;
+      top: -18%;
+      right: -12%;
+      width: 60%;
+      height: 130%;
       background: var(--cor-destaque);
       border-radius: 50%;
       z-index: -1;
       pointer-events: none;
     }
-    .reveal .slides > section.slide-capa::after {
+
+    .reveal .slides>section.slide-capa::after {
       content: '';
       position: absolute;
-      bottom: -22%; left: -8%;
-      width: 26%; height: 55%;
+      bottom: -22%;
+      left: -8%;
+      width: 26%;
+      height: 55%;
       background: var(--cor-fundo);
       border-radius: 50%;
       opacity: 0.95;
@@ -220,29 +312,41 @@
     }
 
     /* Slides de impacto — mesma pausa retórica dramática do "Por fim" do manual */
-    .reveal .slides > section.slide-impacto {
+    .reveal .slides>section.slide-impacto {
       background: var(--cor-fundo-escuro);
     }
-    .reveal .slides > section.slide-impacto h1,
-    .reveal .slides > section.slide-impacto h2,
-    .reveal .slides > section.slide-impacto h3,
-    .reveal .slides > section.slide-impacto p { color: var(--cor-fundo); }
-    .reveal .slides > section.slide-impacto .destaque { color: var(--cor-destaque2); }
-    .reveal .slides > section.slide-impacto::before {
+
+    .reveal .slides>section.slide-impacto h1,
+    .reveal .slides>section.slide-impacto h2,
+    .reveal .slides>section.slide-impacto h3,
+    .reveal .slides>section.slide-impacto p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-impacto .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-impacto::before {
       content: '';
       position: absolute;
-      top: -25%; right: -10%;
-      width: 34%; height: 60%;
+      top: -25%;
+      right: -10%;
+      width: 34%;
+      height: 60%;
       background: var(--cor-destaque);
       border-radius: 50%;
       z-index: -1;
       pointer-events: none;
     }
-    .reveal .slides > section.slide-impacto::after {
+
+    .reveal .slides>section.slide-impacto::after {
       content: '';
       position: absolute;
-      bottom: -20%; right: 6%;
-      width: 20%; height: 45%;
+      bottom: -20%;
+      right: 6%;
+      width: 20%;
+      height: 45%;
       border: 3px solid var(--cor-destaque);
       border-radius: 50%;
       z-index: -1;
@@ -251,27 +355,41 @@
 
     /* Slides divisores de Parte — bloco de círculos laranja, como as seções
        numeradas do manual ("1. Princípios gerais...") */
-    .reveal .slides > section.divisor {
+    .reveal .slides>section.divisor {
       text-align: left;
     }
-    .reveal .slides > section.divisor h1 { color: var(--cor-destaque); text-align: left; }
-    .reveal .slides > section.divisor h2,
-    .reveal .slides > section.divisor h3 { color: var(--cor-preto); text-align: left; }
-    .reveal .slides > section.divisor::before {
+
+    .reveal .slides>section.divisor h1 {
+      color: var(--cor-destaque);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h2,
+    .reveal .slides>section.divisor h3 {
+      color: var(--cor-preto);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor::before {
       content: '';
       position: absolute;
-      top: -12%; right: 6%;
-      width: 30%; height: 70%;
+      top: -12%;
+      right: 6%;
+      width: 30%;
+      height: 70%;
       background: var(--cor-destaque);
       border-radius: 50%;
       z-index: -1;
       pointer-events: none;
     }
-    .reveal .slides > section.divisor::after {
+
+    .reveal .slides>section.divisor::after {
       content: '';
       position: absolute;
-      top: -12%; right: -8%;
-      width: 30%; height: 70%;
+      top: -12%;
+      right: -8%;
+      width: 30%;
+      height: 70%;
       background: var(--cor-destaque);
       border-radius: 50%;
       z-index: -1;
@@ -285,20 +403,30 @@
       width: 100%;
       margin: 0.4em 0;
     }
+
     .reveal table th {
       background: var(--cor-fundo-bloco);
       font-weight: 700;
       border-bottom: 2px solid var(--cor-borda);
     }
+
     .reveal table th,
     .reveal table td {
       padding: 0.35em 0.5em;
       border: 1px solid var(--cor-borda);
       vertical-align: top;
     }
+
     /* Tabela larga rola sozinha */
-    .tabela-larga { overflow-x: auto; max-width: 100%; }
-    .tabela-larga table { font-size: 0.52em; min-width: 900px; }
+    .tabela-larga {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tabela-larga table {
+      font-size: 0.52em;
+      min-width: 900px;
+    }
 
     /* Código */
     .reveal pre {
@@ -309,6 +437,7 @@
       font-size: 0.48em;
       margin: 0.4em 0;
     }
+
     .reveal pre code {
       padding: 0.9em 1.1em;
       max-height: 560px;
@@ -323,6 +452,7 @@
          elemento do slide. */
       min-height: 0 !important;
     }
+
     .reveal code:not(pre code) {
       background: var(--cor-fundo-bloco);
       color: var(--cor-preto);
@@ -339,6 +469,7 @@
       background: transparent;
       margin: 0.3em 0;
     }
+
     /* O Mermaid grava `style="max-width: NNNpx"` INLINE no <svg>, e estilo
        inline vence folha de estilo. Sem !important o diagrama ignora estes
        limites e estoura o slide. */
@@ -348,8 +479,11 @@
       width: auto !important;
       height: auto !important;
     }
+
     /* Diagrama que ocupa o slide inteiro (slide sem texto de apoio) */
-    .reveal .mermaid-grande svg { max-height: 610px !important; }
+    .reveal .mermaid-grande svg {
+      max-height: 610px !important;
+    }
 
     /* Blocos de destaque */
     .reveal blockquote {
@@ -362,10 +496,25 @@
       font-style: normal;
       text-align: left;
     }
-    .destaque { color: var(--cor-destaque); font-weight: 700; }
-    .alerta   { color: var(--cor-alerta);   font-weight: 700; }
-    .ok       { color: var(--cor-ok);       font-weight: 700; }
-    .fraco    { color: var(--cor-texto-fraco); }
+
+    .destaque {
+      color: var(--cor-destaque);
+      font-weight: 700;
+    }
+
+    .alerta {
+      color: var(--cor-alerta);
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--cor-ok);
+      font-weight: 700;
+    }
+
+    .fraco {
+      color: var(--cor-texto-fraco);
+    }
 
     .caixa-alerta {
       background: #fdecea;
@@ -374,6 +523,7 @@
       border-radius: 4px;
       margin: 0.5em 0;
     }
+
     .caixa-ok {
       background: #e8f5e9;
       border-left: 5px solid var(--cor-ok);
@@ -389,40 +539,63 @@
       gap: 1.2em;
       align-items: start;
     }
-    .colunas > div { min-width: 0; }
+
+    .colunas>div {
+      min-width: 0;
+    }
 
     /* Marcadores em formato de pílula — o mesmo ícone laranja usado nas
        colunas de conteúdo do manual, no lugar do disco padrão de lista */
-    .reveal ul, .reveal ol { display: block; margin-left: 1em; }
-    .reveal li { margin-bottom: 0.3em; }
-    .reveal section:not(.centro) ul { list-style: none; margin-left: 0.2em; }
-    .reveal section:not(.centro) ul > li {
+    .reveal ul,
+    .reveal ol {
+      display: block;
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.3em;
+    }
+
+    .reveal section:not(.centro) ul {
+      list-style: none;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ul>li {
       position: relative;
       padding-left: 0.85em;
     }
-    .reveal section:not(.centro) ul > li::before {
+
+    .reveal section:not(.centro) ul>li::before {
       content: '';
       position: absolute;
-      left: 0; top: 0.32em;
-      width: 0.42em; height: 0.42em;
+      left: 0;
+      top: 0.32em;
+      width: 0.42em;
+      height: 0.42em;
       border-radius: 50%;
       background: var(--cor-destaque);
     }
+
     .reveal section:not(.centro) ol {
       list-style: none;
       counter-reset: item;
       margin-left: 0.2em;
     }
-    .reveal section:not(.centro) ol > li {
+
+    .reveal section:not(.centro) ol>li {
       counter-increment: item;
       position: relative;
       padding-left: 1.5em;
     }
-    .reveal section:not(.centro) ol > li::before {
+
+    .reveal section:not(.centro) ol>li::before {
       content: counter(item);
       position: absolute;
-      left: 0; top: 0;
-      width: 1.05em; height: 1.05em;
+      left: 0;
+      top: 0;
+      width: 1.05em;
+      height: 1.05em;
       border-radius: 50%;
       background: var(--cor-destaque);
       color: var(--cor-fundo);
@@ -435,7 +608,8 @@
 
     .logo-marca {
       position: absolute;
-      top: 0.55em; left: 0.7em;
+      top: 0.55em;
+      left: 0.7em;
       height: 1.5em;
       width: auto;
       z-index: 2;
@@ -460,74 +634,105 @@
 </head>
 
 <body>
-<div class="reveal">
-  <div class="slides">
+  <div class="reveal">
+    <div class="slides">
 
-    <!-- ==================== ABERTURA ==================== -->
+      <!-- ==================== ABERTURA ==================== -->
 
-    <section class="centro slide-capa">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
-      <h1>Desenvolvimento Mobile</h1>
-      <h3>Aula 3 — Core Components, StyleSheet e Flexbox</h3>
-      <p class="fraco">CESAR School · 2026.2</p>
-      <aside class="notes">
-        Antes de começar: confirmar que todo mundo tem o projeto do grupo
-        rodando com `npx expo start`. Quem estiver travado resolve AGORA,
-        não no bloco de hands-on.
-      </aside>
-    </section>
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h1>Desenvolvimento Mobile</h1>
+        <h3>Aula 3 — Core Components, StyleSheet e Flexbox</h3>
+        <p class="fraco">CESAR School · 2026.2</p>
+        <aside class="notes">
+          Antes de começar: confirmar que todo mundo tem o projeto do grupo
+          rodando com `npx expo start`. Quem estiver travado resolve AGORA,
+          não no bloco de hands-on.
+        </aside>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h2>Na Aula 1 vocês descobriram que <code>&lt;View&gt;</code> não é <code>&lt;div&gt;</code>.</h2>
-      <h3 class="destaque">Hoje vem a consequência: todo o vocabulário mudou — e a cascata não existe.</h3>
-      <aside class="notes">
-        A boa notícia: o dicionário novo tem menos de dez palavras.
-        A má: a ideia mais central da estilização web — a CASCATA — não foi
-        implementada aqui.
-        Deixar a segunda frase no ar. Ela é o eixo da aula inteira.
-      </aside>
-    </section>
+      <section class="centro slide-impacto">
+        <h2>Na Aula 1 vocês descobriram que <code>&lt;View&gt;</code> não é <code>&lt;div&gt;</code>.</h2>
+        <h3 class="destaque">Hoje vem a consequência: todo o vocabulário mudou — e a cascata não existe.</h3>
+        <aside class="notes">
+          A boa notícia: o dicionário novo tem menos de dez palavras.
+          A má: a ideia mais central da estilização web — a CASCATA — não foi
+          implementada aqui.
+          Deixar a segunda frase no ar. Ela é o eixo da aula inteira.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Agenda — 3 horas</h2>
-      <table>
-        <tr><th>Bloco</th><th>Tempo</th></tr>
-        <tr><td>Abertura + o ambiente corrigido</td><td>10 min</td></tr>
-        <tr><td><b>1.</b> O catálogo mínimo: Core Components</td><td>35 min</td></tr>
-        <tr><td>☕ Intervalo</td><td>10 min</td></tr>
-        <tr><td><b>2.</b> StyleSheet: o estilo que não é CSS</td><td>30 min</td></tr>
-        <tr><td><b>3.</b> Checkpoint conceitual</td><td>10 min</td></tr>
-        <tr><td><b>4.</b> Flexbox: como o espaço é negociado</td><td>35 min</td></tr>
-        <tr><td><b>5.</b> Onde os estilos devem morar</td><td>20 min</td></tr>
-        <tr><td><b>6.</b> Hands-on guiado</td><td>25 min</td></tr>
-        <tr><td>Fechamento</td><td>5 min</td></tr>
-      </table>
-    </section>
+      <section>
+        <h2>Agenda — 3 horas</h2>
+        <table>
+          <tr>
+            <th>Bloco</th>
+            <th>Tempo</th>
+          </tr>
+          <tr>
+            <td>Abertura + o ambiente corrigido</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><b>1.</b> O catálogo mínimo: Core Components</td>
+            <td>35 min</td>
+          </tr>
+          <tr>
+            <td>☕ Intervalo</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><b>2.</b> StyleSheet: o estilo que não é CSS</td>
+            <td>30 min</td>
+          </tr>
+          <tr>
+            <td><b>3.</b> Checkpoint conceitual</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><b>4.</b> Flexbox: como o espaço é negociado</td>
+            <td>35 min</td>
+          </tr>
+          <tr>
+            <td><b>5.</b> Onde os estilos devem morar</td>
+            <td>20 min</td>
+          </tr>
+          <tr>
+            <td><b>6.</b> Hands-on guiado</td>
+            <td>25 min</td>
+          </tr>
+          <tr>
+            <td>Fechamento</td>
+            <td>5 min</td>
+          </tr>
+        </table>
+      </section>
 
-    <section>
-      <h2>Ao final da aula você deve conseguir</h2>
-      <ol>
-        <li><b>Escolher</b> o componente certo — e justificar a escolha</li>
-        <li><b>Aplicar</b> estilo com <code>StyleSheet</code>: condicional e precedência</li>
-        <li><b>Explicar</b> por que não há cascata, e qual é a única exceção</li>
-        <li><b>Ligar estado a interface</b> com <code>useState</code>, <code>onPress</code> e componentes controlados</li>
-        <li><b>Construir</b> um layout Flexbox <b>prevendo</b> o resultado antes de rodar</li>
-        <li><b>Decidir</b> onde cada estilo do projeto deve morar</li>
-        <li><b>Corrigir</b> o que a maioria dos tutoriais ainda ensina errado</li>
-      </ol>
-    </section>
+      <section>
+        <h2>Ao final da aula você deve conseguir</h2>
+        <ol>
+          <li><b>Escolher</b> o componente certo — e justificar a escolha</li>
+          <li><b>Aplicar</b> estilo com <code>StyleSheet</code>: condicional e precedência</li>
+          <li><b>Explicar</b> por que não há cascata, e qual é a única exceção</li>
+          <li><b>Ligar estado a interface</b> com <code>useState</code>, <code>onPress</code> e componentes controlados
+          </li>
+          <li><b>Construir</b> um layout Flexbox <b>prevendo</b> o resultado antes de rodar</li>
+          <li><b>Decidir</b> onde cada estilo do projeto deve morar</li>
+          <li><b>Corrigir</b> o que a maioria dos tutoriais ainda ensina errado</li>
+        </ol>
+      </section>
 
-    <!-- ==================== PARTE 0 — AMBIENTE ==================== -->
+      <!-- ==================== PARTE 0 — AMBIENTE ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 0</h1>
-      <h2>O ambiente, atualizado</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 0</h1>
+        <h2>O ambiente, atualizado</h2>
+      </section>
 
-    <section>
-      <h2>Criar e limpar um projeto</h2>
-      <pre><code class="language-bash" data-trim>
+      <section>
+        <h2>Criar e limpar um projeto</h2>
+        <pre><code class="language-bash" data-trim>
 # SDK atual: 57  =  React Native 0.86.2  +  React 19.2
 npx create-expo-app@latest meu-app
 
@@ -535,37 +740,56 @@ cd meu-app
 npm run reset-project    # move o exemplo p/ app-example/, deixa app/ limpa
 npx expo start
       </code></pre>
-      <p>Depois do reset você pode <b>apagar</b> <code>app-example/</code>.</p>
-      <p class="fraco">Templates: <code>default</code> (recomendado) · <code>blank</code> ·
-      <code>blank-typescript</code> · <code>tabs</code> · <code>bare-minimum</code></p>
-      <aside class="notes">
-        O material antigo desta aula fixava --template default@sdk-54.
-        Não precisa mais. O próximo slide explica POR QUE aquela instrução existia
-        e o que vale hoje.
-      </aside>
-    </section>
+        <p>Depois do reset você pode <b>apagar</b> <code>app-example/</code>.</p>
+        <p class="fraco">Templates: <code>default</code> (recomendado) · <code>blank</code> ·
+          <code>blank-typescript</code> · <code>tabs</code> · <code>bare-minimum</code>
+        </p>
+        <aside class="notes">
+          O material antigo desta aula fixava --template default@sdk-54.
+          Não precisa mais. O próximo slide explica POR QUE aquela instrução existia
+          e o que vale hoje.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Expo Go no iPhone: a regra de verdade</h2>
-      <table>
-        <tr><th>Onde rodar</th><th>O que fazer</th></tr>
-        <tr><td>Android (aparelho/emulador)</td><td><code>expo.dev/go</code> — build do seu SDK</td></tr>
-        <tr><td>Simulador iOS</td><td><code>expo.dev/go</code></td></tr>
-        <tr><td><b>iPhone físico, SDK 55+</b></td><td><b class="destaque"><code>sign.expo.dev</code></b> — Apple ID grátis, cert ~7 dias</td></tr>
-        <tr><td>iPhone físico, SDK 54</td><td>Expo Go da App Store</td></tr>
-        <tr><td>iPhone físico, SDK ≤ 53</td><td class="alerta">Não dá — atualize ou faça dev build</td></tr>
-      </table>
-      <h3>A App Store está no 54 porque a build de 57 <span class="alerta">aguarda aprovação</span>.</h3>
-      <aside class="notes">
-        Não é limitação técnica — é fila de revisão de loja.
-        Amarrar com a Aula 1: aquilo que falamos sobre o custo de depender de
-        revisão de loja, aqui está na prática, atrapalhando a própria aula.
-      </aside>
-    </section>
+      <section>
+        <h2>Expo Go no iPhone: a regra de verdade</h2>
+        <table>
+          <tr>
+            <th>Onde rodar</th>
+            <th>O que fazer</th>
+          </tr>
+          <tr>
+            <td>Android (aparelho/emulador)</td>
+            <td><code>expo.dev/go</code> — build do seu SDK</td>
+          </tr>
+          <tr>
+            <td>Simulador iOS</td>
+            <td><code>expo.dev/go</code></td>
+          </tr>
+          <tr>
+            <td><b>iPhone físico, SDK 55+</b></td>
+            <td><b class="destaque"><code>sign.expo.dev</code></b> — Apple ID grátis, cert ~7 dias</td>
+          </tr>
+          <tr>
+            <td>iPhone físico, SDK 54</td>
+            <td>Expo Go da App Store</td>
+          </tr>
+          <tr>
+            <td>iPhone físico, SDK ≤ 53</td>
+            <td class="alerta">Não dá — atualize ou faça dev build</td>
+          </tr>
+        </table>
+        <h3>A App Store está no 54 porque a build de 57 <span class="alerta">aguarda aprovação</span>.</h3>
+        <aside class="notes">
+          Não é limitação técnica — é fila de revisão de loja.
+          Amarrar com a Aula 1: aquilo que falamos sobre o custo de depender de
+          revisão de loja, aqui está na prática, atrapalhando a própria aula.
+        </aside>
+      </section>
 
-    <section>
-      <h2>🔴 Uma correção de comando</h2>
-      <pre><code class="language-bash" data-trim>
+      <section>
+        <h2>🔴 Uma correção de comando</h2>
+        <pre><code class="language-bash" data-trim>
 # ❌ O que o material antigo mandava
 npm install react-dom@19.2.0 react-native-web@^0.21.0
 
@@ -573,73 +797,110 @@ npm install react-dom@19.2.0 react-native-web@^0.21.0
 npx expo install react-dom react-native-web @expo/metro-runtime
 npx expo start --web
       </code></pre>
-      <h3><code>npx expo install</code> resolve a versão <span class="destaque">compatível com o seu SDK</span>.</h3>
-      <p class="fraco"><code>npm install</code> pega a mais recente do npm — que pode ser de um SDK futuro.</p>
-      <aside class="notes">
-        Regra para levar: dependência que acompanha o SDK se instala com
-        `npx expo install`.
-        O erro que o npm install produz não PARECE ter relação com o seu
-        código — é por isso que custa horas de depuração.
-      </aside>
-    </section>
+        <h3><code>npx expo install</code> resolve a versão <span class="destaque">compatível com o seu SDK</span>.</h3>
+        <p class="fraco"><code>npm install</code> pega a mais recente do npm — que pode ser de um SDK futuro.</p>
+        <aside class="notes">
+          Regra para levar: dependência que acompanha o SDK se instala com
+          `npx expo install`.
+          O erro que o npm install produz não PARECE ter relação com o seu
+          código — é por isso que custa horas de depuração.
+        </aside>
+      </section>
 
-    <!-- ==================== PARTE 1 — CORE COMPONENTS ==================== -->
+      <!-- ==================== PARTE 1 — CORE COMPONENTS ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 1</h1>
-      <h2>Core Components</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 1</h1>
+        <h2>Core Components</h2>
+      </section>
 
-    <section>
-      <h2>O dicionário de tradução</h2>
-      <table>
-        <tr><th>Web</th><th>React Native</th><th>Lembrar</th></tr>
-        <tr><td><code>&lt;div&gt;</code></td><td><b>View</b></td><td>não tem scroll implícito</td></tr>
-        <tr><td><code>&lt;p&gt;</code> <code>&lt;span&gt;</code> <code>&lt;h1&gt;</code></td><td><b>Text</b></td><td><b>todo</b> texto vive aqui</td></tr>
-        <tr><td><code>&lt;img&gt;</code></td><td><b>Image</b></td><td>remota <b>precisa</b> de dimensão</td></tr>
-        <tr><td><code>&lt;input type="text"&gt;</code></td><td><b>TextInput</b></td><td><code>value</code> + <code>onChangeText</code></td></tr>
-        <tr><td><code>&lt;input type="checkbox"&gt;</code></td><td><b>Switch</b></td><td><code>value</code> + <code>onValueChange</code></td></tr>
-        <tr><td>scroll da página</td><td><b>ScrollView</b></td><td>renderiza <b>tudo</b>; duas props de estilo</td></tr>
-        <tr><td><code>&lt;button&gt;</code></td><td><b>Button</b></td><td class="alerta">do sistema, não aceita <code>style</code></td></tr>
-        <tr><td><code>className</code> / <code>.css</code></td><td><b>StyleSheet</b></td><td>objetos JS</td></tr>
-      </table>
-      <h3>São <span class="destaque">sete</span>. O dicionário da aula cabe numa mão e meia.</h3>
-      <aside class="notes">
-        Dizer o "são sete" em voz alta. Reduz a ansiedade da turma:
-        o vocabulário novo é pequeno, o que é difícil é o ESTILO.
+      <section>
+        <h2>O dicionário de tradução</h2>
+        <table>
+          <tr>
+            <th>Web</th>
+            <th>React Native</th>
+            <th>Lembrar</th>
+          </tr>
+          <tr>
+            <td><code>&lt;div&gt;</code></td>
+            <td><b>View</b></td>
+            <td>não tem scroll implícito</td>
+          </tr>
+          <tr>
+            <td><code>&lt;p&gt;</code> <code>&lt;span&gt;</code> <code>&lt;h1&gt;</code></td>
+            <td><b>Text</b></td>
+            <td><b>todo</b> texto vive aqui</td>
+          </tr>
+          <tr>
+            <td><code>&lt;img&gt;</code></td>
+            <td><b>Image</b></td>
+            <td>remota <b>precisa</b> de dimensão</td>
+          </tr>
+          <tr>
+            <td><code>&lt;input type="text"&gt;</code></td>
+            <td><b>TextInput</b></td>
+            <td><code>value</code> + <code>onChangeText</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;input type="checkbox"&gt;</code></td>
+            <td><b>Switch</b></td>
+            <td><code>value</code> + <code>onValueChange</code></td>
+          </tr>
+          <tr>
+            <td>scroll da página</td>
+            <td><b>ScrollView</b></td>
+            <td>renderiza <b>tudo</b>; duas props de estilo</td>
+          </tr>
+          <tr>
+            <td><code>&lt;button&gt;</code></td>
+            <td><b>Button</b></td>
+            <td class="alerta">do sistema, não aceita <code>style</code></td>
+          </tr>
+          <tr>
+            <td><code>className</code> / <code>.css</code></td>
+            <td><b>StyleSheet</b></td>
+            <td>objetos JS</td>
+          </tr>
+        </table>
+        <h3>São <span class="destaque">sete</span>. O dicionário da aula cabe numa mão e meia.</h3>
+        <aside class="notes">
+          Dizer o "são sete" em voz alta. Reduz a ansiedade da turma:
+          o vocabulário novo é pequeno, o que é difícil é o ESTILO.
 
-        Interação, nesta aula, sai de três lugares — todos aqui dentro:
-        onPress no Button, onPress no Text, onChangeText/onValueChange.
-      </aside>
-    </section>
+          Interação, nesta aula, sai de três lugares — todos aqui dentro:
+          onPress no Button, onPress no Text, onChangeText/onValueChange.
+        </aside>
+      </section>
 
-    <section class="centro">
-      <h1>🧭 O dicionário de viagem</h1>
-      <h3>Você já fala a língua. Recebeu um dicionário menor, com palavras diferentes para as mesmas ideias.</h3>
-      <p class="fraco">E algumas palavras não têm tradução: não existe <code>&lt;h1&gt;</code> — existe <code>&lt;Text&gt;</code> com um estilo.</p>
-    </section>
+      <section class="centro">
+        <h1>🧭 O dicionário de viagem</h1>
+        <h3>Você já fala a língua. Recebeu um dicionário menor, com palavras diferentes para as mesmas ideias.</h3>
+        <p class="fraco">E algumas palavras não têm tradução: não existe <code>&lt;h1&gt;</code> — existe
+          <code>&lt;Text&gt;</code> com um estilo.</p>
+      </section>
 
-    <section>
-      <h2><code>Text</code> — regra 1</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Text</code> — regra 1</h2>
+        <pre><code class="language-tsx" data-trim>
 &lt;View&gt;Beber água&lt;/View&gt;                     // ❌ quebra em runtime
 &lt;View&gt;&lt;Text&gt;Beber água&lt;/Text&gt;&lt;/View&gt;        // ✅
       </code></pre>
-      <div class="caixa-alerta">
-        <code>Text strings must be rendered within a &lt;Text&gt; component</code>
-      </div>
-      <h3>Você vai ver esse erro. Todo mundo vê.</h3>
-      <aside class="notes">
-        DEMONSTRAR AO VIVO. Quebrar de propósito, mostrar a tela vermelha,
-        corrigir na frente deles.
-        Vale 30 segundos e economiza uma hora de suporte no hands-on.
-      </aside>
-    </section>
+        <div class="caixa-alerta">
+          <code>Text strings must be rendered within a &lt;Text&gt; component</code>
+        </div>
+        <h3>Você vai ver esse erro. Todo mundo vê.</h3>
+        <aside class="notes">
+          DEMONSTRAR AO VIVO. Quebrar de propósito, mostrar a tela vermelha,
+          corrigir na frente deles.
+          Vale 30 segundos e economiza uma hora de suporte no hands-on.
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>Text</code> — regra 2: a única herança que existe</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Text</code> — regra 2: a única herança que existe</h2>
+        <pre><code class="language-tsx" data-trim>
 // A View NÃO passa fontSize para o Text
 &lt;View style={{ fontSize: 24 }}&gt;          // ❌ não faz nada
   &lt;Text&gt;Continuo no tamanho default&lt;/Text&gt;
@@ -650,12 +911,13 @@ npx expo start --web
   Grande &lt;Text style={{ fontWeight: 'bold' }}&gt;e em negrito&lt;/Text&gt;
 &lt;/Text&gt;
       </code></pre>
-      <h3><code>&lt;Text&gt;</code> dentro de <code>&lt;Text&gt;</code> é a <span class="destaque">única</span> herança de estilo em React Native.</h3>
-    </section>
+        <h3><code>&lt;Text&gt;</code> dentro de <code>&lt;Text&gt;</code> é a <span class="destaque">única</span>
+          herança de estilo em React Native.</h3>
+      </section>
 
-    <section>
-      <h2><code>Image</code> — a que precisa de dimensão</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Image</code> — a que precisa de dimensão</h2>
+        <pre><code class="language-tsx" data-trim>
 // Local: o bundler já sabe o tamanho em tempo de build
 &lt;Image source={require('../assets/habito.png')} /&gt;
 
@@ -665,32 +927,34 @@ npx expo start --web
   style={{ width: 64, height: 64, borderRadius: 32 }}
 /&gt;
       </code></pre>
-      <h3>Sem <code>width</code>/<code>height</code>, a imagem remota tem tamanho <span class="alerta">zero</span>.</h3>
-      <p class="fraco">Nada aparece. E <b>não há erro no console</b>.</p>
-      <aside class="notes">
-        Demonstrar. O SILÊNCIO é o que faz esse bug custar caro: o aluno acha
-        que a URL está errada, quando o problema é o estilo.
-        Mesma família do bug da View sem width (exercício 4, item E).
-      </aside>
-    </section>
+        <h3>Sem <code>width</code>/<code>height</code>, a imagem remota tem tamanho <span class="alerta">zero</span>.
+        </h3>
+        <p class="fraco">Nada aparece. E <b>não há erro no console</b>.</p>
+        <aside class="notes">
+          Demonstrar. O SILÊNCIO é o que faz esse bug custar caro: o aluno acha
+          que a URL está errada, quando o problema é o estilo.
+          Mesma família do bug da View sem width (exercício 4, item E).
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>Image</code> — existe algo melhor no Expo</h2>
-      <pre><code class="language-bash" data-trim>
+      <section>
+        <h2><code>Image</code> — existe algo melhor no Expo</h2>
+        <pre><code class="language-bash" data-trim>
 npx expo install expo-image
       </code></pre>
-      <ul>
-        <li>Cache em <b>disco e memória</b></li>
-        <li><b>Transição</b> suave na troca de imagem — sem flicker</li>
-        <li>Placeholders <b>BlurHash / ThumbHash</b></li>
-        <li>WebP, AVIF, HEIC, SVG, GIF animado</li>
-      </ul>
-      <blockquote>A doc do React Native <b>não</b> deprecia o <code>Image</code> nativo — mas para imagem de rede em produção, <code>expo-image</code> é o caminho.</blockquote>
-    </section>
+        <ul>
+          <li>Cache em <b>disco e memória</b></li>
+          <li><b>Transição</b> suave na troca de imagem — sem flicker</li>
+          <li>Placeholders <b>BlurHash / ThumbHash</b></li>
+          <li>WebP, AVIF, HEIC, SVG, GIF animado</li>
+        </ul>
+        <blockquote>A doc do React Native <b>não</b> deprecia o <code>Image</code> nativo — mas para imagem de rede em
+          produção, <code>expo-image</code> é o caminho.</blockquote>
+      </section>
 
-    <section>
-      <h2><code>TextInput</code> — a entrada controlada</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>TextInput</code> — a entrada controlada</h2>
+        <pre><code class="language-tsx" data-trim>
 const [titulo, setTitulo] = useState('');
 
 &lt;TextInput
@@ -701,37 +965,50 @@ const [titulo, setTitulo] = useState('');
   maxLength={60}
 /&gt;
       </code></pre>
-      <ul>
-        <li>É <b><code>onChangeText</code></b> — sem <code>e.target.value</code></li>
-        <li><b>Não tem borda por default.</b> Se você não estilizar, não vê nada</li>
-        <li>Úteis: <code>keyboardType</code> · <code>secureTextEntry</code> · <code>multiline</code></li>
-      </ul>
-    </section>
+        <ul>
+          <li>É <b><code>onChangeText</code></b> — sem <code>e.target.value</code></li>
+          <li><b>Não tem borda por default.</b> Se você não estilizar, não vê nada</li>
+          <li>Úteis: <code>keyboardType</code> · <code>secureTextEntry</code> · <code>multiline</code></li>
+        </ul>
+      </section>
 
-    <section>
-      <h2><code>ScrollView</code> — a pegadinha das DUAS props de estilo</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>ScrollView</code> — a pegadinha das DUAS props de estilo</h2>
+        <pre><code class="language-tsx" data-trim>
 &lt;ScrollView
   style={styles.tela}                        // a JANELA de rolagem
   contentContainerStyle={styles.conteudo}    // o CONTEÚDO que rola
 &gt;
       </code></pre>
-      <table>
-        <tr><th>Quer isso</th><th>Vai em</th></tr>
-        <tr><td><code>padding</code> no conteúdo</td><td><code>contentContainerStyle</code></td></tr>
-        <tr><td>centralizar os filhos</td><td><code>contentContainerStyle</code></td></tr>
-        <tr><td>altura / fundo da janela</td><td><code>style</code></td></tr>
-      </table>
-      <h3><code>alignItems</code> no <code>style</code> de um <code>ScrollView</code> não faz <span class="alerta">nada</span>.</h3>
-      <aside class="notes">
-        Um dos bugs mais confusos de depurar, porque o resultado é o SILÊNCIO:
-        o código parece certo e a tela não muda.
-      </aside>
-    </section>
+        <table>
+          <tr>
+            <th>Quer isso</th>
+            <th>Vai em</th>
+          </tr>
+          <tr>
+            <td><code>padding</code> no conteúdo</td>
+            <td><code>contentContainerStyle</code></td>
+          </tr>
+          <tr>
+            <td>centralizar os filhos</td>
+            <td><code>contentContainerStyle</code></td>
+          </tr>
+          <tr>
+            <td>altura / fundo da janela</td>
+            <td><code>style</code></td>
+          </tr>
+        </table>
+        <h3><code>alignItems</code> no <code>style</code> de um <code>ScrollView</code> não faz <span
+            class="alerta">nada</span>.</h3>
+        <aside class="notes">
+          Um dos bugs mais confusos de depurar, porque o resultado é o SILÊNCIO:
+          o código parece certo e a tela não muda.
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>View</code> ou <code>ScrollView</code>?</h2>
-      <pre class="mermaid">
+      <section>
+        <h2><code>View</code> ou <code>ScrollView</code>?</h2>
+        <pre class="mermaid">
 flowchart TD
     Q1{"O conteudo passa da<br/>altura da tela?"}
     Q2{"A quantidade de filhos<br/>e conhecida e limitada?"}
@@ -744,55 +1021,66 @@ flowchart TD
     Q2 -->|"sim"| SV
     Q2 -->|"nao, cresce sem limite"| ESP
       </pre>
-      <p><code>ScrollView</code> monta <b>todos</b> os filhos de uma vez. Com 20, ok. Com 2.000, o app engasga.</p>
-      <p class="fraco">Caso típico de <code>ScrollView</code>: um <b>formulário</b> — campos conhecidos, quantidade fixa.</p>
-      <aside class="notes">
-        Se alguém perguntar qual é o "componente especializado": estacionar.
-        Renderização de listas NÃO é assunto desta aula.
-      </aside>
-    </section>
+        <p><code>ScrollView</code> monta <b>todos</b> os filhos de uma vez. Com 20, ok. Com 2.000, o app engasga.</p>
+        <p class="fraco">Caso típico de <code>ScrollView</code>: um <b>formulário</b> — campos conhecidos, quantidade
+          fixa.</p>
+        <aside class="notes">
+          Se alguém perguntar qual é o "componente especializado": estacionar.
+          Renderização de listas NÃO é assunto desta aula.
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>Button</code> — o botão do sistema</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Button</code> — o botão do sistema</h2>
+        <pre><code class="language-tsx" data-trim>
 &lt;Button title="Salvar" onPress={salvar} color="#FF6002" disabled={false} /&gt;
       </code></pre>
-      <p style="font-size:1.15em">São <b>essas</b> as props: <code>title</code> · <code>onPress</code> · <code>color</code> · <code>disabled</code></p>
-      <table>
-        <tr><th>Plataforma</th><th>O que <code>color</code> tinge</th></tr>
-        <tr><td>iOS</td><td>o <b>texto</b> do botão</td></tr>
-        <tr><td>Android</td><td>o <b>fundo</b> do botão</td></tr>
-      </table>
-      <h3>O mesmo <code>color</code> produz dois botões diferentes. <span class="destaque">Teste nas duas.</span></h3>
-      <aside class="notes">
-        Bom exemplo de "componente do sistema entrega a aparência do sistema".
-        Serve para: protótipo, caixa de diálogo, tela de configuração,
-        ação de formulário.
-      </aside>
-    </section>
+        <p style="font-size:1.15em">São <b>essas</b> as props: <code>title</code> · <code>onPress</code> ·
+          <code>color</code> · <code>disabled</code></p>
+        <table>
+          <tr>
+            <th>Plataforma</th>
+            <th>O que <code>color</code> tinge</th>
+          </tr>
+          <tr>
+            <td>iOS</td>
+            <td>o <b>texto</b> do botão</td>
+          </tr>
+          <tr>
+            <td>Android</td>
+            <td>o <b>fundo</b> do botão</td>
+          </tr>
+        </table>
+        <h3>O mesmo <code>color</code> produz dois botões diferentes. <span class="destaque">Teste nas duas.</span></h3>
+        <aside class="notes">
+          Bom exemplo de "componente do sistema entrega a aparência do sistema".
+          Serve para: protótipo, caixa de diálogo, tela de configuração,
+          ação de formulário.
+        </aside>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h1><code>Button</code> não aceita <code>style</code>.</h1>
-      <h3 class="destaque">Ele entrega o botão do <b>sistema</b>. Você escolhe texto, ação e uma cor.</h3>
-      <aside class="notes">
-        PAUSA aqui.
-        Não é limitação acidental — é o PROJETO do componente.
+      <section class="centro slide-impacto">
+        <h1><code>Button</code> não aceita <code>style</code>.</h1>
+        <h3 class="destaque">Ele entrega o botão do <b>sistema</b>. Você escolhe texto, ação e uma cor.</h3>
+        <aside class="notes">
+          PAUSA aqui.
+          Não é limitação acidental — é o PROJETO do componente.
 
-        A pergunta que vem em seguida, garantido:
-        "e se eu quiser um botão com fundo laranja e canto arredondado?"
-        RESPOSTA: "ótima pergunta, e não é o assunto de hoje."
+          A pergunta que vem em seguida, garantido:
+          "e se eu quiser um botão com fundo laranja e canto arredondado?"
+          RESPOSTA: "ótima pergunta, e não é o assunto de hoje."
 
-        Componentes de toque estilizáveis estão FORA do escopo desta aula.
-        Não abrir esse tópico — o orçamento de hoje é estilo e layout.
+          Componentes de toque estilizáveis estão FORA do escopo desta aula.
+          Não abrir esse tópico — o orçamento de hoje é estilo e layout.
 
-        O ponto didático a extrair: a escolha do componente vem ANTES
-        da estilização.
-      </aside>
-    </section>
+          O ponto didático a extrair: a escolha do componente vem ANTES
+          da estilização.
+        </aside>
+      </section>
 
-    <section>
-      <h2>O que dá para fazer hoje: estilizar em volta</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O que dá para fazer hoje: estilizar em volta</h2>
+        <pre><code class="language-tsx" data-trim>
 &lt;View style={styles.areaBotao}&gt;
   &lt;Button title="Marcar concluído" onPress={concluir} color={cores.primaria} /&gt;
 &lt;/View&gt;
@@ -804,12 +1092,12 @@ areaBotao: {
   marginTop: espaco.sm,    // margin EM VOLTA do grupo: uso legítimo
 },
       </code></pre>
-      <h3>Você não controla o botão. <span class="destaque">Controla o espaço dele.</span></h3>
-    </section>
+        <h3>Você não controla o botão. <span class="destaque">Controla o espaço dele.</span></h3>
+      </section>
 
-    <section>
-      <h2><code>Text</code> com <code>onPress</code> — toque dentro do escopo</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Text</code> com <code>onPress</code> — toque dentro do escopo</h2>
+        <pre><code class="language-tsx" data-trim>
 const [concluido, setConcluido] = useState(false);
 
 &lt;Text
@@ -819,18 +1107,18 @@ const [concluido, setConcluido] = useState(false);
   Beber 2L de água
 &lt;/Text&gt;
       </code></pre>
-      <h3>Toque muda o estado → estado muda o array de estilos → a tela reflete.</h3>
-      <p class="fraco">Você já conhece as duas primeiras partes. A terceira é a novidade de hoje.</p>
-      <aside class="notes">
-        Este é o padrão que sustenta metade dos exercícios.
-        Note o setConcluido((anterior) => !anterior): quando o novo estado
-        deriva do anterior, a forma de função é a segura.
-      </aside>
-    </section>
+        <h3>Toque muda o estado → estado muda o array de estilos → a tela reflete.</h3>
+        <p class="fraco">Você já conhece as duas primeiras partes. A terceira é a novidade de hoje.</p>
+        <aside class="notes">
+          Este é o padrão que sustenta metade dos exercícios.
+          Note o setConcluido((anterior) => !anterior): quando o novo estado
+          deriva do anterior, a forma de função é a segura.
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>Switch</code> — o liga/desliga</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>Switch</code> — o liga/desliga</h2>
+        <pre><code class="language-tsx" data-trim>
 const [lembrete, setLembrete] = useState(false);
 
 &lt;View style={styles.linha}&gt;
@@ -842,77 +1130,78 @@ const [lembrete, setLembrete] = useState(false);
   /&gt;
 &lt;/View&gt;
       </code></pre>
-      <p><code>onValueChange={setLembrete}</code> funciona sem função intermediária — mesmo padrão do <code>onChangeText</code>.</p>
-    </section>
+        <p><code>onValueChange={setLembrete}</code> funciona sem função intermediária — mesmo padrão do
+          <code>onChangeText</code>.</p>
+      </section>
 
-    <section>
-      <h2>O laço do componente controlado</h2>
-      <pre class="mermaid mermaid-grande">
+      <section>
+        <h2>O laço do componente controlado</h2>
+        <pre class="mermaid mermaid-grande">
 flowchart LR
     E["estado<br/>useState"] -->|"value"| C["TextInput<br/>ou Switch"]
     C -->|"onChangeText<br/>onValueChange"| S["setEstado"]
     S -->|"re-render"| E
       </pre>
-      <p>O componente <b>não guarda</b> o valor. O estado é a <b>fonte de verdade</b>.</p>
-      <h3>Esqueceu o <code>value</code>? O usuário mexe e a tela volta ao valor anterior.</h3>
-      <aside class="notes">
-        Esse é o bug clássico do componente controlado pela metade: o aluno
-        põe o onValueChange e esquece o value. O Switch "não funciona" e ele
-        acha que o componente está quebrado.
-        Vale demonstrar ao vivo — apagar o value e mostrar o Switch voltando.
-      </aside>
-    </section>
+        <p>O componente <b>não guarda</b> o valor. O estado é a <b>fonte de verdade</b>.</p>
+        <h3>Esqueceu o <code>value</code>? O usuário mexe e a tela volta ao valor anterior.</h3>
+        <aside class="notes">
+          Esse é o bug clássico do componente controlado pela metade: o aluno
+          põe o onValueChange e esquece o value. O Switch "não funciona" e ele
+          acha que o componente está quebrado.
+          Vale demonstrar ao vivo — apagar o value e mostrar o Switch voltando.
+        </aside>
+      </section>
 
-    <section class="centro">
-      <h1>☕ Intervalo</h1>
-      <h3>10 minutos</h3>
-    </section>
+      <section class="centro">
+        <h1>☕ Intervalo</h1>
+        <h3>10 minutos</h3>
+      </section>
 
-    <!-- ==================== PARTE 2 — STYLESHEET ==================== -->
+      <!-- ==================== PARTE 2 — STYLESHEET ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 2</h1>
-      <h2>StyleSheet</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 2</h1>
+        <h2>StyleSheet</h2>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h1>Não existe cascata.</h1>
-      <h3 class="destaque">Não existe herança de estilo.</h3>
-      <p class="fraco">(exceto <code>Text</code> dentro de <code>Text</code>)</p>
-      <aside class="notes">
-        Se a turma sair com UMA ideia desta aula, é esta.
-        Deixar o slide no ar alguns segundos antes de explicar.
-      </aside>
-    </section>
+      <section class="centro slide-impacto">
+        <h1>Não existe cascata.</h1>
+        <h3 class="destaque">Não existe herança de estilo.</h3>
+        <p class="fraco">(exceto <code>Text</code> dentro de <code>Text</code>)</p>
+        <aside class="notes">
+          Se a turma sair com UMA ideia desta aula, é esta.
+          Deixar o slide no ar alguns segundos antes de explicar.
+        </aside>
+      </section>
 
-    <section>
-      <h2>👔 A analogia do código de vestimenta</h2>
-      <div class="colunas">
-        <div>
-          <h3>No CSS</h3>
-          <p>Você anuncia a regra para o prédio inteiro:</p>
-          <blockquote><i>"todo texto deste site é Arial, 16px"</i></blockquote>
-          <p>Todo mundo lá dentro <b>herda</b> o anúncio.</p>
+      <section>
+        <h2>👔 A analogia do código de vestimenta</h2>
+        <div class="colunas">
+          <div>
+            <h3>No CSS</h3>
+            <p>Você anuncia a regra para o prédio inteiro:</p>
+            <blockquote><i>"todo texto deste site é Arial, 16px"</i></blockquote>
+            <p>Todo mundo lá dentro <b>herda</b> o anúncio.</p>
+          </div>
+          <div>
+            <h3>Em React Native</h3>
+            <p><b>Não existe alto-falante.</b></p>
+            <p>Cada componente <b class="destaque">se veste sozinho</b>.</p>
+            <p class="fraco">Cinco textos iguais = cinco vezes o estilo.</p>
+          </div>
         </div>
-        <div>
-          <h3>Em React Native</h3>
-          <p><b>Não existe alto-falante.</b></p>
-          <p>Cada componente <b class="destaque">se veste sozinho</b>.</p>
-          <p class="fraco">Cinco textos iguais = cinco vezes o estilo.</p>
-        </div>
-      </div>
-      <aside class="notes">
-        Enfatizar: repetir estilo aqui é NORMAL, não é falta de habilidade.
-        E é justamente por isso que a Parte 5 (tokens) existe — ela é a
-        resposta de ENGENHARIA para a ausência da cascata.
-        Essa amarração é importante: senão a Parte 5 parece arbitrária.
-      </aside>
-    </section>
+        <aside class="notes">
+          Enfatizar: repetir estilo aqui é NORMAL, não é falta de habilidade.
+          E é justamente por isso que a Parte 5 (tokens) existe — ela é a
+          resposta de ENGENHARIA para a ausência da cascata.
+          Essa amarração é importante: senão a Parte 5 parece arbitrária.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Cascata vs. sem cascata</h2>
-      <pre class="mermaid mermaid-grande">
+      <section>
+        <h2>Cascata vs. sem cascata</h2>
+        <pre class="mermaid mermaid-grande">
 flowchart TB
     subgraph CSS["CSS na web — cascata"]
         direction TB
@@ -924,28 +1213,30 @@ flowchart TB
         R3["estilo no Text"] -->|"herda"| R4["Text aninhado"]
     end
       </pre>
-      <p class="fraco">No bloco do CSS o estilo desce sozinho pela árvore. No bloco do React Native, a única seta de herança vai de <code>Text</code> para <code>Text</code>.</p>
-    </section>
+        <p class="fraco">No bloco do CSS o estilo desce sozinho pela árvore. No bloco do React Native, a única seta de
+          herança vai de <code>Text</code> para <code>Text</code>.</p>
+      </section>
 
-    <section>
-      <h2>As outras diferenças de fundo</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>As outras diferenças de fundo</h2>
+        <pre><code class="language-tsx" data-trim>
 { padding: 16 }         // ✅ número puro — são dp
 { padding: '16px' }     // ❌ unidade CSS não existe
 { width: '100%' }       // ✅ percentual funciona, como string
 { fontSize: '1.5rem' }  // ❌ não há rem, em, vh, vw
       </code></pre>
-      <ul>
-        <li><b>Sem seletores</b> — nada de <code>.classe</code>, <code>#id</code>, <code>&gt;</code>, <code>:first-child</code></li>
-        <li><b>Sem <code>:hover</code></b> — não há mouse. Há <code>pressed</code></li>
-        <li><b><code>camelCase</code></b> — <code>backgroundColor</code>, não <code>background-color</code></li>
-        <li><b>Subconjunto</b> do CSS</li>
-      </ul>
-    </section>
+        <ul>
+          <li><b>Sem seletores</b> — nada de <code>.classe</code>, <code>#id</code>, <code>&gt;</code>,
+            <code>:first-child</code></li>
+          <li><b>Sem <code>:hover</code></b> — não há mouse. Há <code>pressed</code></li>
+          <li><b><code>camelCase</code></b> — <code>backgroundColor</code>, não <code>background-color</code></li>
+          <li><b>Subconjunto</b> do CSS</li>
+        </ul>
+      </section>
 
-    <section>
-      <h2>As formas de passar <code>style</code></h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>As formas de passar <code>style</code></h2>
+        <pre><code class="language-tsx" data-trim>
 &lt;View style={styles.card} /&gt;                                 // objeto
 
 &lt;View style={[styles.card, styles.destacado]} /&gt;             // array
@@ -958,43 +1249,43 @@ flowchart TB
   concluido &amp;&amp; styles.cardConcluido,
   urgente &amp;&amp; styles.cardUrgente]} /&gt;
       </code></pre>
-    </section>
+      </section>
 
-    <section>
-      <h2>Precedência: o último vence</h2>
-      <pre class="mermaid">
+      <section>
+        <h2>Precedência: o último vence</h2>
+        <pre class="mermaid">
 flowchart LR
     A["style={[ a, b, c ]}"] --> B["mescla da esquerda<br/>para a direita"]
     B --> C["conflito:<br/>o ULTIMO vence"]
     C --> D["false, null, undefined<br/>sao ignorados"]
       </pre>
-      <pre><code class="language-tsx" data-trim>
+        <pre><code class="language-tsx" data-trim>
 &lt;Text style={[{ color: 'blue' }, { color: 'red' }]}&gt;Que cor?&lt;/Text&gt;
       </code></pre>
-      <h3>Vermelho. É <code>Object.assign({}, a, b)</code>.</h3>
-      <aside class="notes">
-        PERGUNTAR antes de revelar. Deixar a turma responder em voz alta.
-        Quem lembrar de Object.assign nunca mais erra isso.
-      </aside>
-    </section>
+        <h3>Vermelho. É <code>Object.assign({}, a, b)</code>.</h3>
+        <aside class="notes">
+          PERGUNTAR antes de revelar. Deixar a turma responder em voz alta.
+          Quem lembrar de Object.assign nunca mais erra isso.
+        </aside>
+      </section>
 
-    <section>
-      <h2>O que <code>StyleSheet.create</code> faz</h2>
-      <div class="caixa-ok">
-        <b>✅ Valida em tempo de tipo</b> e dá autocomplete<br>
-        → <code>backgroundColour</code> vira erro de compilação
-      </div>
-      <div class="caixa-alerta">
-        <b>❌ Não faz mágica de performance</b>
-      </div>
-      <p>A história antiga: ele registrava os estilos e passava só um <b>ID pela ponte</b>.
-      A ponte <b>não existe mais</b> — foi removida na 0.84 (Aula 1, §3.4).</p>
-      <h3>Hoje o ganho é <span class="destaque">validação e organização</span>.</h3>
-    </section>
+      <section>
+        <h2>O que <code>StyleSheet.create</code> faz</h2>
+        <div class="caixa-ok">
+          <b>✅ Valida em tempo de tipo</b> e dá autocomplete<br>
+          → <code>backgroundColour</code> vira erro de compilação
+        </div>
+        <div class="caixa-alerta">
+          <b>❌ Não faz mágica de performance</b>
+        </div>
+        <p>A história antiga: ele registrava os estilos e passava só um <b>ID pela ponte</b>.
+          A ponte <b>não existe mais</b> — foi removida na 0.84 (Aula 1, §3.4).</p>
+        <h3>Hoje o ganho é <span class="destaque">validação e organização</span>.</h3>
+      </section>
 
-    <section>
-      <h2>🔴 Fato zumbi: o <code>as const</code></h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>🔴 Fato zumbi: o <code>as const</code></h2>
+        <pre><code class="language-tsx" data-trim>
 // ❌ O que o material antigo escrevia
 StyleSheet.create({
   container: { justifyContent: 'center' as const },
@@ -1005,14 +1296,15 @@ StyleSheet.create({
   container: { justifyContent: 'center' },
 });
       </code></pre>
-      <p>A assinatura de <code>create</code> <b>já preserva os literais</b>.</p>
-      <p><b>Onde ele importa:</b> objeto solto, <b>fora</b> de <code>create</code> — aí o TS alarga <code>'center'</code> para <code>string</code>.</p>
-      <h3>Aprenda a distinção, não a receita.</h3>
-    </section>
+        <p>A assinatura de <code>create</code> <b>já preserva os literais</b>.</p>
+        <p><b>Onde ele importa:</b> objeto solto, <b>fora</b> de <code>create</code> — aí o TS alarga
+          <code>'center'</code> para <code>string</code>.</p>
+        <h3>Aprenda a distinção, não a receita.</h3>
+      </section>
 
-    <section>
-      <h2>🔴 Fato zumbi: a sombra</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>🔴 Fato zumbi: a sombra</h2>
+        <pre><code class="language-tsx" data-trim>
 // ❌ Cinco props, resultado diferente em cada plataforma
 { shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1, shadowRadius: 4, elevation: 5 }
@@ -1020,66 +1312,71 @@ StyleSheet.create({
 // ✅ Uma linha, as duas plataformas
 { boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.12)' }
       </code></pre>
-      <p><code>boxShadow</code> funciona na <b>New Architecture</b> — que é a <b>única</b> desde a 0.82.</p>
-      <p class="fraco">Também chegou <code>filter</code>: blur, brightness, saturate.</p>
-      <aside class="notes">
-        Amarrar com a Aula 1: eles aprenderam que a arquitetura legada foi
-        removida na 0.84. Aqui está a consequência PRÁTICA e visível disso —
-        propriedades de estilo novas que só existem na New Architecture.
-      </aside>
-    </section>
+        <p><code>boxShadow</code> funciona na <b>New Architecture</b> — o <b>único modo</b> desde a <b>0.82</b>,
+          e desde a <b>0.84</b> a legada nem existe mais no código. No projeto de vocês, funciona.</p>
+        <p class="fraco">Também chegou <code>filter</code>: blur, brightness, saturate.</p>
+        <aside class="notes">
+          Amarrar com a Aula 1: eles aprenderam que a arquitetura legada foi
+          removida do código na 0.84 — e que desde a 0.82 a New Architecture já era
+        o único modo possível. Aqui está a consequência PRÁTICA e visível disso —
+          propriedades de estilo novas que só existem na New Architecture.
+        </aside>
+      </section>
 
-    <!-- ==================== CHECKPOINT ==================== -->
+      <!-- ==================== CHECKPOINT ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 3</h1>
-      <h2>Checkpoint</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 3</h1>
+        <h2>Checkpoint</h2>
+      </section>
 
-    <section>
-      <h2>Responda em dupla — 60 segundos cada</h2>
-      <ol>
-        <li>Coloquei <code>fontSize: 24</code> na <code>View</code> e o texto não mudou. <b>Por quê?</b></li>
-        <li>Onde vai o <code>padding</code> de um <code>ScrollView</code>? <b>Por que não no <code>style</code>?</b></li>
-        <li>Quero um botão com fundo gradiente e canto arredondado. <b><code>&lt;Button&gt;</code>?</b></li>
-        <li>Em <code>style={[a, b]}</code>: <code>a</code> diz <code>color:'blue'</code>, <code>b</code> diz <code>color:'red'</code>.
-        <b>Qual vence?</b> E se <code>b</code> for <code>false</code>?</li>
-      </ol>
-      <aside class="notes">
-        NÃO avançar para Flexbox sem isso.
-        Se travarem: retomar o CÓDIGO DE VESTIMENTA, não inventar analogia nova.
-        Se a dúvida for de precedência: escrever Object.assign({}, a, b) na lousa —
-        a maioria reconhece na hora.
-      </aside>
-    </section>
+      <section>
+        <h2>Responda em dupla — 60 segundos cada</h2>
+        <ol>
+          <li>Coloquei <code>fontSize: 24</code> na <code>View</code> e o texto não mudou. <b>Por quê?</b></li>
+          <li>Onde vai o <code>padding</code> de um <code>ScrollView</code>? <b>Por que não no <code>style</code>?</b>
+          </li>
+          <li>Quero um botão com fundo gradiente e canto arredondado. <b><code>&lt;Button&gt;</code>?</b></li>
+          <li>Em <code>style={[a, b]}</code>: <code>a</code> diz <code>color:'blue'</code>, <code>b</code> diz
+            <code>color:'red'</code>.
+            <b>Qual vence?</b> E se <code>b</code> for <code>false</code>?
+          </li>
+        </ol>
+        <aside class="notes">
+          NÃO avançar para Flexbox sem isso.
+          Se travarem: retomar o CÓDIGO DE VESTIMENTA, não inventar analogia nova.
+          Se a dúvida for de precedência: escrever Object.assign({}, a, b) na lousa —
+          a maioria reconhece na hora.
+        </aside>
+      </section>
 
-    <!-- ==================== PARTE 4 — FLEXBOX ==================== -->
+      <!-- ==================== PARTE 4 — FLEXBOX ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 4</h1>
-      <h2>Flexbox</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 4</h1>
+        <h2>Flexbox</h2>
+      </section>
 
-    <section>
-      <h2>🚶 A analogia da fila</h2>
-      <ul>
-        <li><b><code>flexDirection</code></b> — em que direção a fila anda?</li>
-        <li><b><code>justifyContent</code></b> — como as pessoas se distribuem <b>ao longo</b> da fila?</li>
-        <li><b><code>alignItems</code></b> — onde elas ficam <b>na largura</b> da fila?</li>
-      </ul>
-      <h3>Toda dúvida de Flexbox se resolve com uma pergunta:</h3>
-      <h2 class="destaque">"Qual é o eixo principal aqui?"</h2>
-      <aside class="notes">
-        Apresentar a analogia ANTES de qualquer propriedade.
-        Ela é o gancho que eles vão usar para lembrar disso depois.
-      </aside>
-    </section>
+      <section>
+        <h2>🚶 A analogia da fila</h2>
+        <ul>
+          <li><b><code>flexDirection</code></b> — em que direção a fila anda?</li>
+          <li><b><code>justifyContent</code></b> — como as pessoas se distribuem <b>ao longo</b> da fila?</li>
+          <li><b><code>alignItems</code></b> — onde elas ficam <b>na largura</b> da fila?</li>
+        </ul>
+        <h3>Toda dúvida de Flexbox se resolve com uma pergunta:</h3>
+        <h2 class="destaque">"Qual é o eixo principal aqui?"</h2>
+        <aside class="notes">
+          Apresentar a analogia ANTES de qualquer propriedade.
+          Ela é o gancho que eles vão usar para lembrar disso depois.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Os eixos trocam de lugar</h2>
-      <pre class="mermaid mermaid-grande">
+      <section>
+        <h2>Os eixos trocam de lugar</h2>
+        <pre class="mermaid mermaid-grande">
 flowchart TB
     subgraph COL["flexDirection: column — o DEFAULT"]
         direction TB
@@ -1090,23 +1387,24 @@ flowchart TB
         R1["eixo principal:<br/>horizontal"] --> R2["justifyContent<br/>move na HORIZONTAL"] --> R3["alignItems<br/>move na VERTICAL"]
     end
       </pre>
-      <h3>Não existe "<code>justifyContent</code> é horizontal". <span class="destaque">Depende da direção.</span></h3>
-    </section>
+        <h3>Não existe "<code>justifyContent</code> é horizontal". <span class="destaque">Depende da direção.</span>
+        </h3>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h1><code>flexDirection</code> default é <span class="destaque">column</span>.</h1>
-      <h3>Na web é <code>row</code>.</h3>
-      <p class="fraco">Este é o bug de layout nº 1 do semestre.</p>
-      <aside class="notes">
-        ESCREVER NA LOUSA E NÃO APAGAR até o fim da aula.
-        Toda vez que alguém no hands-on disser "não está indo para o lado",
-        apontar para a lousa em vez de responder.
-      </aside>
-    </section>
+      <section class="centro slide-impacto">
+        <h1><code>flexDirection</code> default é <span class="destaque">column</span>.</h1>
+        <h3>Na web é <code>row</code>.</h3>
+        <p class="fraco">Este é o bug de layout nº 1 do semestre.</p>
+        <aside class="notes">
+          ESCREVER NA LOUSA E NÃO APAGAR até o fim da aula.
+          Toda vez que alguém no hands-on disser "não está indo para o lado",
+          apontar para a lousa em vez de responder.
+        </aside>
+      </section>
 
-    <section>
-      <h2>O que acontece na prática</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O que acontece na prática</h2>
+        <pre><code class="language-tsx" data-trim>
 // Você quer categoria e status lado a lado
 linha: {
   justifyContent: 'space-between',   // ❌ distribui na VERTICAL
@@ -1118,46 +1416,70 @@ linha: {
   justifyContent: 'space-between',
 }
       </code></pre>
-      <h3>Se algo "não vai para o lado", checar <code>flexDirection</code> <b>primeiro</b>.</h3>
-      <blockquote><b>Segundo default que surpreende:</b> <code>alignItems</code> é <b>stretch</b> — filho sem largura ocupa a largura toda do pai.</blockquote>
-    </section>
+        <h3>Se algo "não vai para o lado", checar <code>flexDirection</code> <b>primeiro</b>.</h3>
+        <blockquote><b>Segundo default que surpreende:</b> <code>alignItems</code> é <b>stretch</b> — filho sem largura
+          ocupa a largura toda do pai.</blockquote>
+      </section>
 
-    <section>
-      <h2><code>justifyContent</code> — no eixo principal</h2>
-      <table>
-        <tr><th>Valor</th><th>Efeito</th></tr>
-        <tr><td><code>flex-start</code> <span class="fraco">(default)</span></td><td>tudo no começo</td></tr>
-        <tr><td><code>center</code></td><td>tudo no meio</td></tr>
-        <tr><td><code>flex-end</code></td><td>tudo no fim</td></tr>
-        <tr><td><code>space-between</code></td><td>pontas nas bordas, sobra dividida no meio</td></tr>
-        <tr><td><code>space-around</code></td><td>espaço em volta de cada item — bordas com metade</td></tr>
-        <tr><td><code>space-evenly</code></td><td>vãos <b>exatamente</b> iguais, bordas incluídas</td></tr>
-      </table>
-      <p><b><code>alignItems</code></b> — no eixo cruzado: <code>stretch</code> <span class="fraco">(default)</span> ·
-      <code>flex-start</code> · <code>center</code> · <code>flex-end</code> · <code>baseline</code></p>
-    </section>
+      <section>
+        <h2><code>justifyContent</code> — no eixo principal</h2>
+        <table>
+          <tr>
+            <th>Valor</th>
+            <th>Efeito</th>
+          </tr>
+          <tr>
+            <td><code>flex-start</code> <span class="fraco">(default)</span></td>
+            <td>tudo no começo</td>
+          </tr>
+          <tr>
+            <td><code>center</code></td>
+            <td>tudo no meio</td>
+          </tr>
+          <tr>
+            <td><code>flex-end</code></td>
+            <td>tudo no fim</td>
+          </tr>
+          <tr>
+            <td><code>space-between</code></td>
+            <td>pontas nas bordas, sobra dividida no meio</td>
+          </tr>
+          <tr>
+            <td><code>space-around</code></td>
+            <td>espaço em volta de cada item — bordas com metade</td>
+          </tr>
+          <tr>
+            <td><code>space-evenly</code></td>
+            <td>vãos <b>exatamente</b> iguais, bordas incluídas</td>
+          </tr>
+        </table>
+        <p><b><code>alignItems</code></b> — no eixo cruzado: <code>stretch</code> <span class="fraco">(default)</span> ·
+          <code>flex-start</code> · <code>center</code> · <code>flex-end</code> · <code>baseline</code>
+        </p>
+      </section>
 
-    <section>
-      <h2>Centralizar no meio da tela</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>Centralizar no meio da tela</h2>
+        <pre><code class="language-tsx" data-trim>
 tela: {
   flex: 1,                    // ← SEM isto, nada acontece
   justifyContent: 'center',   // centro vertical  (eixo principal)
   alignItems: 'center',       // centro horizontal (eixo cruzado)
 }
       </code></pre>
-      <h3>Sem <code>flex: 1</code>, a <code>View</code> tem só a altura do <b>conteúdo</b>.</h3>
-      <p>Centralizar dentro de uma caixa do tamanho exato do conteúdo não muda nada — <b>não há sobra para distribuir</b>.</p>
-      <aside class="notes">
-        A frase para eles levarem: Flexbox distribui ESPAÇO QUE EXISTE.
-        Antes de mexer em justifyContent, perguntar: este contêiner tem tamanho?
-        É o item C do exercício 4.
-      </aside>
-    </section>
+        <h3>Sem <code>flex: 1</code>, a <code>View</code> tem só a altura do <b>conteúdo</b>.</h3>
+        <p>Centralizar dentro de uma caixa do tamanho exato do conteúdo não muda nada — <b>não há sobra para
+            distribuir</b>.</p>
+        <aside class="notes">
+          A frase para eles levarem: Flexbox distribui ESPAÇO QUE EXISTE.
+          Antes de mexer em justifyContent, perguntar: este contêiner tem tamanho?
+          É o item C do exercício 4.
+        </aside>
+      </section>
 
-    <section>
-      <h2><code>flex</code>, <code>flexGrow</code>, <code>flexBasis</code></h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>flex</code>, <code>flexGrow</code>, <code>flexBasis</code></h2>
+        <pre><code class="language-tsx" data-trim>
 { flex: 1 }        // "ocupe o que sobrar"
                    // = flexGrow:1 + flexShrink:1 + flexBasis:0
 
@@ -1167,16 +1489,17 @@ tela: {
 
 { flexBasis: 100 } // tamanho INICIAL no eixo principal
       </code></pre>
-      <ul>
-        <li><b><code>flexBasis</code></b> = ponto de partida</li>
-        <li><b><code>flexGrow</code></b> = como a sobra é dividida</li>
-      </ul>
-      <blockquote>📌 Em RN, <code>flexShrink</code> default é <b>0</b> (na web é <code>1</code>). Por default os itens <b>não</b> encolhem.</blockquote>
-    </section>
+        <ul>
+          <li><b><code>flexBasis</code></b> = ponto de partida</li>
+          <li><b><code>flexGrow</code></b> = como a sobra é dividida</li>
+        </ul>
+        <blockquote>📌 Em RN, <code>flexShrink</code> default é <b>0</b> (na web é <code>1</code>). Por default os itens
+          <b>não</b> encolhem.</blockquote>
+      </section>
 
-    <section>
-      <h2>Grade: <code>flexWrap</code> + <code>gap</code></h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>Grade: <code>flexWrap</code> + <code>gap</code></h2>
+        <pre><code class="language-tsx" data-trim>
 grade: {
   flexDirection: 'row',
   flexWrap: 'wrap',
@@ -1188,53 +1511,88 @@ celula: {
   aspectRatio: 1,        // quadrado sem calcular altura
 }
       </code></pre>
-      <p><code>aspectRatio</code> poupa a conta de altura. <code>flexGrow</code> faz as células fecharem a largura <b>sem percentual na mão</b> — sobrevive a mudança de tamanho de tela.</p>
-    </section>
+        <p><code>aspectRatio</code> poupa a conta de altura. <code>flexGrow</code> faz as células fecharem a largura
+          <b>sem percentual na mão</b> — sobrevive a mudança de tamanho de tela.</p>
+      </section>
 
-    <section>
-      <h2>🔴 Fato zumbi: espaçar com <code>margin</code></h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>🔴 Fato zumbi: espaçar com <code>margin</code></h2>
+        <pre><code class="language-tsx" data-trim>
 // ❌ margem em cada filho
 celula: { margin: 5 }
       </code></pre>
-      <div class="caixa-alerta">
-        Entre dois vizinhos as margens <b>somam</b>: 5 + 5 = <b>10px</b>.<br>
-        Contra a borda há só <b>uma</b>: <b>5px</b>.<br>
-        → o vão interno é o <b>dobro</b> do externo. Layout irregular.
-      </div>
-      <pre><code class="language-tsx" data-trim>
+        <div class="caixa-alerta">
+          Entre dois vizinhos as margens <b>somam</b>: 5 + 5 = <b>10px</b>.<br>
+          Contra a borda há só <b>uma</b>: <b>5px</b>.<br>
+          → o vão interno é o <b>dobro</b> do externo. Layout irregular.
+        </div>
+        <pre><code class="language-tsx" data-trim>
 // ✅ gap no contêiner: espaço só ENTRE os filhos
 grade: { gap: 10 }
       </code></pre>
-      <h3><code>gap</code> · <code>padding</code> · <code>margin</code> = <b>entre</b> irmãos · <b>dentro</b> do contêiner · <b>em volta</b> do grupo</h3>
-    </section>
+        <h3><code>gap</code> · <code>padding</code> · <code>margin</code> = <b>entre</b> irmãos · <b>dentro</b> do
+          contêiner · <b>em volta</b> do grupo</h3>
+      </section>
 
-    <section>
-      <h2>Flexbox: React Native vs CSS</h2>
-      <table>
-        <tr><th></th><th>React Native</th><th>CSS</th></tr>
-        <tr><td><code>flexDirection</code> default</td><td><b class="destaque">column</b></td><td><code>row</code></td></tr>
-        <tr><td><code>flexShrink</code> default</td><td><b>0</b></td><td><code>1</code></td></tr>
-        <tr><td><code>alignContent</code> default</td><td><code>flex-start</code></td><td><code>stretch</code></td></tr>
-        <tr><td>Unidades</td><td>número (dp) ou <code>'%'</code></td><td><code>px</code>, <code>rem</code>, <code>vh</code>…</td></tr>
-        <tr><td><code>display: grid</code></td><td class="alerta">não existe</td><td>existe</td></tr>
-        <tr><td><code>float</code></td><td class="alerta">não existe</td><td>existe</td></tr>
-        <tr><td><code>position</code></td><td><code>relative</code> <code>absolute</code> <code>static</code></td><td>+ <code>fixed</code> <code>sticky</code></td></tr>
-      </table>
-      <p>🐸 <b>Para casa:</b> <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> (~20 min). Mas ele é <b>CSS</b> — lá o default é <code>row</code>.</p>
-    </section>
+      <section>
+        <h2>Flexbox: React Native vs CSS</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>React Native</th>
+            <th>CSS</th>
+          </tr>
+          <tr>
+            <td><code>flexDirection</code> default</td>
+            <td><b class="destaque">column</b></td>
+            <td><code>row</code></td>
+          </tr>
+          <tr>
+            <td><code>flexShrink</code> default</td>
+            <td><b>0</b></td>
+            <td><code>1</code></td>
+          </tr>
+          <tr>
+            <td><code>alignContent</code> default</td>
+            <td><code>flex-start</code></td>
+            <td><code>stretch</code></td>
+          </tr>
+          <tr>
+            <td>Unidades</td>
+            <td>número (dp) ou <code>'%'</code></td>
+            <td><code>px</code>, <code>rem</code>, <code>vh</code>…</td>
+          </tr>
+          <tr>
+            <td><code>display: grid</code></td>
+            <td class="alerta">não existe</td>
+            <td>existe</td>
+          </tr>
+          <tr>
+            <td><code>float</code></td>
+            <td class="alerta">não existe</td>
+            <td>existe</td>
+          </tr>
+          <tr>
+            <td><code>position</code></td>
+            <td><code>relative</code> <code>absolute</code> <code>static</code></td>
+            <td>+ <code>fixed</code> <code>sticky</code></td>
+          </tr>
+        </table>
+        <p>🐸 <b>Para casa:</b> <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> (~20 min). Mas ele é <b>CSS</b>
+          — lá o default é <code>row</code>.</p>
+      </section>
 
-    <!-- ==================== PARTE 5 — ORGANIZAÇÃO ==================== -->
+      <!-- ==================== PARTE 5 — ORGANIZAÇÃO ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Parte 5</h1>
-      <h2>Onde os estilos devem morar</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 5</h1>
+        <h2>Onde os estilos devem morar</h2>
+      </section>
 
-    <section>
-      <h2>A decisão, em duas perguntas</h2>
-      <pre class="mermaid mermaid-grande">
+      <section>
+        <h2>A decisão, em duas perguntas</h2>
+        <pre class="mermaid mermaid-grande">
 flowchart TD
     Q1{"E uma DECISAO DE DESIGN?<br/>cor, espacamento, tipografia"}
     Q2{"O bloco ficou grande<br/>demais para ler junto?"}
@@ -1247,12 +1605,12 @@ flowchart TD
     Q2 -->|"sim"| IRM
     Q2 -->|"nao"| LOC
       </pre>
-      <h3>Estilo específico fica junto do componente. <span class="destaque">Decisão de design</span> vira token.</h3>
-    </section>
+        <h3>Estilo específico fica junto do componente. <span class="destaque">Decisão de design</span> vira token.</h3>
+      </section>
 
-    <section>
-      <h2>O default: no rodapé do componente</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O default: no rodapé do componente</h2>
+        <pre><code class="language-tsx" data-trim>
 export function CardHabito({ titulo, categoria }: CardHabitoProps) {
   return (
     &lt;View style={styles.card}&gt;
@@ -1268,12 +1626,12 @@ const styles = StyleSheet.create({
   meta:   { fontSize: 12, color: '#666' },
 });
       </code></pre>
-      <p>É o padrão da comunidade e da doc oficial. <b>Comece sempre por aqui.</b></p>
-    </section>
+        <p>É o padrão da comunidade e da doc oficial. <b>Comece sempre por aqui.</b></p>
+      </section>
 
-    <section>
-      <h2><code>theme.ts</code> — tokens</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2><code>theme.ts</code> — tokens</h2>
+        <pre><code class="language-tsx" data-trim>
 export const cores = {
   fundo: '#FEF7EE', cartao: '#FFFFFF', texto: '#191919',
   textoFraco: '#6b6459', primaria: '#FF6002', sucesso: '#2e7d32',
@@ -1287,19 +1645,22 @@ export const tipografia = {
   legenda: { fontSize: 12, color: cores.textoFraco },
 } as const;
       </code></pre>
-      <blockquote>📌 <b>Aqui o <code>as const</code> faz sentido</b> — é objeto solto, fora de <code>create</code>. Sem ele, <code>'600'</code> alarga para <code>string</code>, que não é um <code>fontWeight</code> válido.</blockquote>
-    </section>
+        <blockquote>📌 <b>Aqui o <code>as const</code> faz sentido</b> — é objeto solto, fora de <code>create</code>.
+          Sem ele, <code>'600'</code> alarga para <code>string</code>, que não é um <code>fontWeight</code> válido.
+        </blockquote>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h1>Tokens são <span class="destaque">valores</span>.</h1>
-      <h3>Não são layouts prontos.</h3>
-      <p><code>cores.primaria</code> ✅ · <code>espaco.md</code> ✅<br>
-      <code>globalStyles.container</code> ❌</p>
-    </section>
+      <section class="centro slide-impacto">
+        <h1>Tokens são <span class="destaque">valores</span>.</h1>
+        <h3>Não são layouts prontos.</h3>
+        <p><code>cores.primaria</code> ✅ · <code>espaco.md</code> ✅<br>
+          <code>globalStyles.container</code> ❌
+        </p>
+      </section>
 
-    <section>
-      <h2>O anti-padrão que quase todo mundo comete</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O anti-padrão que quase todo mundo comete</h2>
+        <pre><code class="language-tsx" data-trim>
 // ❌ Isso não é design system — é folha de estilo global com outro nome
 export default StyleSheet.create({
   container: { flex: 1, padding: 20 },
@@ -1307,56 +1668,72 @@ export default StyleSheet.create({
   button: { backgroundColor: 'blue', padding: 10, borderRadius: 5 },
 });
       </code></pre>
-      <p><b>Por que dói:</b> <code>container</code> é <b>layout</b>, não decisão de design.
-      Quando uma tela precisar de <code>padding: 8</code>, você cria <code>container2</code> — ou sobrescreve
-      com <code>[globalStyles.container, {padding: 8}]</code> e perde a rastreabilidade.</p>
-      <h3>Você acoplou telas que não têm nada a ver uma com a outra.</h3>
-      <p class="fraco">Quer compartilhar um card? Compartilhe um <b>componente</b> <code>&lt;Card&gt;</code>, não um objeto de estilo.</p>
-    </section>
+        <p><b>Por que dói:</b> <code>container</code> é <b>layout</b>, não decisão de design.
+          Quando uma tela precisar de <code>padding: 8</code>, você cria <code>container2</code> — ou sobrescreve
+          com <code>[globalStyles.container, {padding: 8}]</code> e perde a rastreabilidade.</p>
+        <h3>Você acoplou telas que não têm nada a ver uma com a outra.</h3>
+        <p class="fraco">Quer compartilhar um card? Compartilhe um <b>componente</b> <code>&lt;Card&gt;</code>, não um
+          objeto de estilo.</p>
+      </section>
 
-    <section>
-      <h2>Objeto inline: quando é legítimo</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>Objeto inline: quando é legítimo</h2>
+        <pre><code class="language-tsx" data-trim>
 // ✅ O valor só existe em runtime
 &lt;View style={[styles.badge, { backgroundColor: corDoStatus(status) }]} /&gt;
 
 // ❌ Valores fixos soltos no JSX
 &lt;View style={{ padding: 16, borderRadius: 12, backgroundColor: '#fff' }} /&gt;
       </code></pre>
-      <p>O objeto é recriado a cada render. Num card isolado ninguém nota; numa tela com centenas de elementos, pesa.</p>
-      <blockquote>Mas o problema principal <b>não é performance</b> — é o número mágico espalhado pelo JSX, longe de qualquer decisão de design.</blockquote>
-    </section>
+        <p>O objeto é recriado a cada render. Num card isolado ninguém nota; numa tela com centenas de elementos, pesa.
+        </p>
+        <blockquote>Mas o problema principal <b>não é performance</b> — é o número mágico espalhado pelo JSX, longe de
+          qualquer decisão de design.</blockquote>
+      </section>
 
-    <section>
-      <h2>E o Tailwind? <span class="fraco">(contexto, fora do escopo)</span></h2>
-      <table>
-        <tr><th>Opção</th><th>Situação em ago/2026</th></tr>
-        <tr><td><b>NativeWind v4</b></td><td>Estável — mas exige <b>Tailwind v3</b></td></tr>
-        <tr><td><b>NativeWind v5</b></td><td>Preview, mira Tailwind v4 — <b>não estável</b></td></tr>
-        <tr><td><b>Uniwind</b></td><td>Novo, para Tailwind v4, API <code>className</code> compatível</td></tr>
-      </table>
-      <h3>A disciplina usa <code>StyleSheet</code>.</h3>
-      <p class="fraco">É o que a doc oficial ensina, é o que existe em qualquer código base, e é <b>a base sobre a qual essas bibliotecas são construídas</b>.</p>
-      <aside class="notes">
-        Mesma lição do TypeScript 7 na Aula 1:
-        VERSÃO MAIS NOVA ≠ VERSÃO RECOMENDADA.
-        E o argumento decisivo: quem aprende StyleSheet entende o que o
-        Tailwind faz por baixo. O contrário não é verdade.
-        Se estiver atrasado, este slide é o primeiro a cortar.
-      </aside>
-    </section>
+      <section>
+        <h2>E o Tailwind? <span class="fraco">(contexto, fora do escopo)</span></h2>
+        <table>
+          <tr>
+            <th>Opção</th>
+            <th>Situação em ago/2026</th>
+          </tr>
+          <tr>
+            <td><b>NativeWind v4</b></td>
+            <td>Estável — mas exige <b>Tailwind v3</b></td>
+          </tr>
+          <tr>
+            <td><b>NativeWind v5</b></td>
+            <td>Preview, mira Tailwind v4 — <b>não estável</b></td>
+          </tr>
+          <tr>
+            <td><b>Uniwind</b></td>
+            <td>Novo, para Tailwind v4, API <code>className</code> compatível</td>
+          </tr>
+        </table>
+        <h3>A disciplina usa <code>StyleSheet</code>.</h3>
+        <p class="fraco">É o que a doc oficial ensina, é o que existe em qualquer código base, e é <b>a base sobre a
+            qual essas bibliotecas são construídas</b>.</p>
+        <aside class="notes">
+          Mesma lição do TypeScript 7 na Aula 1:
+          VERSÃO MAIS NOVA ≠ VERSÃO RECOMENDADA.
+          E o argumento decisivo: quem aprende StyleSheet entende o que o
+          Tailwind faz por baixo. O contrário não é verdade.
+          Se estiver atrasado, este slide é o primeiro a cortar.
+        </aside>
+      </section>
 
-    <!-- ==================== FECHAMENTO ==================== -->
+      <!-- ==================== FECHAMENTO ==================== -->
 
-    <section class="centro divisor">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
-      <h1>Juntando tudo</h1>
-      <h2>O card estilizado</h2>
-    </section>
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Juntando tudo</h1>
+        <h2>O card estilizado</h2>
+      </section>
 
-    <section>
-      <h2>O card estilizado — o estilo</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O card estilizado — o estilo</h2>
+        <pre><code class="language-tsx" data-trim>
 const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo },
   conteudo: {                                        // ← ScrollView: padding AQUI
@@ -1379,11 +1756,11 @@ const styles = StyleSheet.create({
   areaBotao: { borderRadius: 8, overflow: 'hidden' },
 });
       </code></pre>
-    </section>
+      </section>
 
-    <section>
-      <h2>O card estilizado — o componente</h2>
-      <pre><code class="language-tsx" data-trim>
+      <section>
+        <h2>O card estilizado — o componente</h2>
+        <pre><code class="language-tsx" data-trim>
 export default function TelaHabitoDoDia() {          // ← sem JSX.Element
   const [status, setStatus] = useState&lt;StatusHabito&gt;(MOCK.status);
   const [lembrete, setLembrete] = useState(false);
@@ -1412,179 +1789,220 @@ export default function TelaHabitoDoDia() {          // ← sem JSX.Element
   );
 }
       </code></pre>
-    </section>
+      </section>
 
-    <section>
-      <h2>Sete coisas nesse código</h2>
-      <ol>
-        <li><b><code>gap</code></b> no card e no conteúdo — nenhuma <code>margin</code> para espaçar irmãos</li>
-        <li><b><code>boxShadow</code></b> em uma linha, no lugar do quarteto + <code>elevation</code></li>
-        <li><b><code>flexDirection: 'row'</code></b> explícito na linha</li>
-        <li>O <code>padding</code> foi para <b><code>contentContainerStyle</code></b>, não para o <code>style</code></li>
-        <li><b>Um estado, dois efeitos visuais</b> — <code>concluido</code> aparece em <b>dois</b> arrays</li>
-        <li><b><code>Text</code> com <code>onPress</code></b> e <b><code>Button</code> embrulhado numa <code>View</code></b> estilizada</li>
-        <li><b>Nenhum <code>as const</code></b> dentro de <code>create</code> e <b>nenhum <code>: JSX.Element</code></b></li>
-      </ol>
-      <aside class="notes">
-        O item 5 é o mais importante: UM estado gerando DOIS efeitos visuais,
-        sem nenhum if no JSX. É a ideia central da Parte 2 aplicada.
-      </aside>
-    </section>
+      <section>
+        <h2>Sete coisas nesse código</h2>
+        <ol>
+          <li><b><code>gap</code></b> no card e no conteúdo — nenhuma <code>margin</code> para espaçar irmãos</li>
+          <li><b><code>boxShadow</code></b> em uma linha, no lugar do quarteto + <code>elevation</code></li>
+          <li><b><code>flexDirection: 'row'</code></b> explícito na linha</li>
+          <li>O <code>padding</code> foi para <b><code>contentContainerStyle</code></b>, não para o <code>style</code>
+          </li>
+          <li><b>Um estado, dois efeitos visuais</b> — <code>concluido</code> aparece em <b>dois</b> arrays</li>
+          <li><b><code>Text</code> com <code>onPress</code></b> e <b><code>Button</code> embrulhado numa
+              <code>View</code></b> estilizada</li>
+          <li><b>Nenhum <code>as const</code></b> dentro de <code>create</code> e <b>nenhum
+              <code>: JSX.Element</code></b></li>
+        </ol>
+        <aside class="notes">
+          O item 5 é o mais importante: UM estado gerando DOIS efeitos visuais,
+          sem nenhum if no JSX. É a ideia central da Parte 2 aplicada.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Os fatos zumbis desta aula</h2>
-      <div class="tabela-larga">
-      <table>
-        <tr><th>O material antigo ensina</th><th>O que vale hoje</th></tr>
-        <tr><td><code>JSX.Element</code> como tipo de retorno</td><td>React 19 removeu o <code>JSX</code> global — omita a anotação</td></tr>
-        <tr><td><code>as const</code> dentro de <code>create</code></td><td>Desnecessário; <code>create</code> preserva literais</td></tr>
-        <tr><td><code>--template default@sdk-54</code> fixo</td><td>SDK <b>57</b>; iPhone com SDK 55+ via <code>sign.expo.dev</code></td></tr>
-        <tr><td><code>npm install react-dom@19.2.0</code></td><td><b><code>npx expo install</code></b></td></tr>
-        <tr><td>Quarteto <code>shadow*</code> + <code>elevation</code></td><td><b><code>boxShadow</code></b></td></tr>
-        <tr><td><code>margin: 5</code> em cada filho</td><td><b><code>gap</code></b></td></tr>
-        <tr><td><code>Button</code> com <code>color</code> igual nas duas plataformas</td><td>iOS tinge o <b>texto</b>, Android o <b>fundo</b></td></tr>
-        <tr><td>"Estilize o <code>&lt;Button&gt;</code>"</td><td><code>Button</code> <b>não aceita <code>style</code></b></td></tr>
-        <tr><td><code>flexDirection</code> default <code>row</code></td><td>Em RN é <b><code>column</code></b></td></tr>
-        <tr><td>"<code>create</code> otimiza performance"</td><td>Valida tipos e organiza</td></tr>
-      </table>
-      </div>
-      <aside class="notes">
-        Ler alguns em voz alta. Eles VÃO bater nesse material velho na
-        internet — é melhor chegarem lá vacinados.
-        Este slide é o resumo mais útil para revisão antes da prova.
-      </aside>
-    </section>
+      <section>
+        <h2>Os fatos zumbis desta aula</h2>
+        <div class="tabela-larga">
+          <table>
+            <tr>
+              <th>O material antigo ensina</th>
+              <th>O que vale hoje</th>
+            </tr>
+            <tr>
+              <td><code>JSX.Element</code> como tipo de retorno</td>
+              <td>React 19 removeu o <code>JSX</code> global — omita a anotação</td>
+            </tr>
+            <tr>
+              <td><code>as const</code> dentro de <code>create</code></td>
+              <td>Desnecessário; <code>create</code> preserva literais</td>
+            </tr>
+            <tr>
+              <td><code>--template default@sdk-54</code> fixo</td>
+              <td>SDK <b>57</b>; iPhone com SDK 55+ via <code>sign.expo.dev</code></td>
+            </tr>
+            <tr>
+              <td><code>npm install react-dom@19.2.0</code></td>
+              <td><b><code>npx expo install</code></b></td>
+            </tr>
+            <tr>
+              <td>Quarteto <code>shadow*</code> + <code>elevation</code></td>
+              <td><b><code>boxShadow</code></b></td>
+            </tr>
+            <tr>
+              <td><code>margin: 5</code> em cada filho</td>
+              <td><b><code>gap</code></b></td>
+            </tr>
+            <tr>
+              <td><code>Button</code> com <code>color</code> igual nas duas plataformas</td>
+              <td>iOS tinge o <b>texto</b>, Android o <b>fundo</b></td>
+            </tr>
+            <tr>
+              <td>"Estilize o <code>&lt;Button&gt;</code>"</td>
+              <td><code>Button</code> <b>não aceita <code>style</code></b></td>
+            </tr>
+            <tr>
+              <td><code>flexDirection</code> default <code>row</code></td>
+              <td>Em RN é <b><code>column</code></b></td>
+            </tr>
+            <tr>
+              <td>"<code>create</code> otimiza performance"</td>
+              <td>Valida tipos e organiza</td>
+            </tr>
+          </table>
+        </div>
+        <aside class="notes">
+          Ler alguns em voz alta. Eles VÃO bater nesse material velho na
+          internet — é melhor chegarem lá vacinados.
+          Este slide é o resumo mais útil para revisão antes da prova.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Hands-on — 25 min</h2>
-      <p><b>Exercícios 1 a 6 de <code>exercises.md</code></b>, no projeto do seu grupo.</p>
-      <ol>
-        <li><b>1 e 2</b> — associação + caça ao erro <span class="fraco">(sem computador, 8 min)</span></li>
-        <li><b>3</b> — <code>Card</code> com <code>boxShadow</code> e <code>gap</code> <span class="fraco">(7 min)</span></li>
-        <li><b>4</b> — previsão de Flexbox: <b>desenhe antes de rodar</b> <span class="fraco">(5 min)</span></li>
-        <li><b>5</b> — estilo condicional com <code>useState</code>, <code>Text onPress</code> e <code>Switch</code> <span class="fraco">(7 min)</span></li>
-      </ol>
-      <h3>No exercício 4, prever errado é o melhor momento da aula.</h3>
-      <aside class="notes">
-        Circular pela sala. Erros previsíveis, com resposta pronta:
-        texto solto · justifyContent sem row · imagem sem dimensão ·
-        esperar herança da View · style na prop do Button · JSX.Element copiado ·
-        '16px' · flex:1 sem pai com altura.
-      </aside>
-    </section>
+      <section>
+        <h2>Hands-on — 25 min</h2>
+        <p><b>Exercícios 1 a 6 de <code>exercises.md</code></b>, no projeto do seu grupo.</p>
+        <ol>
+          <li><b>1 e 2</b> — associação + caça ao erro <span class="fraco">(sem computador, 8 min)</span></li>
+          <li><b>3</b> — <code>Card</code> com <code>boxShadow</code> e <code>gap</code> <span class="fraco">(7
+              min)</span></li>
+          <li><b>4</b> — previsão de Flexbox: <b>desenhe antes de rodar</b> <span class="fraco">(5 min)</span></li>
+          <li><b>5</b> — estilo condicional com <code>useState</code>, <code>Text onPress</code> e <code>Switch</code>
+            <span class="fraco">(7 min)</span></li>
+        </ol>
+        <h3>No exercício 4, prever errado é o melhor momento da aula.</h3>
+        <aside class="notes">
+          Circular pela sala. Erros previsíveis, com resposta pronta:
+          texto solto · justifyContent sem row · imagem sem dimensão ·
+          esperar herança da View · style na prop do Button · JSX.Element copiado ·
+          '16px' · flex:1 sem pai com altura.
+        </aside>
+      </section>
 
-    <section>
-      <h2>Atividade aplicada</h2>
-      <p><b>Estilizar de verdade a tela do projeto</b> — <code>exercises.md</code>, Atividade 1</p>
-      <ul>
-        <li><code>theme.ts</code> com <b>tokens</b>: cores, espaço, tipografia</li>
-        <li><code>Card</code> reutilizável com <code>destacado?</code> via array de estilos</li>
-        <li>Formulário: <code>TextInput</code> + <code>Switch</code> em <code>ScrollView</code>, <code>Button</code> que desabilita com o campo vazio</li>
-        <li>Um layout Flexbox não trivial, espaçado <b>só com <code>gap</code></b></li>
-      </ul>
-      <div class="caixa-alerta">
-        <b>Proibido:</b> <code>JSX.Element</code> · <code>as const</code> em <code>create</code> ·
-        <code>margin</code> entre irmãos · quarteto <code>shadow*</code> ·
-        componente fora dos sete da aula · <code>any</code> · cor ou espaço mágico no componente
-      </div>
-    </section>
+      <section>
+        <h2>Atividade aplicada</h2>
+        <p><b>Estilizar de verdade a tela do projeto</b> — <code>exercises.md</code>, Atividade 1</p>
+        <ul>
+          <li><code>theme.ts</code> com <b>tokens</b>: cores, espaço, tipografia</li>
+          <li><code>Card</code> reutilizável com <code>destacado?</code> via array de estilos</li>
+          <li>Formulário: <code>TextInput</code> + <code>Switch</code> em <code>ScrollView</code>, <code>Button</code>
+            que desabilita com o campo vazio</li>
+          <li>Um layout Flexbox não trivial, espaçado <b>só com <code>gap</code></b></li>
+        </ul>
+        <div class="caixa-alerta">
+          <b>Proibido:</b> <code>JSX.Element</code> · <code>as const</code> em <code>create</code> ·
+          <code>margin</code> entre irmãos · quarteto <code>shadow*</code> ·
+          componente fora dos sete da aula · <code>any</code> · cor ou espaço mágico no componente
+        </div>
+      </section>
 
-    <section class="centro slide-impacto">
-      <h2>Vocês entraram com uma tela que funcionava e um estilo espalhado.</h2>
-      <h3>Saem com uma tela apresentável e um lugar definido para cada decisão de design.</h3>
-      <h3 class="destaque">E sem cascata — porque ela nunca existiu aqui.</h3>
-    </section>
+      <section class="centro slide-impacto">
+        <h2>Vocês entraram com uma tela que funcionava e um estilo espalhado.</h2>
+        <h3>Saem com uma tela apresentável e um lugar definido para cada decisão de design.</h3>
+        <h3 class="destaque">E sem cascata — porque ela nunca existiu aqui.</h3>
+      </section>
 
-    <section>
-      <h2>Para a próxima aula</h2>
-      <h3>Leitura obrigatória</h3>
-      <ul>
-        <li>Cap. 4 — Criando os primeiros componentes</li>
-        <li>Cap. 5 — Componentes estilizados</li>
-        <li>Cap. 6 — O básico de layout com o Flexbox</li>
-        <li><a href="https://reactnative.dev/docs/components-and-apis">React Native — Core Components and APIs</a></li>
-      </ul>
-      <h3>Recomendada</h3>
-      <ul>
-        <li><a href="https://reactnative.dev/docs/flexbox">Flexbox</a> ·
+      <section>
+        <h2>Para a próxima aula</h2>
+        <h3>Leitura obrigatória</h3>
+        <ul>
+          <li>Cap. 4 — Criando os primeiros componentes</li>
+          <li>Cap. 5 — Componentes estilizados</li>
+          <li>Cap. 6 — O básico de layout com o Flexbox</li>
+          <li><a href="https://reactnative.dev/docs/components-and-apis">React Native — Core Components and APIs</a>
+          </li>
+        </ul>
+        <h3>Recomendada</h3>
+        <ul>
+          <li><a href="https://reactnative.dev/docs/flexbox">Flexbox</a> ·
             <a href="https://reactnative.dev/docs/stylesheet">StyleSheet</a> ·
-            <a href="https://reactnative.dev/docs/layout-props">Layout Props</a></li>
-        <li>🐸 <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> — ~20 min</li>
-      </ul>
-      <p><b>Notas completas, com fontes de todos os dados citados:</b> <code>student-notes.md</code></p>
-    </section>
+            <a href="https://reactnative.dev/docs/layout-props">Layout Props</a>
+          </li>
+          <li>🐸 <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> — ~20 min</li>
+        </ul>
+        <p><b>Notas completas, com fontes de todos os dados citados:</b> <code>student-notes.md</code></p>
+      </section>
 
-    <section class="centro slide-capa">
-      <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
-      <h1>Perguntas?</h1>
-      <p class="fraco"><code>student-notes.md</code> · <code>exercises.md</code></p>
-      <p class="rodape-fonte">
-        Dados de versões e ferramentas verificados em 18/08/2026 ·
-        Fontes completas em student-notes.md
-      </p>
-    </section>
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h1>Perguntas?</h1>
+        <p class="fraco"><code>student-notes.md</code> · <code>exercises.md</code></p>
+        <p class="rodape-fonte">
+          Dados de versões e ferramentas verificados em 18/08/2026 ·
+          Fontes completas em student-notes.md
+        </p>
+      </section>
 
+    </div>
   </div>
-</div>
 
-<script src="vendor/reveal/reveal.js"></script>
-<script src="vendor/reveal/plugin/highlight.js"></script>
-<script src="vendor/reveal/plugin/notes.js"></script>
-<script src="vendor/reveal/plugin/search.js"></script>
-<script src="vendor/reveal/plugin/zoom.js"></script>
-<script src="vendor/mermaid/mermaid.min.js"></script>
+  <script src="vendor/reveal/reveal.js"></script>
+  <script src="vendor/reveal/plugin/highlight.js"></script>
+  <script src="vendor/reveal/plugin/notes.js"></script>
+  <script src="vendor/reveal/plugin/search.js"></script>
+  <script src="vendor/reveal/plugin/zoom.js"></script>
+  <script src="vendor/mermaid/mermaid.min.js"></script>
 
-<script>
-  // --------------------------------------------------------------------------
-  // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
-  // descobertas renderizando a página de verdade num navegador:
-  //
-  // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
-  //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
-  //    ainda vazios e os diagramas saem cortados.
-  //
-  // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
-  //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
-  //    dimensionar as caixas — dentro de um elemento `display: none` toda
-  //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
-  //    renderizam (a conta de layout estoura com dimensão zero).
-  //
-  //    Solução: forçar os slides visíveis SÓ durante a renderização dos
-  //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
-  //    e remover esse estilo antes de inicializar o reveal.
-  //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
-  //    inteiro, que é justamente o que precisamos medir.
-  // --------------------------------------------------------------------------
+  <script>
+    // --------------------------------------------------------------------------
+    // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
+    // descobertas renderizando a página de verdade num navegador:
+    //
+    // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
+    //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
+    //    ainda vazios e os diagramas saem cortados.
+    //
+    // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
+    //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
+    //    dimensionar as caixas — dentro de um elemento `display: none` toda
+    //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
+    //    renderizam (a conta de layout estoura com dimensão zero).
+    //
+    //    Solução: forçar os slides visíveis SÓ durante a renderização dos
+    //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
+    //    e remover esse estilo antes de inicializar o reveal.
+    //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
+    //    inteiro, que é justamente o que precisamos medir.
+    // --------------------------------------------------------------------------
 
-  // Paleta fixa da CESAR School (não acompanha o tema do sistema —
-  // todos os diagramas ficam em slides de fundo creme).
-  mermaid.initialize({
-    startOnLoad: false,          // nós disparamos manualmente, abaixo
-    theme: 'base',
-    securityLevel: 'loose',      // permite <br/> dentro dos rótulos
-    themeVariables: {
-      fontSize: '18px',
-      fontFamily: 'Barlow, Helvetica, sans-serif',
-      primaryColor: '#FEF7EE',
-      primaryTextColor: '#191919',
-      primaryBorderColor: '#FF6002',
-      lineColor: '#232323',
-      secondaryColor: '#F3E9DC',
-      tertiaryColor: '#FFB132',
-      clusterBkg: '#F3E9DC',
-      clusterBorder: '#FF6002',
-      pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
-      pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
-      pieOuterStrokeColor: '#FEF7EE',
-      pieSectionTextColor: '#FEF7EE',
-    },
-    flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
-  });
+    // Paleta fixa da CESAR School (não acompanha o tema do sistema —
+    // todos os diagramas ficam em slides de fundo creme).
+    mermaid.initialize({
+      startOnLoad: false,          // nós disparamos manualmente, abaixo
+      theme: 'base',
+      securityLevel: 'loose',      // permite <br/> dentro dos rótulos
+      themeVariables: {
+        fontSize: '18px',
+        fontFamily: 'Barlow, Helvetica, sans-serif',
+        primaryColor: '#FEF7EE',
+        primaryTextColor: '#191919',
+        primaryBorderColor: '#FF6002',
+        lineColor: '#232323',
+        secondaryColor: '#F3E9DC',
+        tertiaryColor: '#FFB132',
+        clusterBkg: '#F3E9DC',
+        clusterBorder: '#FF6002',
+        pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+        pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+        pieOuterStrokeColor: '#FEF7EE',
+        pieSectionTextColor: '#FEF7EE',
+      },
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+    });
 
-  (async () => {
-    // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
-    const estiloMedicao = document.createElement('style');
-    estiloMedicao.textContent = `
+    (async () => {
+      // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
+      const estiloMedicao = document.createElement('style');
+      estiloMedicao.textContent = `
       .reveal { opacity: 0 !important; }
       .reveal .slides,
       .reveal .slides > section,
@@ -1597,43 +2015,44 @@ export default function TelaHabitoDoDia() {          // ← sem JSX.Element
         transform: none !important;
       }
     `;
-    document.head.appendChild(estiloMedicao);
+      document.head.appendChild(estiloMedicao);
 
-    try {
-      // Renderiza um a um: um diagrama com problema não pode impedir os outros
-      // de aparecerem no meio da aula.
-      for (const el of document.querySelectorAll('pre.mermaid')) {
-        try {
-          await mermaid.run({ nodes: [el] });
-        } catch (erro) {
-          console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+      try {
+        // Renderiza um a um: um diagrama com problema não pode impedir os outros
+        // de aparecerem no meio da aula.
+        for (const el of document.querySelectorAll('pre.mermaid')) {
+          try {
+            await mermaid.run({ nodes: [el] });
+          } catch (erro) {
+            console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+          }
         }
+      } finally {
+        estiloMedicao.remove();
       }
-    } finally {
-      estiloMedicao.remove();
-    }
 
-    Reveal.initialize({
-      hash: true,              // URL acompanha o slide — dá para linkar um slide
-      slideNumber: 'c/t',      // "12 / 48" no canto
-      transition: 'slide',
-      transitionSpeed: 'fast',
-      controls: true,
-      progress: true,
-      overview: true,
-      center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
-      width: 1280,
-      height: 800,
-      margin: 0.06,
-      minScale: 0.2,
-      maxScale: 1.8,
-      pdfSeparateFragments: false,
-      plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
-    });
+      Reveal.initialize({
+        hash: true,              // URL acompanha o slide — dá para linkar um slide
+        slideNumber: 'c/t',      // "12 / 48" no canto
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controls: true,
+        progress: true,
+        overview: true,
+        center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
+        width: 1280,
+        height: 800,
+        margin: 0.06,
+        minScale: 0.2,
+        maxScale: 1.8,
+        pdfSeparateFragments: false,
+        plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+      });
 
-    // Slides marcados com .centro centralizam verticalmente também.
-    Reveal.on('ready', () => document.body.classList.add('pronto'));
-  })();
-</script>
+      // Slides marcados com .centro centralizam verticalmente também.
+      Reveal.on('ready', () => document.body.classList.add('pronto'));
+    })();
+  </script>
 </body>
+
 </html>

@@ -1,4 +1,4 @@
-# Notas de Estudo — Aula 1: Plataformas Móveis, TypeScript e React Native
+# Notas de Estudo — Aula 1: Plataformas Móveis e TypeScript
 
 > **Disciplina:** Desenvolvimento Mobile (2026.2.DM) — CESAR School
 > **Dados de versões e mercado:** conferidos em **7 de agosto de 2026**. Este material envelhece rápido; as fontes estão no final para você conferir por conta própria.
@@ -7,15 +7,16 @@
 
 ## Visão geral
 
-Esta aula responde três perguntas:
+Esta aula responde duas perguntas:
 
 1. **Onde meu app vai rodar?** → panorama das plataformas móveis e embarcadas.
 2. **Com que ferramenta eu descrevo esse app?** → TypeScript, revisado com foco em mobile.
-3. **Como eu escrevo uma interface nativa sem escrever Kotlin e Swift?** → React Native.
+
+A terceira pergunta — **"como eu escrevo uma interface nativa sem escrever Kotlin e Swift?"** — é o assunto da **Aula 2**, quando React Native entra em cena. Aqui construímos o terreno: que plataformas existem, como se decide entre elas, e como modelar o domínio de um app antes de haver qualquer tela.
 
 O fio condutor: você **já sabe** o essencial. TypeScript, componentes, estado, consumo de API — tudo isso transfere do web para o mobile quase intacto. O que muda é a **plataforma** embaixo.
 
-> 📱 **Sobre os exemplos deste material:** o domínio usado nos exemplos de código é o **Rastreador de Micro-hábitos e Condicionamento Físico** — um dos dois projetos da disciplina (o outro é o **App de Gestão e Rotina Pet**). Os mesmos conceitos se aplicam a qualquer um dos dois; só os nomes dos campos mudam.
+> 📱 **Sobre os exemplos deste material:** o domínio usado nos exemplos de código é o **Rastreador de Micro-hábitos e Condicionamento Físico** — o projeto que você constrói ao longo do semestre, no repositório `habit-tracker-expo`.
 
 ---
 
@@ -173,7 +174,7 @@ flowchart TB
 - **OpenHarmony:** 6.1 (mar/2026), versão LTS recomendada.
 - **Mercado na China (Q1/2026):** HarmonyOS **~19–20%**, à frente do iOS (~16–17%) pelo **7º trimestre consecutivo**. Global: ~5%.
 
-> 💡 **Por que isto aparece numa aula de React Native?** Porque a plataforma móvel que cresce mais rápido no mundo escolheu **TypeScript** como base da sua linguagem oficial. Não é coincidência: tipagem estática + sintaxe declarativa + ecossistema gigante é uma combinação difícil de bater. A aposta que você faz aprendendo TS vale em mais de uma plataforma.
+> 💡 **Por que isto aparece numa disciplina de desenvolvimento mobile com TypeScript?** Porque a plataforma móvel que cresce mais rápido no mundo escolheu **TypeScript** como base da sua linguagem oficial. Não é coincidência: tipagem estática + sintaxe declarativa + ecossistema gigante é uma combinação difícil de bater. A aposta que você faz aprendendo TS vale em mais de uma plataforma.
 
 ---
 
@@ -443,9 +444,11 @@ switch (estado.tipo) {
 
 Tente acessar `estado.dados` dentro do `case 'erro'` e o compilador recusa. **Os estados impossíveis deixaram de ser representáveis** — é isso que faz esse padrão valer o esforço.
 
-> 📌 Note que `T` aqui é **um único** `Habito`, não uma lista. O mesmo padrão vale para telas de lista (`EstadoTela<Habito[]>`), mas isso é assunto da Aula 2, quando `FlatList` entra em cena.
+> 📌 Note que `T` aqui é **um único** `Habito`, não uma lista. O mesmo padrão vale para telas de lista (`EstadoTela<Habito[]>`), mas a renderização de listas — `FlatList` e `SectionList` — será vista nas **próximas aulas**.
 
 ## 2.5 Tipando props de componentes
+
+> 📌 **Os componentes daqui em diante são ilustração, não conteúdo desta aula.** `View`, `Text`, `Pressable` e `StyleSheet` são React Native — você os aprende na **Aula 2**. O que interessa agora é o **tipo das props**, que é exatamente o mesmo que você já escreve em React no web.
 
 ```tsx
 import { View, Text, Pressable, StyleSheet } from 'react-native';
@@ -593,273 +596,19 @@ Guarde essa história: ela é uma lição real de engenharia. Uma versão pode s
 
 ---
 
-# Parte 3 — React Native
+# O que vem na Aula 2
 
-## 3.1 Definição
+Você modelou o domínio. Falta a tela.
 
-> **React Native é um framework que usa React e TypeScript para descrever a interface, mas renderiza componentes nativos reais da plataforma.**
+A **Aula 2** responde a pergunta que ficou aberta: como esse `Habito` que você acabou de tipar vira uma interface que roda no celular, sem escrever uma linha de Kotlin ou de Swift. O assunto é **React Native** — o que ele é, o que ele **não** é (não é uma WebView), como funciona por dentro (JSI, Fabric, TurboModules, Hermes) e como se cria um projeto Expo hoje.
 
-A parte que mais importa nessa frase é **"nativos reais"**.
+Guarde estas três coisas desta aula, porque a Aula 2 se apoia nelas:
 
-## 3.2 O que React Native NÃO é
+1. **Três das cinco plataformas usam JS/TS.** React Native não é uma aposta isolada — é o mesmo movimento que levou a Huawei ao ArkTS e a LG ao Enact.
+2. **A união discriminada.** O `EstadoTela<T>` da §2.4 vai virar, literalmente, o `switch` que decide o que a tela desenha.
+3. **Union literais em vez de `string`.** Todo status de tudo, o semestre inteiro.
 
-Este é o mal-entendido central do assunto, então vamos ser explícitos.
-
-**Abordagem WebView** (Cordova, Ionic clássico): o app é um navegador sem barra de endereço, exibindo o seu site. Seu `<div>` continua sendo um `<div>` dentro de um motor de renderização web.
-
-**React Native:** não existe DOM, não existe HTML, não existe CSS, não existe WebView.
-
-```tsx
-<View />    // → android.view.ViewGroup no Android,  UIView no iOS
-<Text />    // → TextView no Android,               UILabel no iOS
-<Image />   // → ImageView no Android,              UIImageView no iOS
-```
-
-```mermaid
-flowchart TB
-    subgraph WV["Híbrido / WebView — Cordova, Ionic clássico"]
-        direction TB
-        W1["Seu código<br/>HTML + CSS + JavaScript"] --> W2["WebView<br/>navegador embutido no app"] --> W3["div continua sendo div<br/>renderizado por um motor web"]
-    end
-    subgraph RNA["React Native"]
-        direction TB
-        R1["Seu código<br/>React + TypeScript"] --> R2["JSI + Fabric"] --> R3["ViewGroup no Android<br/>UIView no iOS<br/>componentes nativos reais"]
-    end
-```
-
-> **Leitura do diagrama:** os dois caminhos partem de código que você escreve, mas terminam em lugares diferentes. À esquerda, um navegador desenha a tela; à direita, o próprio sistema operacional desenha.
-
-O componente que aparece na tela é o **mesmo** que um app escrito em Kotlin ou Swift usaria. O usuário não está olhando uma página web disfarçada.
-
-### Analogia: o tradutor simultâneo
-
-Você escreve o discurso em uma língua (React + TypeScript). Um intérprete o entrega, em tempo real, na língua de cada plateia (Android, iOS). A plateia **não lê legenda** — ela ouve alguém falando a língua dela, com o sotaque dela.
-
-## 3.3 Do web para o mobile: o mapa de tradução
-
-| Web | React Native | Observação |
-|---|---|---|
-| `<div>` | `<View>` | contêiner |
-| `<p>`, `<span>`, `<h1>` | `<Text>` | **todo** texto precisa estar aqui dentro |
-| `<img>` | `<Image>` | `source={{ uri: '...' }}` ou `require()` |
-| `<button>`, `<a>` | `<Pressable>` | há também `TouchableOpacity`, `Button` |
-| `<input>` | `<TextInput>` | |
-| scroll da página | `<ScrollView>` | não há scroll implícito no `<View>` |
-| `className` / arquivo CSS | `StyleSheet.create({...})` | objetos JavaScript |
-
-> 📌 **Ainda não chegamos em `<FlatList>`/`<SectionList>`.** Elas resolvem a renderização de **listas grandes** (só desenham o que está visível na tela) e entram na Aula 2, junto com navegação entre telas. Hoje trabalhamos com componentes isolados.
-
-### As quatro pegadinhas que pegam todo mundo
-
-```tsx
-// 1. Texto solto quebra em runtime
-<View>Olá</View>                    // ❌ erro
-<View><Text>Olá</Text></View>       // ✅
-
-// 2. flexDirection default é 'column', não 'row'
-const styles = StyleSheet.create({
-  linha: { flexDirection: 'row' },  // precisa ser explícito
-});
-
-// 3. Números não têm unidade — são "density-independent pixels"
-{ padding: 16 }        // ✅
-{ padding: '16px' }    // ❌
-{ width: '100%' }      // ✅ percentual em string funciona
-
-// 4. Não há herança de estilo de texto entre Views
-// Definir fontSize numa <View> não afeta o <Text> dentro dela
-```
-
-E lembre: **não existe `:hover`** — não há mouse. Há estados de toque (`pressed`).
-
-## 3.4 Como funciona por dentro: a Nova Arquitetura
-
-Todo o React Native atual roda sobre quatro peças:
-
-```mermaid
-flowchart LR
-    JS["Seu código<br/>React + TypeScript"]
-    HER["Hermes<br/>engine JS<br/>bytecode pré-compilado"]
-    CPP["Camada C++"]
-    FAB["Fabric<br/>renderizador"]
-    TM["TurboModules<br/>módulos nativos lazy"]
-    NAT["Views nativas<br/>ViewGroup · UIView"]
-    API["APIs do sistema<br/>câmera, GPS, storage"]
-
-    JS --> HER
-    HER <-->|"JSI<br/>chamadas diretas e síncronas"| CPP
-    CPP --> FAB
-    CPP --> TM
-    FAB --> NAT
-    TM --> API
-```
-
-> **Leitura do diagrama:** seu código roda no Hermes; o JSI é a via de mão dupla entre JavaScript e C++; dali saem dois caminhos — o Fabric desenha a tela, os TurboModules acessam o hardware.
-
-### JSI — JavaScript Interface
-
-Permite que JavaScript e C++ chamem um ao outro **diretamente e de forma síncrona**, por referência a objetos.
-
-Isto substituiu a antiga "**bridge**": um canal assíncrono que serializava **tudo** em JSON entre JS e nativo. Cada toque, cada atualização de layout virava texto, atravessava a ponte e era desserializado do outro lado. Era o gargalo histórico do React Native.
-
-```mermaid
-flowchart TB
-    subgraph OLD["Arquitetura legada — REMOVIDA na 0.84"]
-        direction LR
-        O1["JavaScript"] -->|"serializa em JSON"| O2["Bridge<br/>assíncrona"] -->|"desserializa"| O3["Nativo"]
-    end
-    subgraph NEW["Nova Arquitetura — hoje"]
-        direction LR
-        N1["JavaScript"] <-->|"JSI: referência direta, síncrona"| N2["Nativo"]
-    end
-    O3 ~~~ N1
-```
-
-> **Leitura do diagrama:** em cima, três etapas com conversão para texto no meio do caminho. Embaixo, uma única ligação direta nos dois sentidos.
-
-> 🔴 **Importante:** a bridge **não existe mais**. A arquitetura legada foi **removida do código** na versão 0.84 (fevereiro de 2026). Se você encontrar um artigo explicando "a ponte assíncrona do React Native", ele está descrevendo software que já não existe. Isso é um excelente detector de material desatualizado.
-
-### Fabric — o renderizador
-
-Responsável por criar e gerenciar a árvore de views nativas. Trabalha com uma árvore imutável e permite renderização síncrona quando necessário.
-
-### TurboModules — módulos nativos
-
-Módulos nativos com carregamento **lazy** (só sobem quando usados, o que acelera o startup) e interface **fortemente tipada**.
-
-A parte elegante: a interface é gerada pelo **Codegen** a partir de uma especificação escrita em **TypeScript**.
-
-> 💡 **Pare um segundo nisso:** você escreve um arquivo `.ts` descrevendo o módulo, e o Codegen gera o código C++/Java/Objective-C correspondente. **O seu TypeScript gera código nativo.**
-
-### Hermes — a engine JavaScript
-
-Engine feita especificamente para mobile: o JavaScript é pré-compilado para **bytecode em tempo de build**, o que significa startup mais rápido, menos uso de memória e app menor. É a engine **default** em iOS e Android desde a 0.84.
-
-### Linha do tempo (para citar com precisão)
-
-```mermaid
-flowchart LR
-    V76["0.76<br/>New Architecture<br/>vira default"]
-    V78["0.78<br/>Bridgeless default<br/>React 19 chega"]
-    V82["0.82 · out/2025<br/>Único modo<br/>não dá mais para desligar"]
-    V84["0.84 · fev/2026<br/>Legada REMOVIDA<br/>Hermes default"]
-    V86["0.86 · jun/2026<br/>Repo migra para<br/>a org react"]
-
-    V76 --> V78 --> V82 --> V84 --> V86
-```
-
-| Versão | O que aconteceu |
-|---|---|
-| 0.76 | New Architecture passa a ser **default** |
-| 0.78 | **Bridgeless mode** passa a ser default; React 19 chega ao RN |
-| 0.82 (out/2025) | New Architecture torna-se o **único modo** |
-| 0.84 (fev/2026) | Arquitetura legada **removida**; Hermes default; Node 22.11+ mínimo |
-| 0.86 (jun/2026) | Repositório migra da org `facebook` para a org `react` no GitHub |
-
-**Hoje (ago/2026): React Native 0.86.2, rodando React 19.2.**
-
-React Native e React agora estão sob a **React Foundation** independente — daí a mudança de organização no GitHub.
-
-## 3.5 Começando um projeto em 2026
-
-A recomendação oficial de `reactnative.dev` é **usar um framework**, e o framework recomendado é o **Expo**:
-
-```bash
-npx create-expo-app@latest meu-app
-cd meu-app
-npx expo start
-```
-
-Abra o app **Expo Go** no seu celular, escaneie o QR code, e o app está rodando **no seu aparelho**.
-
-- **Expo SDK 57** (jun/2026) = React Native 0.86 + React 19.2.
-- Com Expo Go você **não precisa instalar Android Studio nem Xcode** para começar. Quem não tem Mac consegue desenvolver e testar em iPhone.
-- Requisito: **Node.js 22.11 ou superior**.
-
-### Sem framework (só para restrições incomuns)
-
-```bash
-npx @react-native-community/cli@latest init MeuApp
-```
-
-### 🔴 O comando que não existe mais
-
-```bash
-npx react-native init MeuApp   # ❌ MORTO
-```
-
-Depreciado na versão 0.75, **removido na 0.77** (janeiro de 2025).
-
-**Use isto como filtro de qualidade:** se um tutorial, vídeo ou resposta de StackOverflow usa `react-native init`, ele tem pelo menos um ano e meio e provavelmente ensina a arquitetura antiga também. Confira sempre a data.
-
-## 3.6 Primeiro componente: um card, não uma lista
-
-Nesta aula, a prática se limita a um componente isolado — sem lista, sem navegação. É exatamente o que você vai fazer no hands-on desta aula e no Exercício 8 de `exercises.md`.
-
-```tsx
-import { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-
-type StatusHabito = 'pendente' | 'concluido' | 'pulado';
-
-interface Habito {
-  id: string;
-  titulo: string;
-  categoria: string;
-  status: StatusHabito;
-  streakDias: number;
-}
-
-function rotuloStatus(status: StatusHabito): string {
-  switch (status) {
-    case 'pendente':   return 'Pendente';
-    case 'concluido':  return 'Concluído';
-    case 'pulado':     return 'Pulado';
-  }
-}
-
-const MOCK: Habito = {
-  id: '1',
-  titulo: 'Beber 2L de água',
-  categoria: 'saude',
-  status: 'pendente',
-  streakDias: 4,
-};
-
-export default function App() {
-  const [status, setStatus] = useState<StatusHabito>(MOCK.status);
-  const concluido = status === 'concluido';
-
-  return (
-    <View style={styles.container}>
-      <Pressable
-        style={styles.card}
-        onPress={() => setStatus(concluido ? 'pendente' : 'concluido')}
-      >
-        <Text style={styles.titulo}>{MOCK.titulo}</Text>
-        <View style={styles.linha}>
-          <Text style={styles.meta}>{MOCK.categoria}</Text>
-          <Text style={styles.meta}>{rotuloStatus(status)}</Text>
-        </View>
-        <Text style={styles.streak}>
-          🔥 {concluido ? MOCK.streakDias + 1 : MOCK.streakDias} dias seguidos
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 48, backgroundColor: '#fff' },
-  card:      { padding: 16, borderRadius: 8, backgroundColor: '#f2f2f2' },
-  titulo:    { fontSize: 18, fontWeight: '600' },
-  linha:     { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  meta:      { fontSize: 12, color: '#666' },
-  streak:    { marginTop: 8, fontStyle: 'italic' },
-});
-```
-
-Note quantas coisas você **já sabia**: `useState`, props, renderização condicional, tipagem. O que é novo são os nomes dos componentes e o `StyleSheet`. Renderizar **várias** dessas entradas (com `FlatList`) é o primeiro assunto da Aula 2.
+> ⚙️ **Para chegar pronto na Aula 2:** instale o **Node.js 22.11 ou superior** e o app **Expo Go** no seu celular. O hands-on da próxima aula começa com o projeto rodando no seu aparelho, e não haverá tempo para instalar Node em sala.
 
 ---
 
@@ -867,16 +616,14 @@ Note quantas coisas você **já sabia**: `useState`, props, renderização condi
 
 | Erro | Causa | Correção |
 |---|---|---|
-| `Text strings must be rendered within a <Text> component` | Texto solto dentro de `<View>` | Envolva em `<Text>` |
-| QR code do Expo não conecta | Celular e notebook em redes diferentes | Mesma rede Wi-Fi, ou `npx expo start --tunnel` |
-| Layout empilha verticalmente sem querer | `flexDirection` default é `column` | `flexDirection: 'row'` explícito |
-| Estilo ignorado | Unidade CSS em valor numérico | Use número puro: `padding: 16` |
-| `react-native init` não funciona | Removido na 0.77 | `npx create-expo-app@latest` |
-| Erros estranhos no `expo start` | Node antigo | Node 22.11+ |
-| `typescript-eslint` quebra | TypeScript 7 sem API programática | Fixe TS na linha 6.x |
+| `typescript-eslint` quebra | TypeScript 7 sem API programática | Fixe TS na linha 6.x (§2.9) |
 | Tela mostra loading e erro ao mesmo tempo | Booleanos de estado independentes | União discriminada (§2.4) |
-| `undefined is not an object` em runtime | `any` ou `as` escondendo o problema | `unknown` + type guard |
-| "Achei que RN gerava HTML" | Confusão com WebView | `<View>` → `UIView`/`ViewGroup`; não há DOM |
+| `undefined is not an object` em runtime | `any` ou `as` escondendo o problema | `unknown` + type guard (§2.8) |
+| O `switch` de status não compila mais | Alguém adicionou um valor ao union | É o compilador te avisando — trate o caso novo (§2.3) |
+| Erro de digitação em status passa batido | Campo tipado como `string` | Union literal (§2.3) |
+| Tipos do formulário e da entidade desalinhados | Interfaces escritas à mão em paralelo | Derive com `Omit`/`Pick`/`Partial` (§2.7) |
+| "Confundi HarmonyOS com HarmonyOS NEXT" | São produtos diferentes | Tabela dos três nomes (§1.4) |
+| "Achei que o Galaxy Watch rodasse Tizen" | Verdade até 2021 | Wear OS desde o Galaxy Watch 4 (§1.5) |
 
 ---
 
@@ -900,12 +647,9 @@ Responda sem olhar as notas. Se travar em alguma, releia a seção indicada.
 11. Escreva o tipo do payload de criação de um hábito derivando de `Habito` com um utility type. Por que derivar é melhor que escrever à mão? (§2.7)
 12. Por que a disciplina recomenda TypeScript 6.x e não 7.x, sendo o 7 mais rápido? (§2.9)
 
-**React Native**
-13. Complete: "React Native não é uma WebView porque `<View>` se torna ______ no Android e ______ no iOS."
-14. O que JSI substituiu, e por que a coisa substituída era um problema? (§3.4)
-15. O que o Codegen gera, e a partir de qual linguagem? (§3.4)
-16. Qual comando se usa hoje para criar um projeto React Native, e qual comando está morto desde quando? (§3.5)
-17. Por que o primeiro exemplo de componente desta aula usa um card único em vez de uma lista? (§3.6)
+**Decisão de plataforma**
+13. Um cliente pede um app que precisa de câmera, GPS e presença na loja, com dois devs que só sabem TypeScript e três meses de prazo. Qual abordagem você recomenda, e quais **duas restrições do enunciado** sustentam sua resposta? (§1.8)
+14. Cite um caso em que **nativo** ainda é a resposta certa, mesmo com um time que domina React. (§1.8)
 
 ---
 
@@ -913,17 +657,17 @@ Responda sem olhar as notas. Se travar em alguma, releia a seção indicada.
 
 **Obrigatória para a próxima aula**
 - Capítulo 1 — História do Desenvolvimento do React Native, em *React Native: Desenvolvimento de aplicativos mobile com React*
-- [React Native — Core Components and APIs](https://reactnative.dev/docs/components-and-apis)
+- [TypeScript Handbook — Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) — a base das uniões discriminadas da §2.4
 
 **Recomendada**
-- [React Native — Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment)
+- [React Native — Introduction](https://reactnative.dev/docs/getting-started) — só a página de abertura, para chegar com o vocabulário
 - [Expo — Get Started](https://docs.expo.dev/get-started/introduction/)
-- [TypeScript Handbook — Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) (a base das uniões discriminadas)
+- [TypeScript Handbook — Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html)
 
 **Para quem quiser ir além**
-- [React Native 0.84 — remoção da arquitetura legada](https://reactnative.dev/blog/2026/02/11/react-native-0.84)
-- [Announcing TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
 - [AOSP — Architecture](https://source.android.com/docs/core/architecture)
+- [Announcing TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
+- [ArkTS — visão geral](https://en.wikipedia.org/wiki/ArkTS) — a linguagem oficial do HarmonyOS, para ver o TypeScript virar outra coisa
 
 ---
 
@@ -950,9 +694,8 @@ Verificadas em 7 de agosto de 2026.
 **webOS**
 - [webOS TV — Web API and Web Engine](https://webostv.developer.lge.com/develop/specifications/web-api-and-web-engine) · [webOS TV SDK](https://webostv.developer.lge.com/develop/tools/sdk-introduction)
 
-**React Native / Expo / TypeScript / React**
-- [React Native 0.86](https://reactnative.dev/blog/2026/06/11/react-native-0.86) · [0.84](https://reactnative.dev/blog/2026/02/11/react-native-0.84) · [0.77](https://reactnative.dev/blog/2025/01/21/version-0.77)
-- [React Native — Environment Setup](https://reactnative.dev/docs/environment-setup)
-- [Expo SDK 57](https://expo.dev/changelog/sdk-57)
+**TypeScript e React**
 - [Announcing TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
-- [React releases](https://github.com/facebook/react/releases)
+- [React releases](https://github.com/facebook/react/releases) — a mudança de `ref` para prop normal no React 19 (§2.5)
+
+> As fontes de React Native, Expo e da Nova Arquitetura estão em `aulas/aula-02-react-native/student-notes.md`, onde esse conteúdo passou a morar.

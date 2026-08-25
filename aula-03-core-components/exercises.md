@@ -1,18 +1,21 @@
-# Exercícios e Atividades — Aula 3: Core Components, StyleSheet e Flexbox
+# Exercícios e Atividades — Aula 3 (domínio Hábito)
 
 > **Disciplina:** Desenvolvimento Mobile (2026.2.DM) — CESAR School
-> **Domínio usado nos exercícios:** Rastreador de Micro-hábitos (`Habito`). Se o seu grupo ficou com o **App de Gestão e Rotina Pet**, use a tabela de equivalência no final.
+> **Domínio deste arquivo:** Rastreador de Micro-hábitos e Condicionamento Físico (`Habito`).
+> **Está no outro projeto?** Se o seu app é o **App de Gestão e Rotina Pet**, use o arquivo `practice.md` — mesma estrutura, mesmos conceitos, domínio `Pet`.
 
 | Projeto | Repositório | Branch da disciplina |
 |---|---|---|
-| Rastreador de Micro-hábitos e Condicionamento Físico | `habit-tracker-expo` | `feature/ads025_2026-2` |
-| App de Gestão e Rotina Pet | `pet-routine-expo` | `feature/ads025_2026-2` |
+| Rastreador de Micro-hábitos e Condicionamento Físico | `habit-tracker-expo` | `feature/aula_03` |
 
 ## Como usar este arquivo
 
 - **Parte 1 — Exercícios guiados** (em sala, ~25 min): foco em **acurácia**. São propositalmente simples. O objetivo é usar o conceito **corretamente**, não criativamente. Chame o professor quando travar.
 - **Parte 2 — Atividades aplicadas** (para casa): exigem **decisão**, não repetição.
-- **Gabaritos**: no final, em seções colapsadas. Tente antes de abrir.
+- **Todo exercício vem com um scaffold** — um esqueleto de código com marcações `// TODO`. Você completa os trechos que faltam; não precisa escrever do zero, e não deve apagar a estrutura dada.
+- **Gabaritos**: no final, em seções colapsadas. Tente antes de abrir — abrir cedo é o jeito mais eficiente de não aprender.
+
+> 🧩 **Como usar os scaffolds:** a estrutura do arquivo, os imports e os nomes dos estilos já estão lá — o que falta é o miolo, que é onde está o conceito da aula. **Apague o comentário `// TODO` quando resolver aquele ponto.** Um arquivo sem nenhum `TODO` é um exercício concluído, e é assim que o professor confere rápido quem parou onde.
 
 > 📦 **Componentes desta aula** — use **somente** estes sete: `View`, `ScrollView`, `Text`, `TextInput`, `Image`, `Button`, `Switch`, mais `StyleSheet` e Flexbox. Componentes de toque estilizáveis e componentes de lista **não são assunto desta aula** e não devem aparecer nas entregas. Onde precisar de interação: `onPress` no `Button`, `onPress` no `Text`, `onChangeText` no `TextInput`, `onValueChange` no `Switch`.
 
@@ -22,6 +25,25 @@
 > 3. **`gap`** para espaçar irmãos, não `margin` em cada filho.
 > 4. **`boxShadow`** para sombra, não o quarteto `shadow*` + `elevation`.
 > 5. **Zero `any`.**
+
+**Setup dos exercícios 3 a 6** (projeto de sandbox, descartável — os exercícios 1 e 2 são no papel):
+
+```bash
+npx create-expo-app@latest sandbox-aula3
+cd sandbox-aula3
+npm run reset-project
+npx expo start
+```
+
+**Setup da Atividade Aplicada 1** (seu projeto de verdade):
+
+```bash
+git clone <url-do-seu-repositorio> habit-tracker-expo
+cd habit-tracker-expo
+git checkout feature/aula_03
+npm install
+npx expo start
+```
 
 ---
 
@@ -43,10 +65,21 @@ Associe cada necessidade ao componente correto. Cada componente é usado **uma v
 | 6 | Capturar o título digitado pelo usuário | ( ) | f. `Image` |
 | 7 | Exibir a foto de perfil vinda de uma URL | ( ) | g. `Button` |
 
-**Depois de responder:**
-- Para o item 2, quais são as **quatro** props que esse componente aceita? O que acontece se você passar `style`?
-- Para o item 7, que duas propriedades de estilo são obrigatórias e por quê?
-- Dos sete componentes, **quais dois** você usaria para fazer algo reagir ao toque nesta aula?
+### Esqueleto da resposta
+
+Preencha a linha abaixo (uma letra por número) e depois responda às três perguntas:
+
+```text
+1 → ___    2 → ___    3 → ___    4 → ___    5 → ___    6 → ___    7 → ___
+
+a) Item 2 — as quatro props do componente são: ______________________________
+   Se eu passar `style` para ele, acontece: _________________________________
+
+b) Item 7 — as duas propriedades de estilo obrigatórias são: _________________
+   São obrigatórias porque: _________________________________________________
+
+c) Os dois componentes que reagem ao toque nesta aula são: ___________ e ___________
+```
 
 ---
 
@@ -94,6 +127,50 @@ const styles = StyleSheet.create({
 
 *(São 6 achados no total; um dos itens acima cobre dois problemas.)*
 
+### Esqueleto da correção
+
+Reescreva o componente aqui. Cada `TODO` marca um dos achados:
+
+```tsx
+// TODO 1: a lista de imports está incompleta. O que falta?
+import { View, StyleSheet } from 'react-native';
+
+// TODO 2: a anotação de retorno usa um tipo que o React 19 removeu.
+//         Qual é a forma correta hoje? (dica: a mais curta é não anotar)
+export default function CabecalhoHabitos() {
+  return (
+    <View style={styles.container}>
+      {/* TODO 3: este texto está solto dentro de uma View. Onde ele precisa ficar? */}
+      Hábitos de hoje
+
+      <View style={styles.linha}>
+        <Text style={styles.meta}>Total: 5</Text>
+        <Text style={styles.meta}>Concluídos: 2</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    // TODO 4: a unidade está errada. Como se escreve 16 aqui?
+    padding: '16px',
+    // TODO 5: este fontSize não chega em Text nenhum. Por quê? Para onde ele deve ir?
+    fontSize: 20,
+  },
+  linha: {
+    // TODO 6: falta a propriedade que faz os dois textos ficarem lado a lado.
+    //         Sem ela, o justifyContent abaixo está agindo no eixo errado.
+    justifyContent: 'space-between' as const,   // TODO 7: e este `as const`, é necessário aqui?
+  },
+  meta: {
+    fontSize: 12,
+  },
+});
+```
+
+**Anote também, em uma linha cada:** qual dos achados **quebra em runtime**, qual **não compila**, e quais **compilam, rodam e mesmo assim estão errados**. Os do terceiro grupo são os que custam caro.
+
 ---
 
 ## Exercício 3 — Reproduza: o `Card` com sombra e espaçamento modernos
@@ -109,7 +186,66 @@ Crie um componente `CardHabito` que receba `titulo` e `descricao` como props.
 4. Espaço entre o título e a descrição usando **`gap`**, não `margin`.
 5. Título com `fontSize: 18` e `fontWeight: '600'`; descrição com `fontSize: 14` e cor `#666`.
 
-**Teste:** renderize dois cards seguidos. Eles devem estar colados (você ainda não pediu espaço **entre** cards) — depois adicione `gap` no contêiner pai e veja a diferença.
+### Esqueleto
+
+```tsx
+// components/card-habito.tsx
+import { View, Text, StyleSheet } from 'react-native';
+
+// TODO 1: declare o type das props — `titulo` e `descricao`, ambos string. Sem `any`.
+type CardHabitoProps = {
+  // ...
+};
+
+// TODO 2: NÃO anote o tipo de retorno. O TypeScript infere.
+export function CardHabito({ /* TODO 3: desestruture as props aqui */ }: CardHabitoProps) {
+  return (
+    <View style={styles.card}>
+      {/* TODO 4: o título, dentro de um <Text style={styles.titulo}> */}
+      {/* TODO 5: a descrição, dentro de um <Text style={styles.descricao}> */}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    // TODO 6: fundo branco, borderRadius 12, padding 16
+    // TODO 7: sombra — UMA propriedade só (não o quarteto shadow* + elevation)
+    // TODO 8: espaço entre o título e a descrição — sem usar margin
+  },
+  titulo: {
+    // TODO 9: fontSize 18, fontWeight '600'
+  },
+  descricao: {
+    // TODO 10: fontSize 14, cor '#666'
+  },
+});
+```
+
+### Teste (na tela onde você for renderizar)
+
+```tsx
+import { View, StyleSheet } from 'react-native';
+import { CardHabito } from '@/components/card-habito';
+
+export default function TelaHabitos() {
+  return (
+    <View style={styles.lista}>
+      <CardHabito titulo="Beber 2L de água" descricao="Meta diária" />
+      <CardHabito titulo="Caminhar 30 min" descricao="Depois do almoço" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  lista: {
+    padding: 16,
+    // TODO 11: rode PRIMEIRO sem gap — os dois cards ficam colados.
+    //          Só então acrescente o gap aqui e compare.
+    //          Pergunta: por que o gap vai NESTE contêiner e não dentro do card?
+  },
+});
+```
 
 ---
 
@@ -141,7 +277,74 @@ container: { flexDirection: 'row' }
 // filho único: { backgroundColor: 'red', height: 40 }   ← sem width
 ```
 
-**A parte que importa:** em **C** e em **E** o resultado surpreende a maioria. Escreva em uma frase, para cada um, **por quê**.
+### Esqueleto — o laboratório
+
+Cole este arquivo no projeto. Para testar cada caso, troque **uma** linha: o `styles.a` da `View` externa.
+
+```tsx
+// app/flexbox-lab.tsx  — arquivo descartável, apague depois
+import { View, StyleSheet } from 'react-native';
+
+export default function FlexboxLab() {
+  return (
+    // TODO: troque styles.a por styles.b, styles.c, styles.d, styles.e
+    <View style={styles.a}>
+      <View style={styles.caixa} />
+      <View style={styles.caixa} />
+      <View style={styles.caixa} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  caixa: { width: 50, height: 50, backgroundColor: '#FF6002' },
+
+  a: { flex: 1, justifyContent: 'space-between' },
+  b: { flex: 1, flexDirection: 'row', justifyContent: 'space-between' },
+  c: { justifyContent: 'center', alignItems: 'center' },   // ← repare: SEM flex: 1
+  d: { flex: 1, flexDirection: 'row' },                    // ← ver ajuste abaixo
+  e: { flexDirection: 'row' },                             // ← ver ajuste abaixo
+});
+```
+
+Dois casos exigem mudar também os filhos:
+
+```tsx
+// Para o caso D — três filhos com proporções diferentes:
+<View style={styles.d}>
+  <View style={[styles.caixa, { flexGrow: 2 }]} />
+  <View style={[styles.caixa, { flexGrow: 1 }]} />
+  <View style={[styles.caixa, { flexGrow: 1 }]} />
+</View>
+
+// Para o caso E — UM filho só, com altura mas SEM width:
+<View style={styles.e}>
+  <View style={{ backgroundColor: 'red', height: 40 }} />
+</View>
+```
+
+### Esqueleto da previsão
+
+Preencha **antes** de rodar. Depois rode e preencha a última coluna.
+
+| Caso | Minha previsão (desenho + 1 frase) | O que aconteceu de fato |
+|---|---|---|
+| A | | |
+| B | | |
+| C | | |
+| D | | |
+| E | | |
+
+**A parte que importa:** em **C** e em **E** o resultado surpreende a maioria. Escreva uma frase para cada:
+
+```text
+C acontece isso porque: ______________________________________________________
+
+E acontece isso porque: ______________________________________________________
+
+A regra que os dois casos compartilham, na minha própria formulação:
+_____________________________________________________________________________
+```
 
 ---
 
@@ -156,7 +359,10 @@ Complete o componente para que:
 3. O `Switch` de lembrete funcione de verdade (mexer nele muda o estado).
 4. O `Button` mostre `"Desmarcar"` quando concluído e `"Marcar concluído"` quando pendente.
 
+### Esqueleto
+
 ```tsx
+// components/card-habito-interativo.tsx
 import { useState } from 'react';
 import { View, Text, Switch, Button, StyleSheet } from 'react-native';
 
@@ -164,23 +370,31 @@ export default function CardHabito() {
   const [concluido, setConcluido] = useState(false);
   const [lembrete, setLembrete] = useState(false);
 
-  const alternar = /* COMPLETE */;
+  // TODO 1: inverta o estado. Use a forma de função — o novo valor deriva do anterior.
+  const alternar = () => { /* ... */ };
 
   return (
-    <View style={/* COMPLETE: base + condicional */}>
+    // TODO 2: array de estilos — o base SEMPRE, o `cardConcluido` só quando concluído.
+    //         Cuidado: com ternário você TROCA o estilo; com array você SOMA.
+    <View style={/* ... */}>
       <Text
-        style={/* COMPLETE: base + condicional */}
-        onPress={/* COMPLETE */}
+        // TODO 3: mesma ideia — styles.titulo + styles.tituloConcluido condicional
+        style={/* ... */}
+        // TODO 4: o que dispara a alternância no toque?
+        onPress={/* ... */}
       >
         Beber 2L de água
       </Text>
 
       <View style={styles.linha}>
         <Text style={styles.rotulo}>Lembrete diário</Text>
-        <Switch value={/* COMPLETE */} onValueChange={/* COMPLETE */} />
+        {/* TODO 5: ligue o Switch ao estado `lembrete`.
+            Lembre: sem `value`, ele volta sozinho ao valor anterior. */}
+        <Switch value={/* ... */} onValueChange={/* ... */} />
       </View>
 
-      <Button title={/* COMPLETE */} onPress={alternar} />
+      {/* TODO 6: 'Desmarcar' quando concluído, 'Marcar concluído' quando pendente */}
+      <Button title={/* ... */} onPress={alternar} />
     </View>
   );
 }
@@ -216,21 +430,45 @@ const styles = StyleSheet.create({
 
 Este layout deveria ser uma grade de 3 colunas, com espaçamento uniforme. Ele não fica uniforme. Corrija **sem usar `margin`**.
 
+### Esqueleto — o código quebrado, pronto para rodar
+
 ```tsx
+// app/grade-lab.tsx — arquivo descartável, apague depois
+import { View, StyleSheet } from 'react-native';
+
+const CELULAS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+export default function GradeLab() {
+  return (
+    <View style={styles.grade}>
+      {CELULAS.map((n) => (
+        <View key={n} style={styles.celula} />
+      ))}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   grade: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 10,
+    // TODO 1: a propriedade que espaça irmãos entra AQUI. Qual é?
   },
   celula: {
+    // TODO 2: com `gap` no pai, três células de '30%' ainda cabem na linha?
+    //         Faça a conta antes de mexer. Se não couberem, há duas saídas —
+    //         uma ajusta a largura, a outra deixa o flex calcular. Prefira a segunda.
     width: '30%',
     height: 100,
     backgroundColor: '#F3E9DC',
+    // TODO 3: remova o margin. Ele é a causa do espaçamento irregular.
     margin: 5,
   },
 });
 ```
+
+> 💡 O `map` acima é só para gerar nove caixas de teste sem digitar nove vezes — **não** é renderização de lista, que não é assunto desta aula.
 
 **Duas perguntas:**
 1. Por que o espaçamento com `margin: 5` **não** é uniforme entre o vão interno e a borda?
@@ -274,6 +512,135 @@ Na Aula 1 vocês modelaram o domínio; na Aula 2, fizeram a tela funcionar com l
 - Uma linha com informação nas duas pontas (`justifyContent: 'space-between'`), **ou**
 - Uma grade com `flexWrap` + `gap`
 - Espaçamento entre irmãos **só** com `gap`
+
+### Esqueletos para começar
+
+Os três arquivos abaixo são o ponto de partida. **Nenhum deles está completo** — cada `TODO` é uma decisão sua.
+
+```tsx
+// theme.ts — TOKENS: valores, nunca layouts prontos
+export const cores = {
+  fundo: '#FEF7EE',
+  cartao: '#FFFFFF',
+  // TODO 1: complete com texto, textoFraco, primaria, sucesso, erro
+} as const;
+
+export const espaco = {
+  // TODO 2: escala de no mínimo 4 degraus (xs, sm, md, lg).
+  //         Escolha uma progressão e seja consistente — 4/8/16/24 é um bom default.
+} as const;
+
+export const tipografia = {
+  // TODO 3: titulo, corpo, legenda. Cada um é um objeto de estilo de TEXTO.
+  //         A legenda pode reaproveitar `cores.textoFraco`.
+} as const;
+
+// TODO 4: por que este arquivo usa `as const` e o StyleSheet.create do componente NÃO usa?
+//         Responda em um comentário de uma linha aqui mesmo.
+```
+
+```tsx
+// components/card.tsx — componente reutilizável
+import { type ReactNode } from 'react';
+import { View, StyleSheet } from 'react-native';
+
+import { cores, espaco } from '@/theme';
+
+type CardProps = {
+  children: ReactNode;
+  // TODO 5: a prop opcional que muda a aparência do card
+};
+
+export function Card({ children, /* TODO 6 */ }: CardProps) {
+  // TODO 7: array de estilos — base sempre, variante só quando a prop for true
+  return <View style={/* ... */}>{children}</View>;
+}
+
+const styles = StyleSheet.create({
+  card: {
+    // TODO 8: padding, borderRadius e backgroundColor — TODOS vindos dos tokens.
+    //         Nenhum hex e nenhum número solto neste arquivo.
+    // TODO 9: sombra com boxShadow (uma linha) e espaçamento interno com gap
+  },
+  cardDestacado: {
+    // TODO 10: o que muda no destaque? Borda? Fundo? Escolha e justifique no README.
+  },
+});
+```
+
+```tsx
+// app/habito-form.tsx — o formulário
+import { useState } from 'react';
+import { ScrollView, View, Text, TextInput, Switch, Button, StyleSheet } from 'react-native';
+
+import { cores, espaco, tipografia } from '@/theme';
+
+export default function HabitoForm() {
+  const [titulo, setTitulo] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [lembrete, setLembrete] = useState(false);
+
+  // TODO 11: o formulário é válido quando o título não está vazio (sem contar espaços)
+  const tituloVazio = /* ... */;
+
+  return (
+    <ScrollView
+      style={styles.tela}
+      // TODO 12: qual das duas props recebe o padding do conteúdo?
+      contentContainerStyle={/* ... */}
+    >
+      <Text style={styles.rotulo}>Título</Text>
+      {/* TODO 13: input controlado (value + onChangeText).
+          TODO 14: array de estilos — borda vermelha quando `tituloVazio`. */}
+      <TextInput style={/* ... */} value={/* ... */} onChangeText={/* ... */} />
+
+      <Text style={styles.rotulo}>Descrição</Text>
+      {/* TODO 15: o segundo input controlado */}
+      <TextInput style={styles.input} />
+
+      <View style={styles.linha}>
+        <Text style={styles.rotulo}>Lembrete diário</Text>
+        {/* TODO 16: o Switch controlado */}
+        <Switch />
+      </View>
+
+      {/* TODO 17: o Button não aceita style — envolva-o numa View estilizada.
+          TODO 18: desabilite enquanto o título estiver vazio. */}
+      <View style={styles.areaBotao}>
+        <Button title="Salvar" onPress={() => {}} color={cores.primaria} />
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  tela: {
+    // TODO 19: flex e cor de fundo (dos tokens)
+  },
+  conteudo: {
+    // TODO 20: padding e gap — daqui saem TODOS os espaçamentos do formulário.
+    //          Se você precisar de margin em algum filho, algo está errado.
+  },
+  input: {
+    borderWidth: 1,
+    // TODO 21: borderColor, borderRadius, padding e fontSize — tudo dos tokens
+  },
+  inputInvalido: {
+    // TODO 22: só o que MUDA em relação ao input normal. Não repita o resto.
+  },
+  linha: {
+    // TODO 23: os dois filhos nas pontas, alinhados verticalmente
+  },
+  rotulo: tipografia.corpo,
+  areaBotao: {
+    borderRadius: 8,
+    overflow: 'hidden',
+    // TODO 24: margin AQUI é legítima. Por quê? (é espaço em volta do grupo)
+  },
+});
+```
+
+> ⚠️ **O esqueleto não é a entrega.** Ele economiza digitação e fixa a estrutura de arquivos; a nota está nas decisões que preenchem os `TODO`. Entregar o esqueleto com os `TODO` intactos vale zero.
 
 **5. `README.md`** (complementando o do repositório) com:
 - **Uma decisão de organização de estilo que você tomou e o motivo.** Ex.: por que tal estilo virou token e tal outro ficou local; por que você extraiu (ou não) um arquivo de estilos irmão.
@@ -379,6 +746,59 @@ export default StyleSheet.create({
 4. **Ordem de prioridade da refatoração.** Você tem meio dia. O que faz primeiro e o que fica para depois? Justifique pelo **risco** e pelo **retorno**, não pela facilidade.
 5. **Um problema que você decidiu NÃO corrigir**, e por quê. Toda auditoria honesta tem esse item.
 
+### Esqueleto do relatório
+
+Entregue neste formato — ele existe para você não esquecer nenhum dos cinco itens:
+
+```markdown
+# Auditoria de estilo — TelaResumo
+
+## 1. Problemas encontrados
+
+| # | Onde (linha/trecho) | O que está errado | Consequência concreta | Correção |
+|---|---|---|---|---|
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+<!-- TODO: pelo menos oito linhas. "É feio" não é consequência concreta —
+     consequência concreta é: quebra em runtime / não compila / o layout sai
+     errado / o valor fica impossível de mudar em um lugar só. -->
+
+## 2. O problema arquitetural
+
+<!-- TODO: qual problema NÃO se resolve trocando uma linha? Explique por que
+     a ESTRUTURA escolhida o produz, e o que ela acopla a quê. -->
+
+## 3. `globalStyles.ts` reescrito como `theme.ts`
+```
+
+```tsx
+// theme.ts
+export const cores = {
+  // TODO: os valores que sobreviveram do globalStyles
+} as const;
+
+export const espaco = {
+  // TODO
+} as const;
+
+// TODO: liste aqui, em comentário, o que você REMOVEU do globalStyles e por quê.
+//       (dica: o que era layout, e não decisão de design, não entra)
+```
+
+```markdown
+## 4. Ordem de refatoração — tenho meio dia
+
+| Ordem | O que faço | Risco se não fizer | Retorno |
+|---|---|---|---|
+| 1 |  |  |  |
+<!-- TODO: justifique por RISCO e RETORNO. A ordem em que os problemas
+     aparecem no arquivo não é uma justificativa. -->
+
+## 5. O que eu decidi NÃO corrigir
+
+<!-- TODO: um item, com o motivo. Toda auditoria honesta tem esse parágrafo. -->
+```
+
 ### Critérios de avaliação
 
 | Critério | Peso | O que se espera |
@@ -403,25 +823,6 @@ Complete os 24 níveis do [Flexbox Froggy](https://flexboxfroggy.com/). Depois e
 - **Um nível** que exigiria código diferente em React Native, com os dois códigos lado a lado.
 
 **Por que vale a pena:** o jogo constrói intuição de eixo muito rápido. Mas ele é CSS — e transferir sem perceber as diferenças é como aprender espanhol e falar português achando que é o mesmo idioma.
-
----
-
-# Equivalência de domínio — Pet
-
-Se seu grupo ficou com o **App de Gestão e Rotina Pet**, use esta tabela. A lógica dos exercícios não muda.
-
-| Habito (usado nos exercícios) | Pet (seu domínio) |
-|---|---|
-| `Habito` | `Pet` |
-| `CardHabito` | `CardPet` |
-| `titulo: string` | `nome: string` |
-| `categoria: string` | `especie: EspeciePet` |
-| `status: StatusHabito` | `statusPasseio: StatusPasseio` |
-| `streakDias: number` | `idadeMeses: number` |
-| "Hábitos de hoje" | "Meus pets" |
-| "Hábito do dia" | "Pet em destaque" |
-| "Lembrete diário" | "Alerta de vacina" |
-| "Marcar concluído" | "Registrar passeio" |
 
 ---
 

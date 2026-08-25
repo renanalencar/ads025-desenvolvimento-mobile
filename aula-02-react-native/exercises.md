@@ -1,8 +1,8 @@
-# Exercícios e Atividades — Aula 2
+# Exercícios e Atividades — Aula 2 (domínio Hábito)
 
 > **Disciplina:** Desenvolvimento Mobile (2026.2.DM) — CESAR School
-> **Domínio usado nos exercícios guiados:** Rastreador de Micro-hábitos e Condicionamento Físico (`Habito`).
-> **Projetos da disciplina:** ao longo do semestre cada estudante constrói um app abaixo. Os exercícios desta aula usam o domínio `Habito`.
+> **Domínio deste arquivo:** Rastreador de Micro-hábitos e Condicionamento Físico (`Habito`).
+> **Está no outro projeto?** Se o seu app é o **App de Gestão e Rotina Pet**, use o arquivo `practice.md` — mesma estrutura, mesmos conceitos, domínio `Pet`.
 
 | Projeto | Repositório | Branch da disciplina |
 |---|---|---|
@@ -11,15 +11,26 @@
 ## Como usar este arquivo
 
 - **Parte 1 — Exercícios guiados** (em sala, ~20 min): foco em **acurácia**. São propositalmente simples. O objetivo é usar o conceito **corretamente**, não criativamente. Chame o professor quando travar.
-- **Parte 2 — Atividades aplicadas** (para casa): exigem **decisão**, não repetição.
+- **Parte 2 — Atividade aplicada** (para casa): exige **decisão**, não repetição.
+- **Todo exercício vem com um scaffold** — um esqueleto de código com marcações `// TODO`. Você completa os trechos que faltam; não precisa escrever do zero, e não deve apagar a estrutura dada.
 - **Gabaritos**: no final, em seções colapsadas. Tente antes de abrir — abrir cedo é o jeito mais eficiente de não aprender.
 
-**Setup necessário para os exercícios 1 a 3:**
+**Setup dos exercícios guiados 1 a 4** (projeto de sandbox, descartável):
 
 ```bash
 node --version              # precisa ser 22.11 ou superior
-npx create-expo-app@latest habit-tracker-expo
-cd habit-tracker-app
+npx create-expo-app@latest sandbox-app
+cd sandbox-app
+npx expo start              # --tunnel se o Wi-Fi da sala isolar os aparelhos
+```
+
+**Setup da Atividade 1** (seu projeto de verdade):
+
+```bash
+git clone <url-do-seu-repositorio> habit-tracker-expo
+cd habit-tracker-expo
+git checkout ads025_2026-2
+npm install
 npx expo start
 ```
 
@@ -27,11 +38,11 @@ npx expo start
 
 # Parte 1 — Exercícios guiados
 
-## Exercício 1 — Complete o código: componentes básicos
+## Exercício 1 — Conserte o componente: componentes básicos
 
 **Nível:** ⭐ · **Tempo:** 4 min · **No computador**
 
-Este componente tem **três erros** que quebram em runtime ou não compilam. Encontre e corrija.
+Este componente tem **quatro problemas** que quebram em runtime, não compilam ou não produzem o layout pedido. Encontre todos.
 
 ```tsx
 import { View, StyleSheet } from 'react-native';
@@ -55,14 +66,107 @@ const styles = StyleSheet.create({
 ```
 
 **Dicas (sem entregar a resposta):**
-1. Um erro é sobre **onde** o texto pode ficar.
-2. Um erro é sobre **importação**.
-3. Um erro é sobre **unidades de medida**.
-4. E há uma **quarta** questão: `styles.linha` quer colocar os dois textos lado a lado. Ele consegue?
+1. Um problema é sobre **onde** o texto pode ficar.
+2. Um problema é sobre **importação**.
+3. Um problema é sobre **unidades de medida**.
+4. `styles.linha` quer colocar os dois textos lado a lado. Ele consegue?
+
+### Scaffold — complete no seu editor
+
+```tsx
+// exercicio-01.tsx
+import { /* TODO 2: o que mais precisa ser importado aqui? */ View, StyleSheet } from 'react-native';
+
+export default function Cabecalho() {
+  return (
+    <View style={styles.container}>
+      {/* TODO 1: o título "Hábitos de hoje" não pode ficar solto dentro da View.
+                  Envolva-o no componente correto. */}
+
+      <View style={styles.linha}>
+        <Text>Total: 5</Text>
+        <Text>Concluídos: 2</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: /* TODO 3: corrija o valor — em React Native, números de estilo não levam unidade */,
+  },
+  linha: {
+    // TODO 4: falta uma propriedade para os dois textos ficarem lado a lado.
+    //         Lembre qual é o valor default de flexDirection.
+    justifyContent: 'space-between',
+  },
+});
+```
+
+**Como saber que acertou:** o app abre sem tela vermelha e os dois textos aparecem **na mesma linha**, um em cada ponta.
 
 ---
 
-## Exercício 2 — Refatore: união discriminada
+## Exercício 2 — Escreva o tipo: props de componente
+
+**Nível:** ⭐⭐ · **Tempo:** 5 min · **No computador**
+
+Complete o scaffold para que o componente compile **sem nenhum `any`**.
+
+**Requisitos:**
+- `titulo` e `categoria` são textos obrigatórios.
+- `status` deve aceitar **apenas** `'pendente'`, `'concluido'` ou `'pulado'`.
+- `onPress` é uma função sem parâmetros que não retorna nada.
+- `destacado` é **opcional** e booleano.
+
+### Scaffold
+
+```tsx
+// exercicio-02.tsx
+import { Text, StyleSheet } from 'react-native';
+
+// TODO 1: declare o union type literal com os três status possíveis.
+type StatusHabito = /* ... */;
+
+// TODO 2: descreva as props conforme os requisitos acima.
+//         Nenhum campo pode ser `any`, e `status` não pode ser `string`.
+type CardHabitoProps = {
+  /* ... */
+};
+
+export function CardHabito({
+  titulo,
+  categoria,
+  status,
+  onPress,
+  destacado = false,
+}: CardHabitoProps) {
+  return (
+    <Text onPress={onPress} style={[styles.card, destacado && styles.destaque]}>
+      <Text style={styles.titulo}>{titulo}</Text>
+      <Text style={styles.meta}>{categoria} · {status}</Text>
+    </Text>
+  );
+}
+
+const styles = StyleSheet.create({
+  card:     { padding: 16, borderRadius: 8, backgroundColor: '#f2f2f2' },
+  destaque: { backgroundColor: '#ffe8d6' },
+  titulo:   { fontSize: 18, fontWeight: '600' },
+  meta:     { fontSize: 12, color: '#666' },
+});
+```
+
+**Teste sua resposta:** as duas linhas abaixo devem dar **erro de compilação**. Se alguma passar, seu tipo está frouxo.
+
+```tsx
+<CardHabito titulo="Beber água" categoria="saude" status="PENDENTE" onPress={() => {}} />
+<CardHabito titulo="Beber água" categoria="saude" status="pendente" />
+```
+
+---
+
+## Exercício 3 — Refatore: união discriminada
 
 **Nível:** ⭐⭐⭐ · **Tempo:** 6 min · **No computador**
 
@@ -84,15 +188,54 @@ function TelaHabitoDoDia() {
 
 **Parte B:** por que o `habito!` (non-null assertion) foi necessário na última linha? O que ele está escondendo?
 
-**Parte C:** refatore usando um tipo `EstadoTela<T>` com união discriminada. O `!` deve desaparecer.
+**Parte C:** refatore usando o scaffold abaixo. O `!` deve desaparecer.
+
+### Scaffold
+
+```tsx
+// exercicio-03.tsx
+import { useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+
+// TODO 1: complete a união discriminada.
+//         São exatamente três variantes, todas com o campo discriminante `tipo`.
+//         - carregando: não carrega nenhum dado
+//         - sucesso:    carrega os dados, do tipo genérico T
+//         - erro:       carrega uma mensagem legível
+type EstadoTela<T> =
+  | { tipo: 'carregando' }
+  /* ... */;
+
+function TelaHabitoDoDia() {
+  // TODO 2: um único useState substitui os três anteriores.
+  //         Qual é o estado inicial da tela?
+  const [estado, setEstado] = useState<EstadoTela<Habito>>(/* ... */);
+
+  // TODO 3: um switch sobre o campo discriminante, com um `case` por variante.
+  //         Dentro de cada case, só os campos daquela variante existem —
+  //         é isso que faz o `!` desaparecer.
+  switch (estado.tipo) {
+    case 'carregando':
+      return <ActivityIndicator />;
+    /* ... */
+  }
+}
+```
+
+**Como saber que acertou:** tentar ler `estado.dados` dentro do `case 'erro'` deve dar **erro de compilação**. Se compilar, a união não está discriminada de verdade.
 
 ---
 
-## Exercício 3 — Complete: utility types
+## Exercício 4 — Derive os tipos: utility types
 
 **Nível:** ⭐⭐ · **Tempo:** 4 min · **No computador**
 
+Derive os três tipos **usando utility types** (`Pick`, `Omit`, `Partial`). Nenhum deles pode repetir campos à mão.
+
+### Scaffold
+
 ```ts
+// exercicio-04.ts
 type StatusHabito = 'pendente' | 'concluido' | 'pulado';
 type CategoriaHabito = 'saude' | 'produtividade' | 'mentalidade' | 'sono';
 type FrequenciaHabito = 'diaria' | 'semanal';
@@ -106,62 +249,202 @@ interface Habito {
   streakDias: number;
   criadoEm: string;
 }
-```
 
-Derive os três tipos abaixo **usando utility types** (`Pick`, `Omit`, `Partial`). Nenhum deles pode repetir campos à mão.
-
-```ts
-// 1. Payload do formulário de criação.
-//    O servidor gera id, status, streakDias e criadoEm.
+// TODO 1: payload do formulário de criação.
+//         O servidor é quem gera id, status, streakDias e criadoEm.
 type NovoHabito = /* ... */;
 
-// 2. O que o card da tela precisa: id, titulo, status, categoria.
+// TODO 2: o que o card da tela precisa — id, titulo, status e categoria.
 type ResumoHabito = /* ... */;
 
-// 3. Edição parcial de um hábito já existente (qualquer campo editável, ou nenhum).
+// TODO 3: edição parcial de um hábito já existente.
+//         Pense bem de qual dos tipos acima este deve derivar.
 type AtualizacaoHabito = /* ... */;
 ```
 
-**Pergunta de fechamento:** você adicionou o campo `lembreteHorario?: string` a `Habito`. Quais dos três tipos derivados precisam ser alterados manualmente? **Por quê essa resposta é o ponto do exercício?**
+**Pergunta de fechamento:** você adicionou o campo `lembreteHorario?: string` a `Habito`. Quais dos três tipos derivados precisam ser alterados manualmente? **Por que essa resposta é o ponto do exercício?**
 
 ---
 
-# Parte 2 — Atividades aplicadas
+# Parte 2 — Atividade aplicada
 
 ## Atividade 1 — Modelagem e tela do hábito do dia
 
-**Nível:** ⭐⭐⭐ · **Tempo estimado:** 2 a 3 h · **Entrega:** individual ou em dupla · **Prazo:** próxima aula
+**Nível:** ⭐⭐⭐ · **Tempo estimado:** 2 a 3 h · **Entrega:** individual · **Prazo:** próxima aula
 
 ### Contexto
 
-Você está no time que constrói o **Rastreador de Micro-hábitos e Condicionamento Físico**, se for o projeto do seu estudante. O backend ainda não existe. Sua tarefa é construir a **tela do hábito do dia** com dados mockados, mas com o domínio **modelado de verdade**, de modo que a troca do mock pela API real seja quase indolor.
+Você está construindo o **Rastreador de Micro-hábitos e Condicionamento Físico**. O backend ainda não existe. Sua tarefa é construir a **tela do hábito do dia** com dados mockados, mas com o domínio **modelado de verdade**, de modo que a troca do mock pela API real seja quase indolor.
 
-Note que esta tela mostra **uma única entidade em destaque**, não uma lista — listas e `FlatList` chegam na próxima aula 4.
+Esta tela mostra **uma única entidade em destaque**, não uma lista — listas e `FlatList` chegam mais adiante no semestre.
+
+### Estrutura de arquivos a criar
+
+```
+habit-tracker-expo/
+├── App.tsx                        ← a tela (scaffold 3)
+└── src/
+    ├── types/habito.ts            ← modelagem do domínio (scaffold 1)
+    ├── services/habito-service.ts ← camada de dados falsa (scaffold 2)
+    └── components/card-habito.tsx ← o card (scaffold 4)
+```
+
+### Scaffold 1 — `src/types/habito.ts`
+
+```ts
+// TODO 1: os três union types literais do domínio.
+//         Nenhum deles pode ser `string`.
+export type StatusHabito = /* ... */;
+export type CategoriaHabito = /* ... */;
+export type FrequenciaHabito = /* ... */;
+
+// TODO 2: a entidade completa. Campos mínimos:
+//         id, titulo, categoria, frequencia, status, streakDias, criadoEm.
+export interface Habito {
+  /* ... */
+}
+
+// TODO 3: os três tipos derivados, com utility types (sem repetir campos).
+export type NovoHabito = /* ... */;
+export type ResumoHabito = /* ... */;
+export type AtualizacaoHabito = /* ... */;
+
+// TODO 4: o estado de tela, como união discriminada de três variantes.
+export type EstadoTela<T> = /* ... */;
+
+// TODO 5: função que traduz o status para um rótulo legível em português.
+//         Use um switch — se amanhã um status novo entrar na união,
+//         o compilador precisa avisar aqui.
+export function rotuloStatus(status: StatusHabito): string {
+  /* ... */
+}
+```
+
+### Scaffold 2 — `src/services/habito-service.ts`
+
+```ts
+import { Habito } from '../types/habito';
+
+// Deixe esta constante no código, comentada como está,
+// para o professor conseguir testar o estado de erro.
+const SIMULAR_ERRO = false;
+
+const MOCK: Habito = {
+  // TODO 1: um hábito completo e coerente com o tipo.
+};
+
+export async function buscarHabitoDoDia(): Promise<Habito> {
+  // TODO 2: espere ~1 segundo antes de responder, para o loading ser visível.
+  //         Dica: new Promise((resolve) => setTimeout(resolve, 1000))
+
+  // TODO 3: se SIMULAR_ERRO for true, lance um Error com mensagem legível.
+
+  // TODO 4: devolva o MOCK.
+}
+```
+
+### Scaffold 3 — `App.tsx`
+
+```tsx
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+import { CardHabito } from './src/components/card-habito';
+import { buscarHabitoDoDia } from './src/services/habito-service';
+import { EstadoTela, Habito } from './src/types/habito';
+
+export default function App() {
+  const [estado, setEstado] = useState<EstadoTela<Habito>>({ tipo: 'carregando' });
+
+  const carregar = useCallback(async () => {
+    // TODO 1: volte para o estado 'carregando', chame o serviço e,
+    //         conforme o resultado, mude para 'sucesso' ou 'erro'.
+  }, []);
+
+  useEffect(() => {
+    carregar();
+  }, [carregar]);
+
+  function marcarConcluido() {
+    // TODO 2: só faz sentido se o estado atual for 'sucesso'.
+    //         Atualize o status do hábito para 'concluido' (só em memória).
+    //         Cuidado: não dá para acessar estado.dados sem antes checar o tipo.
+  }
+
+  // TODO 3: um `case` por variante da união.
+  switch (estado.tipo) {
+    case 'carregando':
+      return (
+        <View style={styles.centro}>
+          <ActivityIndicator />
+        </View>
+      );
+
+    case 'sucesso':
+      return (
+        <View style={styles.container}>
+          {/* TODO 4: renderize o CardHabito com os dados de estado.dados
+                      e passe a ação de marcar concluído. */}
+        </View>
+      );
+
+    case 'erro':
+      return (
+        <View style={styles.centro}>
+          {/* TODO 5: mensagem legível + um Text com onPress para tentar de novo. */}
+        </View>
+      );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 48, backgroundColor: '#fff' },
+  centro:    { flex: 1, alignItems: 'center', justifyContent: 'center' },
+});
+```
+
+### Scaffold 4 — `src/components/card-habito.tsx`
+
+```tsx
+import { StyleSheet, Text, View } from 'react-native';
+
+import { Habito, rotuloStatus } from '../types/habito';
+
+// TODO 1: tipe as props. O card recebe um hábito e uma ação de toque.
+type CardHabitoProps = {
+  /* ... */
+};
+
+export function CardHabito({ /* ... */ }: CardHabitoProps) {
+  return (
+    <View style={styles.card}>
+      {/* TODO 2: título do hábito */}
+      {/* TODO 3: uma linha com categoria e status legível, um em cada ponta */}
+      {/* TODO 4: o streak em dias */}
+      {/* TODO 5: um Text com onPress: "Marcar concluído hoje" */}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card:   { padding: 16, borderRadius: 8, backgroundColor: '#f2f2f2' },
+  titulo: { fontSize: 18, fontWeight: '600' },
+  linha:  { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
+  meta:   { fontSize: 12, color: '#666' },
+  botao:  { marginTop: 16, fontWeight: '600', color: '#FF6002' },
+});
+```
 
 ### O que entregar
 
-**1. Modelagem do domínio** — um arquivo `src/types/habito.ts` contendo:
-- `Habito` (entidade completa)
-- `StatusHabito`, `CategoriaHabito` e `FrequenciaHabito` como **union types literais** (não `string`)
-- `NovoHabito`, `ResumoHabito` e `AtualizacaoHabito` **derivados** com utility types
-- `EstadoTela<T>` como **união discriminada**
-
-**2. Camada de dados falsa** — `src/services/habitoService.ts`:
-- Uma função `buscarHabitoDoDia(): Promise<Habito>` que devolve **um hábito** mockado, com um atraso artificial de ~1 segundo (para o loading ser visível)
-- A função deve ser **assíncrona** e ter o mesmo formato que teria uma chamada HTTP real
-
-**3. Tela do hábito do dia** — usando `EstadoTela<Habito>`:
-- Estado de **carregando** → indicador visual
-- Estado de **sucesso** → card com título, categoria, status legível, streak e um botão **"Marcar concluído hoje"**
-- Estado de **erro** → mensagem legível e um botão "Tentar novamente"
-- Ao tocar em "Marcar concluído hoje", o status muda para `'concluido'` (atualização local, sem persistir — isso também é assunto de aula futura)
-
-**4. `README.md`** (complementando o do repositório do projeto) com:
-- **Uma decisão de modelagem que você tomou e o motivo** (ex.: por que `type` e não `interface`, por que esse conjunto de status, por que `streakDias` é um número e não uma lista de datas)
+1. Os quatro arquivos acima, com todos os `TODO` resolvidos e **removidos**.
+2. Os três estados funcionando: carregando, sucesso e erro.
+3. A ação **"Marcar concluído hoje"** alterando o estado local.
+4. Um `README.md` no repositório com **uma decisão de modelagem que você tomou e o motivo** (ex.: por que `type` e não `interface`, por que esse conjunto de status, por que `streakDias` é um número e não uma lista de datas).
 
 ### Como testar o estado de erro
 
-Você precisa vê-lo funcionando. Sugestão: faça `buscarHabitoDoDia()` lançar um erro quando uma constante `SIMULAR_ERRO` for `true`. Deixe essa constante no código, comentada, para o professor conseguir testar também.
+Você precisa vê-lo funcionando. Troque `SIMULAR_ERRO` para `true` em `habito-service.ts`, confira a tela de erro e o botão "Tentar novamente", e devolva a constante para `false` antes de entregar — mas **deixe a constante no código**.
 
 ### Critérios de avaliação
 
@@ -170,55 +453,13 @@ Você precisa vê-lo funcionando. Sugestão: faça `buscarHabitoDoDia()` lançar
 | **Modelagem de tipos** | 30% | Unions literais em vez de `string`; utility types derivando de uma fonte única; união discriminada correta para o estado de tela |
 | **Ausência de `any` e de assertions desnecessárias** | 20% | Nenhum `any`. `!` e `as` só com justificativa em comentário |
 | **Os três estados funcionam** | 20% | Loading, sucesso e erro visíveis e testáveis de fato |
-| **Organização** | 15% | Separação entre `types/`, `services/` e a tela; nomes coerentes |
+| **Organização** | 15% | Separação entre `types/`, `services/` e `components/`; nomes coerentes |
 | **Ação de marcar concluído** | 10% | Funciona e atualiza o estado local corretamente |
 | **README** | 5% | A decisão de modelagem explicada |
 
 ### O que **não** é avaliado nesta atividade
 
 Beleza visual, animações, navegação entre telas, persistência, listas. Foque na modelagem e nos três estados de uma única entidade.
-
----
-
-## Atividade 2 — Relatório de decisão de plataforma
-
-**Nível:** ⭐⭐ · **Tempo estimado:** 1 h · **Entrega:** individual · **Formato:** 1 a 2 páginas
-
-### Contexto
-
-Uma **rede de 40 clínicas veterinárias** contratou sua consultoria para um app que ajude tutores a acompanhar a rotina dos pets. Restrições do projeto:
-
-- **Orçamento:** R$ 90 mil, primeira versão
-- **Prazo:** 3 meses até o piloto
-- **Equipe disponível:** 2 desenvolvedores — ambos com TypeScript e React, **nenhum** com Kotlin ou Swift
-- **Público:** tutores de todas as faixas de renda; **65% dos aparelhos do público-alvo são Android de entrada** com menos de 4 GB de RAM
-- **Requisitos funcionais que envolvem hardware:**
-  - Tirar foto do pet e de documentos (carteira de vacinação)
-  - Capturar a localização GPS durante passeios
-  - Funcionar com conectividade instável — registrar offline e sincronizar depois
-  - Notificar o tutor sobre vacinas e consultas agendadas
-- Também é necessário um **painel para as clínicas**, usado em desktop na recepção
-
-### O que entregar
-
-1. **Recomendação de abordagem** para o app do tutor: nativo, cross-platform ou web/PWA. Escolha **uma** e defenda.
-2. **Três restrições específicas do enunciado** que sustentam sua escolha. Cite-as explicitamente — não argumente em abstrato.
-3. **Análise da abordagem que você rejeitou**: o que a organização perde ao não escolhê-la? Toda decisão tem custo; nomeie o seu.
-4. **Recomendação para o painel da clínica.** Deve ser a mesma tecnologia do app do tutor? Justifique.
-5. **Um risco técnico concreto** da sua recomendação e como você o mitigaria.
-6. **Uma pergunta que você faria ao cliente** antes de fechar a decisão — algo que o enunciado não informa e que poderia mudar sua resposta.
-
-### Critérios de avaliação
-
-| Critério | Peso | O que se espera |
-|---|---|---|
-| **Argumentação ancorada nas restrições** | 35% | Cita restrições do enunciado, não generalidades sobre tecnologia |
-| **Honestidade sobre o trade-off** | 25% | Reconhece o que se perde; não vende a escolha como perfeita |
-| **Risco e mitigação** | 20% | Risco plausível e específico, com mitigação viável |
-| **Decisão sobre o painel** | 10% | Coerente, com justificativa |
-| **Qualidade da pergunta ao cliente** | 10% | Uma pergunta que **realmente** mudaria a decisão |
-
-> **Não existe uma resposta única correta.** Cross-platform é defensável; PWA é defensável em parte; nativo é defensável com ressalvas fortes. O que é avaliado é a **qualidade do raciocínio**, não a coincidência com a opinião do professor.
 
 ---
 
@@ -289,6 +530,42 @@ type CardHabitoProps = {
 <details>
 <summary><b>Gabarito — Exercício 3</b></summary>
 
+**Parte A — dois estados impossíveis (entre outros):**
+
+- `carregando = true` **e** `erro = 'falhou'` ao mesmo tempo — a tela está carregando ou deu erro?
+- `carregando = false`, `erro = null` **e** `habito = null` — nada aconteceu e não há o que mostrar; a última linha explode.
+
+**Parte B —** o `!` foi necessário porque, para o compilador, `habito` **pode** ser `null` naquela linha. O `!` não verifica nada: apenas manda o compilador calar a boca. Ele esconde exatamente o terceiro estado impossível acima.
+
+**Parte C:**
+
+```tsx
+type EstadoTela<T> =
+  | { tipo: 'carregando' }
+  | { tipo: 'sucesso'; dados: T }
+  | { tipo: 'erro'; mensagem: string };
+
+function TelaHabitoDoDia() {
+  const [estado, setEstado] = useState<EstadoTela<Habito>>({ tipo: 'carregando' });
+
+  switch (estado.tipo) {
+    case 'carregando':
+      return <ActivityIndicator />;
+    case 'sucesso':
+      return <Text>{estado.dados.titulo}</Text>;   // sem `!`
+    case 'erro':
+      return <Text>{estado.mensagem}</Text>;
+  }
+}
+```
+
+O campo `tipo` é o **discriminante**: dentro de cada `case`, o TypeScript sabe exatamente quais campos existem. `estado.dados` dentro do `case 'erro'` não compila — e é justamente esse o ganho.
+
+</details>
+
+<details>
+<summary><b>Gabarito — Exercício 4</b></summary>
+
 ```ts
 type NovoHabito = Omit<Habito, 'id' | 'status' | 'streakDias' | 'criadoEm'>;
 
@@ -315,6 +592,6 @@ type AtualizacaoHabito = Partial<NovoHabito>;
 
 | Parte | Onde | Tempo |
 |---|---|---|
-| Exercícios 1 a 3 | Sala, sem computador | ~9 min |
+| Exercícios 1 a 3 | Sala, no computador | ~15 min |
+| Exercício 4 | Sala, se sobrar tempo — senão, em casa | ~4 min |
 | Atividade 1 | Casa | 2–3 h |
-| Atividade 2 | Casa | ~1 h |

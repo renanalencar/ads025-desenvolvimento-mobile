@@ -10,6 +10,7 @@ footer: 'Aula 3 — Core Components, StyleSheet e Flexbox'
 Slides em Markdown compatíveis com Marp.
 Para exportar:  npx @marp-team/marp-cli@latest presentation.md -o aula3.pdf
 Os blocos de comentário HTML são notas do apresentador (não aparecem no slide).
+Materiais irmãos: student-notes.md · exercises.md · practice.md (equivalência Pet).
 
 >>> PARA PROJETAR EM SALA, USE `presentation.html` (reveal.js). <<<
 Este arquivo .md é a fonte em Markdown, para leitura rápida no editor e para
@@ -24,18 +25,25 @@ modo apresentador, visão geral e navegação por teclado.
 
 CESAR School · 2026.2
 
+<!--
+Antes de começar: confirmar que todo mundo tem o projeto do grupo rodando
+com `npx expo start`. Quem estiver travado resolve AGORA, não no bloco de
+hands-on.
+-->
+
 ---
 
 <!-- _class: lead -->
 
 ## Na Aula 1 vocês descobriram que `<View>` não é `<div>`.
 
-### Hoje vem a consequência: todo o vocabulário mudou, e a **cascata não existe**.
+### Hoje vem a consequência: todo o vocabulário mudou — e a **cascata não existe**.
 
 <!--
-Gancho de abertura. A boa notícia: o dicionário novo tem menos de dez palavras.
-A má: a ideia mais central da estilização web — a cascata — não foi implementada.
-Deixar essa segunda frase no ar. Ela é o eixo da aula.
+A boa notícia: o dicionário novo tem menos de dez palavras.
+A má: a ideia mais central da estilização web — a CASCATA — não foi
+implementada aqui.
+Deixar a segunda frase no ar. Ela é o eixo da aula inteira.
 -->
 
 ---
@@ -59,7 +67,7 @@ Deixar essa segunda frase no ar. Ela é o eixo da aula.
 ## Ao final da aula você deve conseguir
 
 1. **Escolher** o componente certo — e justificar a escolha
-2. **Aplicar** estilo com `StyleSheet`, incluindo condicional e precedência
+2. **Aplicar** estilo com `StyleSheet`: condicional e precedência
 3. **Explicar** por que não há cascata, e qual é a única exceção
 4. **Ligar estado a interface** com `useState`, `onPress` e componentes controlados
 5. **Construir** um layout Flexbox **prevendo** o resultado antes de rodar
@@ -109,7 +117,8 @@ Explicar no próximo slide POR QUE aquela instrução existia.
 
 <!--
 Não é limitação técnica — é fila de revisão de loja.
-Amarrar com a Aula 1: o custo de depender de revisão de loja, na prática.
+Amarrar com a Aula 1: aquilo que falamos sobre o custo de depender de
+revisão de loja, aqui está na prática, atrapalhando a própria aula.
 -->
 
 ---
@@ -130,9 +139,10 @@ npx expo start --web
 `npm install` pega a mais recente do npm — que pode ser de um SDK futuro.
 
 <!--
-Regra para levar: dependência que acompanha o SDK se instala com expo install.
-O erro resultante do npm install não parece ter relação com o seu código —
-é por isso que custa horas.
+Regra para levar: dependência que acompanha o SDK se instala com
+`npx expo install`.
+O erro que o npm install produz não PARECE ter relação com o seu código —
+é por isso que custa horas de depuração.
 -->
 
 ---
@@ -156,6 +166,14 @@ O erro resultante do npm install não parece ter relação com o seu código —
 | `className` / `.css` | `StyleSheet.create` | objetos JS |
 
 ### São **sete**. O dicionário da aula cabe numa mão e meia.
+
+<!--
+Dizer o "são sete" em voz alta. Reduz a ansiedade da turma: o vocabulário
+novo é pequeno; o que é difícil é o ESTILO.
+
+Interação, nesta aula, sai de três lugares — todos aqui dentro:
+onPress no Button, onPress no Text, onChangeText/onValueChange.
+-->
 
 ---
 
@@ -181,7 +199,8 @@ E algumas palavras não têm tradução: não existe `<h1>` — existe `<Text>` 
 Você vai ver esse erro. Todo mundo vê.
 
 <!--
-DEMONSTRAR AO VIVO. Quebrar de propósito, mostrar a tela vermelha, corrigir.
+DEMONSTRAR AO VIVO. Quebrar de propósito, mostrar a tela vermelha,
+corrigir na frente deles.
 Vale 30 segundos e economiza uma hora de suporte no hands-on.
 -->
 
@@ -223,8 +242,9 @@ Vale 30 segundos e economiza uma hora de suporte no hands-on.
 Nada aparece. E **não há erro no console**.
 
 <!--
-Demonstrar. O silêncio é o que faz esse bug custar caro:
-o aluno acha que a URL está errada, quando o problema é o estilo.
+Demonstrar. O SILÊNCIO é o que faz esse bug custar caro: o aluno acha
+que a URL está errada, quando o problema é o estilo.
+Mesma família do bug da View sem width (exercício 4, item E).
 -->
 
 ---
@@ -240,7 +260,7 @@ npx expo install expo-image
 - Placeholders **BlurHash / ThumbHash**
 - WebP, AVIF, HEIC, SVG, GIF animado
 
-A doc do RN **não** deprecia o `Image` nativo — mas para imagem de rede em produção, `expo-image` é o caminho.
+A doc do React Native **não** deprecia o `Image` nativo — mas para imagem de rede em produção, `expo-image` é o caminho.
 
 ---
 
@@ -277,12 +297,12 @@ const [titulo, setTitulo] = useState('');
 |---|---|
 | `padding` no conteúdo | `contentContainerStyle` |
 | centralizar os filhos | `contentContainerStyle` |
-| altura/fundo da janela | `style` |
+| altura / fundo da janela | `style` |
 
 ### `alignItems` no `style` de um `ScrollView` não faz **nada**.
 
 <!--
-Esse é dos bugs mais confusos de depurar, porque o resultado é o silêncio:
+Um dos bugs mais confusos de depurar, porque o resultado é o SILÊNCIO:
 o código parece certo e a tela não muda.
 -->
 
@@ -306,7 +326,12 @@ flowchart TD
 
 `ScrollView` monta **todos** os filhos de uma vez. Com 20, ok. Com 2.000, o app engasga.
 
-Caso típico de `ScrollView`: um **formulário**.
+Caso típico de `ScrollView`: um **formulário** — campos conhecidos, quantidade fixa.
+
+<!--
+Se alguém perguntar qual é o "componente especializado": estacionar.
+Renderização de listas NÃO é assunto desta aula.
+-->
 
 ---
 
@@ -320,10 +345,16 @@ São **essas** as props: `title` · `onPress` · `color` · `disabled`
 
 | Plataforma | O que `color` tinge |
 |---|---|
-| iOS | o **texto** |
-| Android | o **fundo** |
+| iOS | o **texto** do botão |
+| Android | o **fundo** do botão |
 
 ### O mesmo `color` produz dois botões diferentes. Teste nas duas.
+
+<!--
+Bom exemplo de "componente do sistema entrega a aparência do sistema".
+Serve para: protótipo, caixa de diálogo, tela de configuração,
+ação de formulário.
+-->
 
 ---
 
@@ -335,11 +366,17 @@ São **essas** as props: `title` · `onPress` · `color` · `disabled`
 
 <!--
 PAUSA aqui.
-Não é limitação acidental — é o projeto do componente.
-A pergunta que vem: "e se eu quiser um botão com fundo laranja e canto arredondado?"
+Não é limitação acidental — é o PROJETO do componente.
+
+A pergunta que vem em seguida, garantido:
+"e se eu quiser um botão com fundo laranja e canto arredondado?"
 RESPOSTA: "ótima pergunta, e não é o assunto de hoje."
+
 Componentes de toque estilizáveis estão FORA do escopo desta aula.
-Não abrir esse tópico: o orçamento de hoje é estilo e layout.
+Não abrir esse tópico — o orçamento de hoje é estilo e layout.
+
+O ponto didático a extrair: a escolha do componente vem ANTES
+da estilização.
 -->
 
 ---
@@ -380,6 +417,12 @@ const [concluido, setConcluido] = useState(false);
 
 Você já conhece as duas primeiras partes. A terceira é a novidade de hoje.
 
+<!--
+Este é o padrão que sustenta metade dos exercícios.
+Note o setConcluido((anterior) => !anterior): quando o novo estado deriva
+do anterior, a forma de função é a segura.
+-->
+
 ---
 
 ## `Switch` — o liga/desliga
@@ -415,16 +458,19 @@ O componente **não guarda** o valor. O estado é a fonte de verdade.
 ### Esqueceu o `value`? O usuário mexe e a tela volta ao valor anterior.
 
 <!--
-Esse é o bug clássico do componente controlado pela metade:
-o aluno põe onValueChange e esquece o value. O Switch "não funciona"
-e ele acha que o componente está quebrado.
+Esse é o bug clássico do componente controlado pela metade: o aluno põe
+o onValueChange e esquece o value. O Switch "não funciona" e ele acha que
+o componente está quebrado.
+Vale demonstrar ao vivo — apagar o value e mostrar o Switch voltando.
 -->
 
 ---
 
 <!-- _class: lead -->
 
-# ☕ Intervalo — 10 min
+# ☕ Intervalo
+
+### 10 minutos
 
 ---
 
@@ -460,7 +506,8 @@ Cada componente **se veste sozinho**.
 <!--
 Enfatizar: repetir estilo aqui é NORMAL, não é falta de habilidade.
 E é justamente por isso que a Parte 5 (tokens) existe — ela é a
-resposta de engenharia para a ausência da cascata.
+resposta de ENGENHARIA para a ausência da cascata.
+Essa amarração é importante: senão a Parte 5 parece arbitrária.
 -->
 
 ---
@@ -479,6 +526,8 @@ flowchart TB
         R3["estilo no Text"] -->|"herda"| R4["Text aninhado"]
     end
 ```
+
+No bloco do CSS o estilo desce sozinho pela árvore. No bloco do React Native, a única seta de herança vai de `Text` para `Text`.
 
 ---
 
@@ -532,7 +581,7 @@ flowchart LR
 ### Vermelho. É `Object.assign({}, a, b)`.
 
 <!--
-PERGUNTAR antes de revelar. Deixar a turma responder.
+PERGUNTAR antes de revelar. Deixar a turma responder em voz alta.
 Quem lembrar de Object.assign nunca mais erra isso.
 -->
 
@@ -546,7 +595,7 @@ Quem lembrar de Object.assign nunca mais erra isso.
 ❌ **Não** faz mágica de performance
 
 A história antiga: ele registrava os estilos e passava só um **ID pela ponte**.
-A ponte **não existe mais** (Aula 1, §3.4).
+A ponte **não existe mais** — foi removida na **0.84** (Aula 1, §3.4).
 
 ### Hoje o ganho é **validação e organização**.
 
@@ -585,9 +634,17 @@ A assinatura de `create` **já preserva os literais**.
 { boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.12)' }
 ```
 
-`boxShadow` funciona na **New Architecture** — a **única** desde a 0.82.
+`boxShadow` funciona na **New Architecture** — o **único modo** desde a **0.82**, e desde a **0.84**
+a arquitetura legada nem existe mais no código.
 
-Também chegou `filter` (blur, brightness, saturate).
+Também chegou `filter`: blur, brightness, saturate.
+
+<!--
+Amarrar com a Aula 1: eles aprenderam que a arquitetura legada foi
+removida do código na 0.84 — e que desde a 0.82 a New Architecture já era o único
+modo possível. Aqui está a consequência PRÁTICA e visível disso —
+propriedades de estilo novas que só existem na New Architecture.
+-->
 
 ---
 
@@ -602,14 +659,15 @@ Também chegou `filter` (blur, brightness, saturate).
 
 2. Onde vai o `padding` de um `ScrollView`? **Por que não no `style`?**
 
-3. Quais são as quatro props do `<Button>`? Por que ele não fica arredondado?
+3. Quero um botão com fundo gradiente e canto arredondado. **`<Button>`?**
 
 4. Em `style={[a, b]}`: `a` diz `color:'blue'`, `b` diz `color:'red'`. **Qual vence?** E se `b` for `false`?
 
 <!--
-Não avançar para Flexbox sem isso.
+NÃO avançar para Flexbox sem isso.
 Se travarem: retomar o CÓDIGO DE VESTIMENTA, não inventar analogia nova.
-Se a dúvida for precedência: escrever Object.assign({}, a, b) na lousa.
+Se a dúvida for de precedência: escrever Object.assign({}, a, b) na lousa —
+a maioria reconhece na hora.
 -->
 
 ---
@@ -628,6 +686,11 @@ Se a dúvida for precedência: escrever Object.assign({}, a, b) na lousa.
 ### Toda dúvida de Flexbox se resolve com uma pergunta:
 
 ## *"Qual é o eixo principal aqui?"*
+
+<!--
+Apresentar a analogia ANTES de qualquer propriedade.
+Ela é o gancho que eles vão usar para lembrar disso depois.
+-->
 
 ---
 
@@ -659,6 +722,8 @@ Este é o bug de layout nº 1 do semestre.
 
 <!--
 ESCREVER NA LOUSA E NÃO APAGAR até o fim da aula.
+Toda vez que alguém no hands-on disser "não está indo para o lado",
+apontar para a lousa em vez de responder.
 -->
 
 ---
@@ -691,8 +756,8 @@ linha: {
 | `flex-start` *(default)* | tudo no começo |
 | `center` | tudo no meio |
 | `flex-end` | tudo no fim |
-| `space-between` | pontas nas bordas, sobra no meio |
-| `space-around` | espaço em volta de cada item (bordas com metade) |
+| `space-between` | pontas nas bordas, sobra dividida no meio |
+| `space-around` | espaço em volta de cada item — bordas com metade |
 | `space-evenly` | vãos **exatamente** iguais, bordas incluídas |
 
 `alignItems` — no eixo cruzado: `stretch` *(default)* · `flex-start` · `center` · `flex-end` · `baseline`
@@ -714,8 +779,9 @@ tela: {
 Centralizar dentro de uma caixa do tamanho exato do conteúdo não muda nada — **não há sobra para distribuir**.
 
 <!--
-Flexbox distribui ESPAÇO QUE EXISTE.
+A frase para eles levarem: Flexbox distribui ESPAÇO QUE EXISTE.
 Antes de mexer em justifyContent, perguntar: este contêiner tem tamanho?
+É o item C do exercício 4.
 -->
 
 ---
@@ -755,7 +821,7 @@ celula: {
 }
 ```
 
-`aspectRatio` poupa a conta de altura. `flexGrow` faz as células fecharem a largura sem percentual na mão.
+`aspectRatio` poupa a conta de altura. `flexGrow` faz as células fecharem a largura **sem percentual na mão** — sobrevive a mudança de tamanho de tela.
 
 ---
 
@@ -779,7 +845,7 @@ grade: { gap: 10 }
 
 ---
 
-## Flexbox: RN vs CSS
+## Flexbox: React Native vs CSS
 
 | | React Native | CSS |
 |---|---|---|
@@ -860,7 +926,7 @@ export const tipografia = {
 } as const;
 ```
 
-📌 **Aqui o `as const` faz sentido** — objeto solto. Sem ele, `'600'` alarga para `string`.
+📌 **Aqui o `as const` faz sentido** — é objeto solto, fora de `create`. Sem ele, `'600'` alarga para `string`, que não é um `fontWeight` válido.
 
 ---
 
@@ -906,9 +972,9 @@ Quer compartilhar um card? Compartilhe um **componente** `<Card>`, não um objet
 <View style={{ padding: 16, borderRadius: 12, backgroundColor: '#fff' }} />
 ```
 
-O objeto é recriado a cada render. Num card isolado, ninguém nota; numa tela com centenas de elementos, pesa.
+O objeto é recriado a cada render. Num card isolado ninguém nota; numa tela com centenas de elementos, pesa.
 
-Mas o problema principal **não é performance** — é o número mágico espalhado, longe de qualquer decisão de design.
+Mas o problema principal **não é performance** — é o número mágico espalhado pelo JSX, longe de qualquer decisão de design.
 
 ---
 
@@ -926,14 +992,16 @@ Mas o problema principal **não é performance** — é o número mágico espalh
 
 <!--
 Mesma lição do TypeScript 7 na Aula 1:
-versão mais nova ≠ versão recomendada.
-Quem aprende StyleSheet entende o que o Tailwind faz por baixo.
-O contrário não é verdade.
+VERSÃO MAIS NOVA ≠ VERSÃO RECOMENDADA.
+E o argumento decisivo: quem aprende StyleSheet entende o que o Tailwind
+faz por baixo. O contrário não é verdade.
+Se estiver atrasado, este slide é o primeiro a cortar.
 -->
 
 ---
 
 # Juntando tudo
+## O card estilizado
 
 ---
 
@@ -1005,9 +1073,14 @@ export default function TelaHabitoDoDia() {          // ← sem JSX.Element
 2. **`boxShadow`** em uma linha, no lugar do quarteto + `elevation`
 3. **`flexDirection: 'row'`** explícito na linha
 4. O `padding` foi para **`contentContainerStyle`**, não para o `style`
-5. **Um estado, dois efeitos visuais** — `concluido` aparece em dois arrays
+5. **Um estado, dois efeitos visuais** — `concluido` aparece em **dois** arrays
 6. **`Text` com `onPress`** e **`Button` embrulhado numa `View`** estilizada
 7. **Nenhum `as const`** dentro de `create` e **nenhum `: JSX.Element`**
+
+<!--
+O item 5 é o mais importante: UM estado gerando DOIS efeitos visuais,
+sem nenhum if no JSX. É a ideia central da Parte 2 aplicada.
+-->
 
 ---
 
@@ -1015,16 +1088,22 @@ export default function TelaHabitoDoDia() {          // ← sem JSX.Element
 
 | O material antigo ensina | O que vale hoje |
 |---|---|
-| `JSX.Element` | React 19 removeu o `JSX` global — omita a anotação |
-| `as const` em `create` | Desnecessário; `create` preserva literais |
-| `--template default@sdk-54` fixo | SDK **57**; iPhone SDK 55+ via `sign.expo.dev` |
-| `npm install react-dom@...` | **`npx expo install`** |
+| `JSX.Element` como tipo de retorno | React 19 removeu o `JSX` global — omita a anotação |
+| `as const` dentro de `create` | Desnecessário; `create` preserva literais |
+| `--template default@sdk-54` fixo | SDK **57**; iPhone com SDK 55+ via `sign.expo.dev` |
+| `npm install react-dom@19.2.0` | **`npx expo install`** |
 | Quarteto `shadow*` + `elevation` | **`boxShadow`** |
 | `margin: 5` em cada filho | **`gap`** |
 | `Button` com `color` igual nas duas plataformas | iOS tinge o **texto**, Android o **fundo** |
 | "Estilize o `<Button>`" | `Button` **não aceita `style`** |
 | `flexDirection` default `row` | Em RN é **`column`** |
 | "`create` otimiza performance" | Valida tipos e organiza |
+
+<!--
+Ler alguns em voz alta. Eles VÃO bater nesse material velho na internet —
+é melhor chegarem lá vacinados.
+Este slide é o resumo mais útil para revisão antes da prova.
+-->
 
 ---
 
@@ -1040,9 +1119,9 @@ export default function TelaHabitoDoDia() {          // ← sem JSX.Element
 ### No exercício 4, prever errado é o melhor momento da aula.
 
 <!--
-Circular pela sala. Erros previsíveis:
+Circular pela sala. Erros previsíveis, com resposta pronta:
 texto solto · justifyContent sem row · imagem sem dimensão ·
-esperar herança da View · style no <Button> · JSX.Element copiado ·
+esperar herança da View · style na prop do Button · JSX.Element copiado ·
 '16px' · flex:1 sem pai com altura.
 -->
 
@@ -1052,7 +1131,7 @@ esperar herança da View · style no <Button> · JSX.Element copiado ·
 
 **Estilizar de verdade a tela do projeto** — `exercises.md`, Atividade 1
 
-- `theme.ts` com **tokens** (cores, espaço, tipografia)
+- `theme.ts` com **tokens**: cores, espaço, tipografia
 - `Card` reutilizável com `destacado?` via array de estilos
 - Formulário: `TextInput` + `Switch` em `ScrollView`, `Button` que desabilita com o campo vazio
 - Um layout Flexbox não trivial, espaçado **só com `gap`**
@@ -1083,7 +1162,7 @@ esperar herança da View · style no <Button> · JSX.Element copiado ·
 - [Flexbox](https://reactnative.dev/docs/flexbox) · [StyleSheet](https://reactnative.dev/docs/stylesheet) · [Layout Props](https://reactnative.dev/docs/layout-props)
 - 🐸 [Flexbox Froggy](https://flexboxfroggy.com/) — ~20 min
 
-**Notas completas, com fontes:** `student-notes.md`
+**Notas completas, com fontes de todos os dados citados:** `student-notes.md`
 
 ---
 
@@ -1095,5 +1174,5 @@ esperar herança da View · style no <Button> · JSX.Element copiado ·
 
 <!--
 Dados de versões e ferramentas verificados em 18/08/2026.
-Fontes completas em student-notes.md e lesson-plan.md.
+Fontes completas em student-notes.md.
 -->

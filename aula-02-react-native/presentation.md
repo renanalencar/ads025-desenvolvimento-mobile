@@ -3,26 +3,36 @@ marp: true
 theme: default
 paginate: true
 header: 'Desenvolvimento Mobile — 2026.2 · CESAR School'
-footer: 'Aula 1 — Plataformas Móveis, TypeScript e React Native'
+footer: 'Aula 2 — React Native'
 ---
 
 <!--
 Slides em Markdown compatíveis com Marp.
-Para exportar:  npx @marp-team/marp-cli@latest presentation.md -o aula1.pdf
+Para exportar:  npx @marp-team/marp-cli@latest presentation.md -o aula2.pdf
 Os blocos de comentário HTML são notas do apresentador (não aparecem no slide).
 
->>> PARA PROJETAR EM SALA, USE `presentation.html` (reveal.js). <<<
-Este arquivo .md é a fonte em Markdown, para leitura rápida no editor e para
-quem preferir Marp. O Marp NÃO renderiza blocos ```mermaid nativamente — os
-diagramas aparecem como código. A versão HTML renderiza tudo e ainda tem
-modo apresentador, visão geral e navegação por teclado.
+>>> PARA PROJETAR EM SALA, USE `presentation.html` (reveal.js, 26 slides). <<<
+Este arquivo .md espelha a mesma sequência do HTML, para leitura rápida no
+editor e para quem preferir Marp. O Marp NÃO renderiza blocos ```mermaid
+nativamente — os diagramas aparecem como código. A versão HTML renderiza
+tudo e ainda tem modo apresentador, visão geral e navegação por teclado.
+
+Escopo desta aula: SÓ React Native (o que é, o que não é, a Nova Arquitetura,
+como se cria um projeto hoje) + hands-on. Panorama de plataformas e revisão
+de TypeScript são da Aula 1.
 -->
 
 # Desenvolvimento Mobile
 
-## Aula 1 — Plataformas Móveis, TypeScript e React Native
+## Aula 2 — React Native
 
 CESAR School · 2026.2
+
+<!--
+Gancho de abertura no próximo slide.
+Antes de começar: confirmar que todo mundo tem Node instalado —
+quem não tiver, resolver AGORA, não no bloco de hands-on.
+-->
 
 ---
 
@@ -33,757 +43,31 @@ CESAR School · 2026.2
 ### Hoje vamos levar isso para dentro do bolso de bilhões de pessoas.
 
 <!--
-Gancho de abertura. Enfatizar: o repertório deles transfere quase inteiro.
+Enfatizar: o repertório deles transfere quase inteiro.
 TS, componentes, estado, consumo de API — tudo continua valendo.
 O que é novo é a PLATAFORMA, não a linguagem.
 -->
 
 ---
 
-## Agenda — 3 horas
+## Agenda — 1h05
 
 | Bloco | Tempo |
 |---|---|
-| Abertura: disciplina e projetos | 15 min |
-| **1.** Panorama das plataformas móveis | 45 min |
-| ☕ Intervalo | 10 min |
-| **2.** TypeScript com olhos de mobile | 35 min |
-| **3.** Checkpoint conceitual | 10 min |
-| **4.** Introdução ao React Native | 35 min |
-| **5.** Hands-on: criando o projeto | 25 min |
+| **1.** Introdução ao React Native | 35 min |
+| **2.** Hands-on: criando o projeto | 25 min |
 | Fechamento | 5 min |
-
----
-
-## Os dois projetos da disciplina
-
-Ao longo do semestre, cada grupo constrói **um** destes dois apps:
-
-- 🧘 **Rastreador de Micro-hábitos e Condicionamento Físico** — `habit-tracker-expo`
-- 🐾 **App de Gestão e Rotina Pet** — `pet-routine-expo`
-
-### Hoje: todo mundo cria o projeto Expo que vai usar a partir da próxima aula.
-
-<!--
-Cada repositório já existe com a branch feature/ads025_2026-2, README e
-TODOs no App.tsx. Confirmar com a turma qual grupo ficou com qual projeto.
--->
 
 ---
 
 ## Ao final da aula você deve conseguir
 
-1. **Comparar** as 5 plataformas: Android, iOS, HarmonyOS, Tizen, webOS
-2. **Justificar** nativo vs. cross-platform vs. web a partir de restrições reais
-3. **Modelar** um domínio em TypeScript: props, estado, unions, generics
-4. **Explicar** o que React Native é — e o que ele **não** é
-5. **Criar e rodar** um projeto React Native no seu próprio celular
+1. **Explicar** o que React Native é — e o que ele **não** é
+2. **Criar e rodar** um projeto React Native no seu próprio celular
 
 ---
 
 # Parte 1
-## Plataformas Móveis
-
----
-
-## Quanto vale cada plataforma?
-
-### StatCounter — julho/2026 *(mede tráfego web)*
-
-| | Mundo | Brasil |
-|---|---|---|
-| Android | **68,4%** | **77,6%** |
-| iOS | 31,6% | 22,4% |
-
-### Counterpoint — Q1/2026 *(mede vendas)*
-
-| Android | iOS | **HarmonyOS** |
-|---|---|---|
-| ~73% | ~22% | **~5%** |
-
----
-
-## O mesmo mercado, duas fotografias
-
-```mermaid
-pie showData title StatCounter - trafego web mundial
-    "Android" : 68.4
-    "iOS" : 31.6
-```
-
-```mermaid
-pie showData title Counterpoint - vendas globais
-    "Android" : 73
-    "iOS" : 22
-    "HarmonyOS" : 5
-```
-
-<!--
-Perguntar antes de mostrar o próximo slide:
-"Onde está o HarmonyOS no primeiro gráfico?"
-A ausência é o argumento.
--->
-
----
-
-<!-- _class: lead -->
-
-# Os dois estão certos.
-# Por que discordam?
-
-<!--
-PAUSA. Deixar a turma pensar 60 segundos. Não entregar a resposta.
-Conduzir com perguntas:
- - "O que o StatCounter conta exatamente?"
- - "Se eu navego mais, eu peso mais?"
- - "Onde está o HarmonyOS no primeiro quadro?"
--->
-
----
-
-## Metodologia
-
-- **Tráfego web** conta *page views* — quem navega mais, pesa mais
-- **Vendas** contam aparelhos que saíram da loja neste trimestre
-- **Base instalada** seria uma terceira coisa, diferente das duas
-
-### E o detalhe revelador
-
-**StatCounter não desagrega HarmonyOS.**
-
-Aparelhos Huawei são classificados como "Android" ou "outros" pelo *user-agent*.
-
-> Uma plataforma com ~5% do mercado global fica **invisível**.
-
-### 🎯 Saiba o que o número mede antes de decidir com base nele.
-
----
-
-## Android
-
-| | |
-|---|---|
-| **Dono** | Google / AOSP — **open source** |
-| **Versão** | 17 "Cinnamon Bun" · API 37 *(jun/2026)* |
-| **Linguagem** | **Kotlin** *(Kotlin-first desde 2019)* |
-| **UI** | Jetpack Compose *(declarativo)* |
-| **IDE** | Android Studio |
-| **Play Store** | `targetSdk` ≥ 36 a partir de 31/ago/2026 |
-
-### Dor característica: **fragmentação**
-
-Muitos fabricantes · muitas versões em uso · muitos tamanhos de tela
-
----
-
-## Android — arquitetura (AOSP atual: 7 camadas)
-
-```mermaid
-flowchart TB
-    A7["7 · Aplicações"]
-    A6["6 · Android Framework — Java/Kotlin"]
-    A5["5 · ART — Android Runtime"]
-    A4["4 · System services"]
-    A3["3 · HAL — Hardware Abstraction Layer"]
-    A2["2 · Daemons e libs nativas"]
-    A1["1 · Kernel Linux"]
-
-    A7 --> A6 --> A5 --> A4 --> A3 --> A2 --> A1
-```
-
-
-<!--
-Destacar a HAL: é o contrato que permite o mesmo Android rodar em milhares
-de aparelhos. O fabricante implementa a HAL; as camadas de cima não sabem
-de nada. É a resposta técnica para "como um SO serve tanta gente".
--->
-
----
-
-## iOS
-
-| | |
-|---|---|
-| **Dono** | Apple — **fechado**, verticalmente integrado |
-| **Versão** | 26.6 *(jul/2026)* · **iOS 27** em beta |
-| **Linguagem** | **Swift** |
-| **UI** | SwiftUI *(UIKit segue suportado)* |
-| **IDE** | Xcode 26.6 — **só roda em macOS** |
-| **App Store** | build com Xcode 26+ desde abr/2026 |
-
-**Vantagem:** consistência — poucos aparelhos, atualização rápida
-**Restrição prática:** sem Mac, sem desenvolvimento nativo iOS
-
----
-
-## ⚠️ Sobre aquele diagrama de 4 camadas do iOS
-
-Você vai encontrar em todo lugar:
-
-`Cocoa Touch` → `Media` → `Core Services` → `Core OS`
-
-**Ele vem de um documento da Apple que está arquivado.**
-
-A documentação atual não organiza o iOS assim — descreve o núcleo
-Darwin/XNU e os frameworks por domínio.
-
-> Use como **modelo conceitual histórico**, não como arquitetura vigente.
-
-<!--
-Vale um minuto: mostra à turma que material didático envelhece, inclusive
-o que "todo mundo" reproduz. Bom momento para incentivar checar a fonte.
--->
-
----
-
-## OpenHarmony / HarmonyOS
-
-<!-- _class: lead -->
-
-# ⚠️ São TRÊS coisas diferentes
-
-### Este é o erro mais comum do assunto.
-
----
-
-## Os três nomes
-
-| Nome | O que é | Roda APK? |
-|---|---|---|
-| **OpenHarmony** (OHOS) | Projeto **open source**, OpenAtom Foundation *(2020)* — a base técnica | — |
-| **HarmonyOS 1–4** | Produto Huawei = OpenHarmony **+ core AOSP** | ✅ **Sim** |
-| **HarmonyOS NEXT** = HarmonyOS 5 *(out/2024)* **e superiores** | Produto Huawei **sem** AOSP | ❌ **Não** |
-
-### A Huawei quebrou a compatibilidade com Android de propósito.
-
-Sem ART, sem camada de compatibilidade. Todo app é **reescrito**.
-
----
-
-## A diferença está em uma peça só
-
-```mermaid
-flowchart TB
-    OH["OpenHarmony — OHOS<br/>projeto open source"]
-    AOSP["core AOSP<br/>inclui o runtime ART"]
-    H4["HarmonyOS 1 a 4"]
-    HN["HarmonyOS NEXT = 5, 6, 7…"]
-    SIM["✅ Roda APK"]
-    NAO["❌ NÃO roda APK"]
-
-    OH -->|"é a base de"| H4
-    OH -->|"é a base de"| HN
-    AOSP -->|"somado a"| H4
-    H4 --> SIM
-    HN --> NAO
-```
-
-<!--
-Apontar para a caixa do AOSP: é a ÚNICA diferença estrutural.
-Presente → roda APK. Ausente → não roda.
--->
-
----
-
-## HarmonyOS — a stack
-
-| | |
-|---|---|
-| **Linguagem** | **ArkTS** — *superset do TypeScript* |
-| **UI** | ArkUI *(declarativo)* |
-| **Compilador** | ArkCompiler *(AOT)* |
-| **IDE** | DevEco Studio *(gratuita)* |
-| **Versões** | HarmonyOS 6 · SDK 6.1.1 (API 24) · **7 em dev beta** |
-| **OpenHarmony** | 6.1 LTS *(mar/2026)* |
-
-### Mercado
-
-**China, Q1/2026: ~19–20%** — à frente do iOS pelo **7º trimestre seguido**
-Global: ~5%
-
----
-
-<!-- _class: lead -->
-
-# A plataforma móvel que cresce mais rápido no mundo
-
-# escolheu **TypeScript** como base da sua linguagem oficial.
-
-<!--
-Momento-chave da aula. Amarra a Parte 1 na Parte 2 e dá peso real à
-revisão de TS que vem a seguir. A aposta deles em TS não é sobre React
-Native — é sobre uma tendência de indústria.
--->
-
----
-
-## Tizen (Samsung) — o que ele NÃO é mais
-
-### ❌ Não é o sistema dos celulares Samsung
-
-Celulares Samsung rodam **Android**.
-
-### ❌ Não é mais o sistema dos smartwatches Samsung
-
-Desde o Galaxy Watch 4 *(2021)*: **Wear OS**.
-Suporte aos relógios Tizen encerrado no fim de 2025.
-
----
-
-## Tizen — onde ele realmente vive
-
-**Smart TVs · monitores · signage · eletrodomésticos · IoT**
-
-| | |
-|---|---|
-| **Versão** | Tizen 10.0 · SDK 10 *(fev/2026)* |
-| **Linguagem** | **Web** — HTML/CSS/JS *(engine V8)* |
-| **Também** | .NET/Xamarin, C/C++ nativo |
-| **Tooling** | migrou de Java para **Node.js + TypeScript**, em VS Code |
-
-> Uma versão maior por ano, junto com a linha de TVs.
-
----
-
-## webOS (LG)
-
-| | |
-|---|---|
-| **Onde vive** | TVs LG, monitores, projetores, signage, automotivo |
-| **webOS Hub** | licenciado para **200+ marcas** *(Konka, Aiwa, Hyundai…)* |
-| **Versão** | webOS TV 26 · engine **Chromium 132** |
-| **Linguagem** | **Web** — HTML/CSS/JS |
-| **Framework oficial** | **Enact — construído sobre React** |
-| **Novidade** | Flutter para webOS agora suportado |
-| **SDK** | webOS Studio *(VS Code)*, CLI, Simulator |
-
----
-
-## Comparativo
-
-| | Android | iOS | HarmonyOS | Tizen | webOS |
-|---|---|---|---|---|---|
-| **Dono** | Google | Apple | Huawei | Samsung | LG |
-| **Modelo** | Aberto | Fechado | Misto | Aberto | OSE aberto |
-| **Linguagem** | Kotlin | Swift | **ArkTS** | **Web** | **Web** |
-| **UI** | Compose | SwiftUI | ArkUI | Web | **Enact/React** |
-| **Onde roda** | Tudo | Apple | Celular, IoT | **TV, IoT** | **TV, auto** |
-| **Global** | ~68–73% | ~22–32% | ~5% | nicho | nicho |
-| **APK?** | ✅ | ❌ | ❌ | ❌ | ❌ |
-
----
-
-<!-- _class: lead -->
-
-# 3 das 5 plataformas usam **JS/TS** + modelo **React-like**
-
-HarmonyOS → ArkTS *(superset de TS)*
-Tizen → apps web, tooling em TS
-webOS → **Enact, sobre React**
-
-### Não é coincidência. É a razão desta disciplina existir.
-
----
-
-## Uma linguagem, quatro destinos
-
-```mermaid
-flowchart TB
-    TS["JavaScript / TypeScript<br/>modelo declarativo React-like"]
-    TS --> HM["HarmonyOS<br/>ArkTS + ArkUI"]
-    TS --> TZ["Tizen<br/>apps web"]
-    TS --> WO["webOS<br/>Enact, sobre React"]
-    TS --> RN["React Native<br/>Android + iOS"]
-```
-
----
-
-## Nativo, cross-platform ou web?
-
-| | **Nativo** | **Cross-platform** | **Web/PWA** |
-|---|---|---|---|
-| **Performance** | máxima | muito boa | limitada |
-| **Código** | 2 bases | **1 base** | 1 base |
-| **Custo** | alto | médio | baixo |
-| **Hardware** | total | quase total | restrito |
-| **Loja** | sim | sim | não |
-| **Quando** | jogos, câmera, áudio de baixa latência | **maioria dos apps de produto** | alcance máximo, orçamento mínimo |
-
-### Escolha pela **restrição mais dura** do projeto — não pela tecnologia mais legal.
-
----
-
-## Árvore de decisão
-
-```mermaid
-flowchart TD
-    Q1{"Performance extrema?<br/>jogo 3D, áudio de baixa latência"}
-    Q2{"Precisa da loja e de<br/>câmera, GPS ou push?"}
-    Q3{"O time domina<br/>React e TypeScript?"}
-    Q4{"Há orçamento para<br/>dois times?"}
-    NAT["NATIVO"]
-    CROSS["CROSS-PLATFORM"]
-    WEB["WEB / PWA"]
-
-    Q1 -->|sim| NAT
-    Q1 -->|não| Q2
-    Q2 -->|não| WEB
-    Q2 -->|sim| Q3
-    Q3 -->|sim| CROSS
-    Q3 -->|não| Q4
-    Q4 -->|sim| NAT
-    Q4 -->|não| CROSS
-```
-
-<!--
-Enfatizar: cada losango é uma RESTRIÇÃO do projeto, não uma preferência.
-Usar esta árvore na Atividade Aplicada 2.
--->
-
----
-
-# Parte 2
-## TypeScript, com olhos de mobile
-
-### Vocês já usam TS com Node, Express e Next.
-### A sintaxe é a mesma. O que muda é o **peso** de cada recurso.
-
----
-
-## Por que TS pesa mais no mobile
-
-### No web, um bug em produção:
-
-`git push` → resolvido em 10 minutos
-
-### No mobile:
-
-1. Corrige o código
-2. Gera novo build
-3. Submete para a loja
-4. **Espera a revisão** *(horas a dias)*
-5. Espera o usuário **atualizar o app**
-
-> O mesmo `undefined is not an object` custa **uma semana**.
-> E o usuário final não tem console para te contar o que aconteceu.
-
----
-
-## O caminho de um bug até o usuário
-
-```mermaid
-flowchart TB
-    subgraph W["WEB — minutos"]
-        direction LR
-        W1["Corrige"] --> W2["git push"] --> W3["Usuário já vê"]
-    end
-    subgraph M["MOBILE — dias"]
-        direction LR
-        M1["Corrige"] --> M2["Novo build"] --> M3["Submete à loja"] --> M4["Revisão"] --> M5["Usuário atualiza"]
-    end
-    W3 ~~~ M1
-```
-
-### Duas dessas etapas não dependem de você.
-
----
-
-## `type` vs `interface`
-
-```ts
-// interface — formas de objeto extensíveis
-interface Usuario {
-  id: string;
-  nome: string;
-}
-interface Instrutor extends Usuario {
-  especialidade: string;
-}
-
-// type — uniões, tuplas, funções, utilitários
-type StatusHabito = 'pendente' | 'concluido' | 'pulado';
-type Duracao = [inicio: string, fim: string];
-```
-
-**Regra prática:** `interface` para objetos, `type` para o resto.
-Não é regra técnica — é **consistência**.
-
----
-
-## Antes de ver a solução: uma analogia
-
-Num restaurante existem dois jeitos de pedir:
-
-- **Cardápio fechado** — você escolhe entre os pratos listados. Pediu algo que não existe? O garçom avisa **na hora**.
-- **"Traga o que você tiver"** — o garçom aceita qualquer pedido e leva pra cozinha. Só lá — às vezes só quando chega errado à mesa — descobre-se que aquilo não existe.
-
-### Guarde essa imagem. Já voltamos a ela.
-
-<!--
-Apresentar esta analogia ANTES do código, não como recurso de emergência
-se a turma travar. É o gancho mental que sustenta o conceito.
--->
-
----
-
-## Union literais — o recurso mais importante de hoje
-
-```ts
-// ❌ status: string — o "traga o que você tiver"
-habito.status = 'conclído';      // faltou um "u"
-habito.status = 'Pendente';      // maiúscula
-habito.status = 'em espera';     // 🤷 valor que ninguém combinou
-
-if (habito.status === 'finalizado') { /* nunca roda, ninguém avisa */ }
-```
-
-### Todos esses **compilam sem reclamar**.
-
----
-
-## A solução
-
-```ts
-type StatusHabito = 'pendente' | 'concluido' | 'pulado';
-
-interface Habito {
-  status: StatusHabito;
-}
-
-habito.status = 'conclído';  // 🔴 erro de compilação
-```
-
-### 🍽️ Analogia — o cardápio (retomando)
-
-`string` = "traz o que eu pedir"
-Union literal = **cardápio fechado** — só 3 pratos, e o garçom avisa **antes** da cozinha errar
-
----
-
-## Bônus: exaustividade automática
-
-```ts
-function rotuloStatus(status: StatusHabito): string {
-  switch (status) {
-    case 'pendente':   return 'Pendente';
-    case 'concluido':  return 'Concluído';
-    case 'pulado':     return 'Pulado';
-  }
-}
-```
-
-### Amanhã alguém adiciona `'atrasado'` ao tipo…
-
-→ **este `switch` passa a dar erro** até você tratar o novo caso.
-
-> O compilador vira uma lista de tarefas automática.
-
----
-
-## Estado de tela — o jeito frágil
-
-```ts
-const [loading, setLoading] = useState(false);
-const [habito, setHabito]   = useState<Habito | null>(null);
-const [erro, setErro]       = useState<string | null>(null);
-```
-
-### Nada impede o estado impossível:
-
-```
-loading = true   E   erro = "falhou"   E   habito = {...}
-```
-
-### O que a tela mostra?
-
-<!--
-Perguntar em voz alta. Deixar o silêncio incomodar um pouco.
-Todos já escreveram esse bug.
--->
-
----
-
-## União discriminada — o jeito robusto
-
-```ts
-type EstadoTela<T> =
-  | { tipo: 'carregando' }
-  | { tipo: 'sucesso'; dados: T }
-  | { tipo: 'erro'; mensagem: string };
-
-const [estado, setEstado] =
-  useState<EstadoTela<Habito>>({ tipo: 'carregando' });
-```
-
-```tsx
-switch (estado.tipo) {
-  case 'carregando': return <ActivityIndicator />;
-  case 'sucesso':    return <CardHabito habito={estado.dados} />;  // ✅
-  case 'erro':       return <Erro texto={estado.mensagem} />;      // ✅
-}
-```
-
-### `estado.dados` dentro do `case 'erro'` → **erro de compilação**
-
-> Os estados impossíveis deixaram de ser **representáveis**.
-
----
-
-## Três estados. Exatamente três.
-
-```mermaid
-stateDiagram-v2
-    direction LR
-    state "carregando" as C
-    state "sucesso<br/>dados: T" as S
-    state "erro<br/>mensagem: string" as E
-
-    [*] --> C
-    C --> S: dados chegaram
-    C --> E: requisicao falhou
-    E --> C: tentar novamente
-    S --> [*]
-```
-
-### Não existe seta para "carregando **e** com erro".
-
-> Aqui `T` é **um único** `Habito` — sem lista, sem `FlatList`. Isso chega na Aula 2.
-
----
-
-## Tipando props
-
-```tsx
-type CardHabitoProps = {
-  titulo: string;
-  status: StatusHabito;
-  onPress: () => void;
-  destacado?: boolean;          // opcional
-};
-
-export function CardHabito({
-  titulo, status, onPress,
-  destacado = false,            // default
-}: CardHabitoProps) {
-  /* ... */
-}
-```
-
-- `children: React.ReactNode` para componentes que envolvem outros
-- 📌 **React 19:** `ref` é prop normal — `forwardRef` não é mais necessário
-
----
-
-## Generics: os dois lugares onde você vai encontrá-los
-
-```ts
-// 1. useState<T> — quando o valor inicial não revela o tipo
-const [habito, setHabito] = useState<Habito | null>(null);
-const [streak, setStreak] = useState(0);   // aqui inferir basta
-
-// 2. Funções que embrulham chamadas de API
-async function buscarJson<T>(url: string): Promise<T> {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`Falha: ${r.status}`);
-  return r.json() as Promise<T>;
-}
-
-const habito = await buscarJson<Habito>('/habito-do-dia');
-```
-
-⚠️ Aquele `as Promise<T>` é uma **promessa**, não uma verificação.
-*(Voltaremos a isso na integração com API — Zod/Valibot)*
-
----
-
-## Utility types — uma fonte de verdade
-
-```ts
-interface Habito {
-  id: string; titulo: string;
-  categoria: CategoriaHabito; frequencia: FrequenciaHabito;
-  status: StatusHabito; streakDias: number; criadoEm: string;
-}
-
-// o formulário não envia id/status/streakDias/criadoEm — o servidor gera
-type NovoHabito = Omit<Habito, 'id' | 'status' | 'streakDias' | 'criadoEm'>;
-
-// o card da tela só precisa de 4 campos
-type ResumoHabito = Pick<Habito, 'id' | 'titulo' | 'status' | 'categoria'>;
-
-type AtualizacaoHabito = Partial<NovoHabito>;
-```
-
-### Existe **um** tipo. Os outros são **derivados**.
-
-Adicione um campo à entidade → os derivados acompanham sozinhos.
-
----
-
-## O que evitar
-
-```ts
-// ❌ any desliga o compilador
-function processar(dados: any) {
-  return dados.qualquer.coisa;   // compila, explode em runtime
-}
-
-// ❌ assertion: "confia em mim" — não gera verificação nenhuma
-const habito = resposta as Habito;
-
-// ✅ type guard: "eu verifiquei" — gera verificação de verdade
-function ehHabito(v: unknown): v is Habito {
-  return typeof v === 'object' && v !== null
-      && 'id' in v && 'titulo' in v && 'status' in v;
-}
-```
-
-> `any` não é um tipo flexível. É **abrir mão da verificação**.
-
----
-
-## ⚠️ Aviso de ambiente: TypeScript 7
-
-### Julho/2026: compilador reescrito em **Go** — **8 a 12× mais rápido**
-
-Type-check do VS Code: ~126s → **~11s**
-
-### Mas: TS 7.0 **ainda não expõe API programática**
-
-`typescript-eslint` · `ts-jest` · `ts-morph` · Vue/Svelte/Astro → **não funcionam**
-
-*(API prevista para o TS 7.1)*
-
-## 👉 Nesta disciplina: fixe o TypeScript na linha **6.x**
-
-> Lição de engenharia: uma versão pode ser tecnicamente superior
-> e ainda **não estar pronta** para o seu projeto.
-
----
-
-# Parte 3
-## Checkpoint
-
-### 60 segundos em duplas para cada pergunta
-
----
-
-## Checkpoint
-
-1. Diferença entre **OpenHarmony**, **HarmonyOS 4** e **HarmonyOS NEXT**?
-   Qual roda APK?
-
-2. Startup, app de leitura de QR code, **2 devs que sabem TS**, prazo de **2 meses**.
-   Nativo, cross-platform ou web? Justifique com **duas** restrições.
-
-3. Por que `status: 'pendente' | 'concluido' | ...` é melhor que `status: string`?
-   **Dê um bug** que o primeiro previne.
-
-4. **Tizen roda em celulares hoje?**
-
----
-
-# Parte 4
 ## React Native
 
 ---
@@ -862,7 +146,8 @@ Android, iOS.
 | scroll da página | `<ScrollView>` |
 | `className` / CSS | `StyleSheet.create({...})` |
 
-> `<FlatList>`/`<SectionList>` (listas grandes) chegam na Aula 2 — hoje é componente isolado.
+> `<FlatList>`/`<SectionList>` (listas grandes) chegam mais adiante — hoje é componente isolado.
+> O catálogo completo e o `StyleSheet` são a Aula 3.
 
 ---
 
@@ -885,6 +170,11 @@ Android, iOS.
 ```
 
 ### E não existe `:hover` — não há mouse.
+
+<!--
+Demonstrar o erro nº 1 AO VIVO no projeto. Ver a tela vermelha
+vale mais que o slide.
+-->
 
 ---
 
@@ -973,7 +263,9 @@ flowchart TB
 ### O TypeScript de vocês gera código nativo.
 
 <!--
-Pausar aqui. É o momento em que a Parte 2 e a Parte 4 se encontram.
+Pausar aqui. É o momento em que o TypeScript da Aula 1 reaparece do outro
+lado da máquina. Se alguém ainda achava que TS era "só pra pegar typo",
+é agora que cai a ficha.
 -->
 
 ---
@@ -990,18 +282,6 @@ flowchart LR
 
     V76 --> V78 --> V82 --> V84 --> V86
 ```
-
----
-
-## Linha do tempo (para citar com precisão)
-
-| Versão | O que aconteceu |
-|---|---|
-| **0.76** | New Architecture passa a ser **default** |
-| **0.78** | **Bridgeless** default · React 19 chega ao RN |
-| **0.82** *(out/25)* | New Architecture torna-se o **único modo** |
-| **0.84** *(fev/26)* | Legada **removida** · Hermes default · Node 22.11+ |
-| **0.86** *(jun/26)* | Repo migra de `facebook` → org **`react`** no GitHub |
 
 ### Hoje: **React Native 0.86.2** com **React 19.2**
 
@@ -1036,12 +316,15 @@ Sem framework *(só p/ restrições incomuns)*:
 
 ## Depreciado na 0.75 · **REMOVIDO na 0.77** *(jan/2025)*
 
-### Use isso como filtro de qualidade:
+> Use isso como filtro de qualidade:
+> tutorial que usa esse comando tem 1,5 ano+
+> e provavelmente ensina a arquitetura antiga.
+> **Confira sempre a data.**
 
-### tutorial que usa esse comando tem 1,5 ano+
-### e provavelmente ensina a arquitetura antiga.
-
-### **Confira sempre a data.**
+<!--
+Este slide economiza horas de frustração da turma.
+Repetir em voz alta. Pedir para anotarem.
+-->
 
 ---
 
@@ -1069,11 +352,17 @@ export default function App() {
 }
 ```
 
-### Sem lista, sem `FlatList` — isso é assunto da Aula 2.
+### Sem lista, sem `FlatList` — isso é assunto de aula futura.
+
+<!--
+No HTML, as setas → e ← navegam pelos destaques de linha antes de trocar
+de slide. Destaque 1: estado tipado. Destaque 2: toque alternando status.
+Destaque 3: View e Text de novo, sem lista nenhuma.
+-->
 
 ---
 
-# Parte 5
+# Parte 2
 ## Hands-on
 
 ### Ninguém sai da sala sem um app rodando no próprio celular.
@@ -1092,9 +381,19 @@ npx expo start              # --tunnel se o Wi-Fi da sala isolar
 
 1. Abrir no celular com **Expo Go** *(QR code)* ou emulador
 2. Editar `App.tsx` → ver o **Fast Refresh**
-3. Exercícios guiados 1 a 3 *(`exercises.md`)*
+3. Exercícios guiados 1 a 3 *(`exercises.md` — domínio Hábito; `practice.md` — domínio Pet)*
 
 ### Se travar, chame. Os erros previsíveis já estão mapeados.
+
+<!--
+Erros esperados, com resposta pronta:
+ - Texto solto fora de <Text> → erro em runtime (o nº 1)
+ - Celular e notebook em redes diferentes → npx expo start --tunnel
+ - Esperar flexDirection 'row' por default
+ - Usar px/% em números de estilo
+ - Node desatualizado
+CIRCULAR PELA SALA. Não ficar na frente.
+-->
 
 ---
 
@@ -1104,7 +403,7 @@ npx expo start              # --tunnel se o Wi-Fi da sala isolar
 
 ### e construir a tela do hábito do dia — uma única entidade, sem lista
 
-Enunciado completo, critérios de avaliação e prazo em **`exercises.md`**
+Enunciado completo, critérios de avaliação e prazo em **`exercises.md`** *(Hábito)* ou **`practice.md`** *(Pet)*
 
 ---
 
@@ -1115,6 +414,11 @@ Enunciado completo, critérios de avaliação e prazo em **`exercises.md`**
 # Hoje o **mesmo tipo** passou a descrever uma tela nativa.
 
 ## O tipo não mudou. A plataforma mudou.
+
+<!--
+Fechar o arco da aula. Retomar literalmente o gancho da abertura.
+É a última coisa que eles ouvem — vale entregar devagar.
+-->
 
 ---
 
@@ -1136,4 +440,6 @@ Enunciado completo, critérios de avaliação e prazo em **`exercises.md`**
 
 # Perguntas?
 
-### `student-notes.md` · `exercises.md`
+### `student-notes.md` · `exercises.md` · `practice.md`
+
+Dados de versões verificados em 07/08/2026 · Fontes completas em `student-notes.md`

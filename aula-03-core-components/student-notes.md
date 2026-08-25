@@ -40,7 +40,7 @@ mindmap
 
 > **Leitura do diagrama:** o mapa mostra os quatro blocos da aula. Os três primeiros são o caminho "o que existe → como estilizar → como posicionar"; o quarto é a decisão de engenharia sobre onde guardar tudo isso.
 
-> 📱 **Sobre os exemplos deste material:** o domínio é o **Rastreador de Micro-hábitos** (`Habito`) — um dos dois projetos da disciplina. Se o seu grupo ficou com o **App de Gestão e Rotina Pet**, a tabela de equivalência está em `exercises.md`.
+> 📱 **Sobre os exemplos deste material:** o domínio é o **Rastreador de Micro-hábitos** (`Habito`) — um dos dois projetos da disciplina. Se o seu grupo ficou com o **App de Gestão e Rotina Pet**, use o **`practice.md`**: são as mesmas práticas, com os mesmos scaffolds, no domínio `Pet` (e ele traz a tabela de equivalência no final).
 
 ---
 
@@ -288,7 +288,7 @@ Ou seja, o mesmo `color="#FF6002"` produz dois botões visualmente diferentes. T
 
 **Quando `Button` é a escolha certa:** protótipo, caixa de diálogo, tela de configuração, ação de formulário — qualquer lugar em que a aparência do sistema é aceitável, ou desejável.
 
-> 📌 **Se o requisito pede fundo, borda, raio de canto, sombra ou ícone**, `Button` não resolve — nenhuma dessas coisas passa por `title`/`color`. O componente adequado para desenhar o próprio botão **não é assunto desta aula**; você vai chegar nele mais adiante na disciplina. Por hoje, quando precisar de aparência própria em algo tocável, use `<Text onPress={...}>` com estilo (próxima seção).
+> 📌 **Se o requisito pede fundo gradiente, borda, raio de canto, sombra ou ícone**, `Button` não resolve — nenhuma dessas coisas passa por `title`/`color`. A lição vale além do componente: **a escolha do componente vem antes da estilização**. Reconhecer isso cedo poupa meia hora de tentativa e erro. O componente adequado para desenhar o próprio botão **não é assunto desta aula**; você vai chegar nele mais adiante na disciplina. Por hoje, quando precisar de aparência própria em algo tocável, use `<Text onPress={...}>` com estilo (próxima seção).
 
 ### O que dá para fazer hoje: estilizar em volta
 
@@ -505,7 +505,7 @@ const estiloSolto = { justifyContent: 'center' } as const;
 
 Aprenda a **distinção**, não a receita.
 
-**Sobre "performance":** você vai ler que `StyleSheet.create` "otimiza". Historicamente ele registrava os estilos e passava só um ID pela ponte — e a ponte não existe mais (Aula 1, §3.4). Hoje o ganho real é **validação e organização**. Objetos inline funcionam; o problema deles é criar um objeto novo a cada render e espalhar números mágicos pelo JSX.
+**Sobre "performance":** você vai ler que `StyleSheet.create` "otimiza". Historicamente ele registrava os estilos e passava só um ID pela ponte — e a ponte não existe mais, foi removida na **0.84** (Aula 1, §3.4). Hoje o ganho real é **validação e organização**. Objetos inline funcionam; o problema deles é criar um objeto novo a cada render e espalhar números mágicos pelo JSX.
 
 ## 3.5 Sombra: `boxShadow` em vez do quarteto antigo
 
@@ -529,7 +529,9 @@ const styles = StyleSheet.create({
 });
 ```
 
-`boxShadow` está documentado em View Style Props e funciona na **New Architecture** — que é a **única** arquitetura desde a versão 0.82 (Aula 1, §3.4). Ou seja: no projeto de vocês, funciona.
+`boxShadow` está documentado em View Style Props e funciona na **New Architecture**. E a New Architecture é o **único modo** desde a **0.82** (out/2025) — desde a **0.84** (fev/2026) a arquitetura legada foi **removida do código** (Aula 1, §3.4). Ou seja: no projeto de vocês, funciona.
+
+> 📌 **Dois marcos diferentes, não se confunda:** na **0.82** deixou de ser possível **desligar** a New Architecture; na **0.84** o código da arquitetura legada (e a bridge) foi **apagado do repositório**.
 
 Também chegou `filter` (blur, brightness, saturate), com a mesma condição.
 
@@ -659,12 +661,15 @@ const styles = StyleSheet.create({
     gap: 12,                 // ✅ espaçamento entre os itens
   },
   celula: {
-    width: '30%',            // 3 por linha
+    flexBasis: '30%',        // tamanho-alvo: 3 por linha
+    flexGrow: 1,             // absorve a sobra da linha
     aspectRatio: 1,          // quadrado, sem precisar calcular altura
     backgroundColor: '#F3E9DC',
   },
 });
 ```
+
+⚠️ **Por que não `width: '30%'` direto?** Porque três células de 30% ocupam 90% **mais** dois vãos de `gap`. Em tela estreita, `90% + 24px` estoura a largura e a terceira célula quebra para a linha de baixo. Com `flexBasis: '30%'` + `flexGrow: 1` você dá o tamanho-alvo e deixa o Flexbox fechar a conta — a solução **sobrevive a mudança de tamanho de tela**. É exatamente o que o Exercício 6 pede.
 
 ### `gap` — pare de espaçar com `margin`
 
@@ -1034,6 +1039,7 @@ const styles = StyleSheet.create({
 | `Cannot find namespace 'JSX'` | React 19 removeu o `JSX` global | Remover a anotação, ou `React.JSX.Element` |
 | `padding: '16px'` ignorado | Unidade CSS não existe | `padding: 16` |
 | Espaçamento irregular entre itens | `margin` em cada filho soma entre vizinhos | `gap` no contêiner |
+| Grade quebra em 2 por linha em vez de 3 | `width: '30%'` × 3 + `gap` estoura a largura | `flexBasis: '30%'` + `flexGrow: 1` |
 | `Switch` não muda ao ser tocado | Falta o `value` ligado ao estado | `value={x}` + `onValueChange={setX}` |
 | `react-native-web` quebrou o build | Versão incompatível com o SDK | `npx expo install`, não `npm install` |
 | Erro de tipo em `justifyContent` fora de `create` | TS alargou `'center'` para `string` | `as const` ou anotação de tipo |
@@ -1050,7 +1056,7 @@ Responda sem olhar as notas. Se travar, releia a seção indicada.
 2. Por que uma `<Image>` com `require()` funciona sem `width`/`height`, mas uma com `uri` remoto não? (§2.4)
 3. Qual a diferença entre `style` e `contentContainerStyle` num `ScrollView`? Onde vai o `padding`? (§2.6)
 4. Quando `View` basta e quando você precisa de `ScrollView`? Qual é o critério? (§2.6)
-5. Quais são as quatro props do `<Button>`? Por que não dá para deixá-lo com canto arredondado? (§2.7)
+5. Quais são as quatro props do `<Button>`? Se o requisito pede fundo gradiente e canto arredondado, `<Button>` serve? (§2.7)
 6. O que a prop `color` do `Button` tinge no iOS? E no Android? (§2.7)
 7. Como se faz um trecho de texto reagir ao toque usando só o catálogo desta aula? (§2.8)
 8. Descreva o laço do componente controlado. O que acontece se você esquecer o `value`? (§2.9)
@@ -1070,13 +1076,14 @@ Responda sem olhar as notas. Se travar, releia a seção indicada.
 18. Por que `justifyContent: 'center'` às vezes "não faz nada"? (§4.3)
 19. Qual a diferença entre `flexBasis: 200` e `flexGrow: 1`? (§4.3)
 20. Por que `gap: 12` é melhor que `margin: 6` em cada filho? (§4.3)
-21. Cite duas coisas do Flexbox no CSS que **não** existem em React Native. (§4.4)
+21. Numa grade com `flexWrap` e `gap`, por que `width: '30%'` pode deixar só duas células por linha? Como `flexBasis` + `flexGrow` resolvem? (§4.3)
+22. Cite duas coisas do Flexbox no CSS que **não** existem em React Native. (§4.4)
 
 **Organização**
-22. Qual a pergunta que decide se um estilo vai para `theme.ts` ou fica no componente? (§5)
-23. Por que `globalStyles.container` é uma má ideia, se `cores.primaria` é uma boa? (§5.3)
-24. Quando um objeto de estilo inline é legítimo? (§5.4)
-25. Por que a disciplina ensina `StyleSheet` e não NativeWind? (§5.5)
+23. Qual a pergunta que decide se um estilo vai para `theme.ts` ou fica no componente? (§5)
+24. Por que `globalStyles.container` é uma má ideia, se `cores.primaria` é uma boa? (§5.3)
+25. Quando um objeto de estilo inline é legítimo? (§5.4)
+26. Por que a disciplina ensina `StyleSheet` e não NativeWind? (§5.5)
 
 ---
 
