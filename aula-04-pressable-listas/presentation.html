@@ -1,0 +1,2024 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 4 — Pressable, FlatList e SectionList</title>
+
+  <!--
+    ============================================================================
+    APRESENTAÇÃO DA AULA 4 — reveal.js
+    ============================================================================
+
+    COMO ABRIR
+      Basta dar duplo clique neste arquivo. Ele funciona offline: todas as
+      dependências estão em vendor/, nada é baixado da internet.
+
+    ATALHOS DE TECLADO
+      →  ou  espaço   avança
+      ←               volta
+      S               modo apresentador (notas + cronômetro + próximo slide)
+      F               tela cheia
+      O  ou  Esc      visão geral de todos os slides
+      B  ou  .        tela preta (para chamar atenção de volta)
+      Ctrl + clique   zoom em um ponto do slide
+      ?               ajuda com todos os atalhos
+
+    IMPRIMIR / GERAR PDF
+      Abra com ?print-pdf no final da URL e mande imprimir pelo navegador.
+      Ex.: file:///.../presentation.html?print-pdf
+
+    ONDE EDITAR O CONTEÚDO
+      Cada <section> é um slide. Notas do apresentador vão em <aside class="notes">.
+      Diagramas vão em <pre class="mermaid">.
+    ============================================================================
+  -->
+
+  <link rel="stylesheet" href="vendor/reveal/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/theme/white.css" id="theme">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    /* ---------------------------------------------------------------------
+       Identidade visual CESAR School (ver TEMPLATE.pdf / TEMPLATE.pptx da
+       Aula 1): fundo creme, laranja de marca, títulos em Barlow Condensed
+       caixa-alta, corpo de texto em Barlow, formas circulares decorativas.
+       Fontes embutidas em vendor/fonts/ para manter a aula 100% offline.
+       --------------------------------------------------------------------- */
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-400.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
+    }
+
+    :root {
+      --cor-fundo: #FEF7EE;
+      --cor-fundo-escuro: #232323;
+      --cor-preto: #191919;
+      --cor-destaque: #FF6002;
+      --cor-destaque2: #FB6B00;
+      --cor-amarelo: #FFB132;
+      --cor-alerta: #c62828;
+      --cor-ok: #2e7d32;
+      --cor-texto-fraco: #6b6459;
+      --cor-fundo-bloco: #F3E9DC;
+      --cor-borda: #E4D6C3;
+      --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      --fonte-corpo: 'Barlow', Arial, sans-serif;
+    }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal,
+    .reveal .slides {
+      background: var(--cor-fundo);
+    }
+
+    .reveal,
+    .reveal p,
+    .reveal li,
+    .reveal td,
+    .reveal th,
+    .reveal blockquote {
+      font-family: var(--fonte-corpo);
+      color: var(--cor-preto);
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      color: var(--cor-preto);
+      letter-spacing: 0.01em;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-transform: uppercase;
+    }
+
+    .reveal h1 {
+      font-size: 1.9em;
+      font-weight: 900;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h3 {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+      font-weight: 700;
+    }
+
+    /* Altura cheia + centralização vertical, só na seção .present: com
+       center:false, por padrão a <section> só teria a altura do próprio
+       conteúdo (top-aligned) — o que grudava tudo no topo e fazia os acentos
+       decorativos em bottom:0/top:0 flutuarem soltos no meio do slide em vez
+       de ficarem presos às bordas reais do palco 1280x800.
+       IMPORTANTE: o seletor tem que incluir ".present" — reveal.css usa
+       "display: none" para esconder as seções não-atuais com esse MESMO
+       seletor base; um "display: flex !important" sem ".present" sobrescreve
+       esse display:none e deixa todos os slides visíveis empilhados ao
+       mesmo tempo (efeito fantasma de texto duplicado). */
+    .reveal .slides>section.present,
+    .reveal .slides>section>section.present {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* flex-shrink:0 nos filhos diretos: sem isso, o flexbox ENCOLHE blocos
+       de conteúdo (ex.: <pre> de código) para caber nos 800px do palco
+       quando o slide é denso — e o <pre> encolhido fica menor que o próprio
+       <code> lá dentro, que passa a vazar por cima do próximo elemento. */
+    .reveal .slides>section.present>*,
+    .reveal .slides>section>section.present>* {
+      flex-shrink: 0;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    .reveal section.centro {
+      text-align: center;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-align: left;
+    }
+
+    .reveal section.centro h1,
+    .reveal section.centro h2,
+    .reveal section.centro h3 {
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Formas decorativas — o motivo de semicírculos do template, aplicado
+       como acento discreto no canto superior direito dos slides de
+       conteúdo e como barra de base à esquerda. Ficam atrás do conteúdo
+       (z-index negativo) para nunca colidir com texto, tabelas ou código.
+       --------------------------------------------------------------------- */
+    .reveal .slides>section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides>section>section:not(.centro):not(:has(.tabela-larga))::before {
+      content: '';
+      position: absolute;
+      top: -70px;
+      right: -50px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--cor-preto);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section:not(.centro)::after,
+    .reveal .slides>section>section:not(.centro)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 15%;
+      min-width: 120px;
+      height: 10px;
+      background: var(--cor-destaque);
+      border-radius: 0 6px 6px 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slide de abertura e de fechamento — fundo escuro, à la capa do manual */
+    .reveal .slides>section.slide-capa {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-capa h1,
+    .reveal .slides>section.slide-capa h2,
+    .reveal .slides>section.slide-capa h3,
+    .reveal .slides>section.slide-capa p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-capa .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-capa::before {
+      content: '';
+      position: absolute;
+      top: -18%;
+      right: -12%;
+      width: 60%;
+      height: 130%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-capa::after {
+      content: '';
+      position: absolute;
+      bottom: -22%;
+      left: -8%;
+      width: 26%;
+      height: 55%;
+      background: var(--cor-fundo);
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides de impacto — mesma pausa retórica dramática do "Por fim" do manual */
+    .reveal .slides>section.slide-impacto {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-impacto h1,
+    .reveal .slides>section.slide-impacto h2,
+    .reveal .slides>section.slide-impacto h3,
+    .reveal .slides>section.slide-impacto p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-impacto .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-impacto::before {
+      content: '';
+      position: absolute;
+      top: -25%;
+      right: -10%;
+      width: 34%;
+      height: 60%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-impacto::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: 6%;
+      width: 20%;
+      height: 45%;
+      border: 3px solid var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides divisores de Parte — bloco de círculos laranja, como as seções
+       numeradas do manual ("1. Princípios gerais...") */
+    .reveal .slides>section.divisor {
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h1 {
+      color: var(--cor-destaque);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h2,
+    .reveal .slides>section.divisor h3 {
+      color: var(--cor-preto);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor::before {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: 6%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.divisor::after {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: -8%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Tabelas: o gargalo real de legibilidade numa aula comparativa */
+    .reveal table {
+      font-size: 0.62em;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.4em 0;
+    }
+
+    .reveal table th {
+      background: var(--cor-fundo-bloco);
+      font-weight: 700;
+      border-bottom: 2px solid var(--cor-borda);
+    }
+
+    .reveal table th,
+    .reveal table td {
+      padding: 0.35em 0.5em;
+      border: 1px solid var(--cor-borda);
+      vertical-align: top;
+    }
+
+    /* Tabela larga rola sozinha */
+    .tabela-larga {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tabela-larga table {
+      font-size: 0.52em;
+      min-width: 900px;
+    }
+
+    /* Código */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      font-size: 0.48em;
+      margin: 0.4em 0;
+    }
+
+    .reveal pre code {
+      padding: 0.9em 1.1em;
+      max-height: 560px;
+      line-height: 1.35;
+      /* reveal.css define ".reveal .hljs { min-height: 100% }". Com a
+         seção agora em flex column, isso vira uma referência circular:
+         o <pre> (flex item, altura "auto") passa a ter uma altura
+         "definida" pelo algoritmo de flex, e o min-height:100% do
+         <code> lá dentro passa a resolver contra ESSA altura em vez de
+         crescer para caber no próprio conteúdo — o código fica cortado
+         menor que o necessário e vaza visualmente por cima do próximo
+         elemento do slide. */
+      min-height: 0 !important;
+    }
+
+    .reveal code:not(pre code) {
+      background: var(--cor-fundo-bloco);
+      color: var(--cor-preto);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    /* Diagramas Mermaid */
+    .reveal .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      margin: 0.3em 0;
+    }
+
+    /* O Mermaid grava `style="max-width: NNNpx"` INLINE no <svg>, e estilo
+       inline vence folha de estilo. Sem !important o diagrama ignora estes
+       limites e estoura o slide. */
+    .reveal .mermaid svg {
+      max-width: 100% !important;
+      max-height: 500px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    /* Diagrama que ocupa o slide inteiro (slide sem texto de apoio) */
+    .reveal .mermaid-grande svg {
+      max-height: 610px !important;
+    }
+
+    /* Blocos de destaque */
+    .reveal blockquote {
+      width: 100%;
+      font-size: 0.8em;
+      background: var(--cor-fundo-bloco);
+      border-left: 5px solid var(--cor-destaque);
+      box-shadow: none;
+      padding: 0.7em 1em;
+      font-style: normal;
+      text-align: left;
+    }
+
+    .destaque {
+      color: var(--cor-destaque);
+      font-weight: 700;
+    }
+
+    .alerta {
+      color: var(--cor-alerta);
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--cor-ok);
+      font-weight: 700;
+    }
+
+    .fraco {
+      color: var(--cor-texto-fraco);
+    }
+
+    .caixa-alerta {
+      background: #fdecea;
+      border-left: 5px solid var(--cor-alerta);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    .caixa-ok {
+      background: #e8f5e9;
+      border-left: 5px solid var(--cor-ok);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    /* Duas colunas */
+    .colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2em;
+      align-items: start;
+    }
+
+    .colunas>div {
+      min-width: 0;
+    }
+
+    /* Marcadores em formato de pílula — o mesmo ícone laranja usado nas
+       colunas de conteúdo do manual, no lugar do disco padrão de lista */
+    .reveal ul,
+    .reveal ol {
+      display: block;
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.3em;
+    }
+
+    .reveal section:not(.centro) ul {
+      list-style: none;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ul>li {
+      position: relative;
+      padding-left: 0.85em;
+    }
+
+    .reveal section:not(.centro) ul>li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      width: 0.42em;
+      height: 0.42em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+    }
+
+    .reveal section:not(.centro) ol {
+      list-style: none;
+      counter-reset: item;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ol>li {
+      counter-increment: item;
+      position: relative;
+      padding-left: 1.5em;
+    }
+
+    .reveal section:not(.centro) ol>li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.05em;
+      height: 1.05em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: var(--cor-fundo);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.78em;
+      line-height: 1.05em;
+      text-align: center;
+    }
+
+    .logo-marca {
+      position: absolute;
+      top: 0.55em;
+      left: 0.7em;
+      height: 1.5em;
+      width: auto;
+      z-index: 2;
+    }
+
+    .rodape-fonte {
+      position: absolute;
+      bottom: 0.4em;
+      left: 0;
+      right: 0;
+      font-size: 0.42em;
+      color: var(--cor-texto-fraco);
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Sem tema escuro automático: a identidade CESAR School é fixa
+       (fundo creme + laranja de marca), como no manual em PDF/PPTX.
+       Slides de impacto usam .slide-impacto / .slide-capa (ver acima).
+       --------------------------------------------------------------------- */
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== ABERTURA ==================== -->
+
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h1>Desenvolvimento Mobile</h1>
+        <h3>Aula 4 — Pressable, FlatList e SectionList</h3>
+        <p class="fraco">CESAR School · 2026.2</p>
+        <aside class="notes">
+          Antes de começar: confirmar que todo mundo tem o projeto do grupo
+          rodando com `npx expo start`. Quem estiver travado resolve AGORA,
+          não no bloco de hands-on.
+
+          Dizer também qual arquivo cada grupo segue: exercises.md (Hábito)
+          ou practice.md (Pet).
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>Na Aula 3 eu te dei um <span class="destaque">remendo</span>.</h2>
+        <h3>O <code>Button</code> não aceita <code>style</code>, então usamos <code>&lt;Text onPress&gt;</code>.
+          Hoje devolvo o componente de verdade.</h3>
+        <aside class="notes">
+          E, de quebra, resolvo o outro problema que ficou aberto: a tela que
+          mostra TRÊS hábitos funciona; a que mostra TRÊS MIL trava.
+
+          Deixar as duas dívidas no ar. São o eixo da aula inteira.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Agenda — 3 horas</h2>
+        <table>
+          <tr>
+            <th>Bloco</th>
+            <th>Tempo</th>
+          </tr>
+          <tr>
+            <td>Abertura + o problema do dia</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><b>1.</b> <code>Pressable</code>: o toque que você desenha</td>
+            <td>35 min</td>
+          </tr>
+          <tr>
+            <td>☕ Intervalo</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td><b>2.</b> Checkpoint — toque</td>
+            <td>8 min</td>
+          </tr>
+          <tr>
+            <td><b>3.</b> <code>FlatList</code>: só renderiza o que se vê</td>
+            <td>42 min</td>
+          </tr>
+          <tr>
+            <td><b>4.</b> <code>SectionList</code>: quando o dado vem agrupado</td>
+            <td>20 min</td>
+          </tr>
+          <tr>
+            <td><b>5.</b> Checkpoint — listas</td>
+            <td>7 min</td>
+          </tr>
+          <tr>
+            <td><b>6.</b> Hands-on guiado</td>
+            <td>38 min</td>
+          </tr>
+          <tr>
+            <td>Atividade aplicada + fechamento</td>
+            <td>10 min</td>
+          </tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>Ao final da aula você deve conseguir</h2>
+        <ol>
+          <li><b>Construir</b> um controle tocável com aparência própria e feedback visual</li>
+          <li><b>Descrever</b> o ciclo de vida do toque e escolher o callback certo</li>
+          <li><b>Ajustar</b> área e tempo do toque com <code>hitSlop</code> e companhia</li>
+          <li><b>Explicar</b> por que uma lista longa não pode ser um <code>.map()</code> em <code>ScrollView</code></li>
+          <li><b>Renderizar</b> uma <code>FlatList</code> completa — chave, molduras, estado vazio</li>
+          <li><b>Diagnosticar</b> os três defeitos clássicos de lista</li>
+          <li><b>Escolher</b> entre <code>FlatList</code> e <code>SectionList</code> pelo formato do dado</li>
+          <li><b>Prever</b> a diferença de sticky header entre iOS e Android</li>
+        </ol>
+      </section>
+
+      <!-- ==================== PARTE 1 — PRESSABLE ==================== -->
+
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 1</h1>
+        <h2>Pressable — o toque que você desenha</h2>
+      </section>
+
+      <section>
+        <h2>O que você tinha, e o limite de cada um</h2>
+        <table>
+          <tr>
+            <th>O que você tinha</th>
+            <th>O limite</th>
+          </tr>
+          <tr>
+            <td><code>Button</code></td>
+            <td>aparência do sistema; <b class="alerta">não aceita <code>style</code></b></td>
+          </tr>
+          <tr>
+            <td><code>&lt;Text onPress&gt;</code></td>
+            <td>funciona, mas o alvo é só o texto e não há feedback</td>
+          </tr>
+          <tr>
+            <td><code>Switch</code></td>
+            <td>é um liga/desliga, não uma ação</td>
+          </tr>
+          <tr>
+            <td><b class="destaque">Pressable</b></td>
+            <td><b>envolve qualquer coisa</b> e reporta o toque</td>
+          </tr>
+        </table>
+        <h3>A frase-chave: <code>Pressable</code> <span class="destaque">não desenha nada</span>.</h3>
+        <aside class="notes">
+          Ele é uma casca que detecta o toque no que estiver dentro dele.
+          Toda a aparência continua vindo do StyleSheet e do Flexbox da Aula 3.
+
+          Consequência prática que vale dizer em voz alta: um Pressable VAZIO
+          é invisível e parece quebrado. Ele PRECISA de filhos.
+        </aside>
+      </section>
+
+      <section class="centro">
+        <h1>🚪 O tapete sensor</h1>
+        <h3>O tapete não tem aparência própria e não abre porta nenhuma. Ele só avisa: <i>"alguém pisou aqui"</i>.</h3>
+        <p class="fraco">O que acontece depois é decisão sua.</p>
+        <aside class="notes">
+          Levar a analogia até o fim:
+          - o tapete = Pressable
+          - o que a pessoa VÊ = a View estilizada por dentro
+          - o que acontece depois = onPress
+
+          Se alguém perguntar "então ele é só um wrapper?" — sim, exatamente.
+          E é por isso que ele é flexível.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O mínimo funcional</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Pressable onPress={onSalvar} style={styles.botao}&gt;
+  &lt;Text style={styles.rotulo}&gt;Salvar hábito&lt;/Text&gt;
+&lt;/Pressable&gt;
+
+const styles = StyleSheet.create({
+  botao: {
+    paddingVertical: 14, paddingHorizontal: 20,
+    borderRadius: 12, backgroundColor: '#FF6002', alignItems: 'center',
+  },
+  rotulo: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
+});
+      </code></pre>
+        <h3>Nada aí é novo além do <code>Pressable</code>.</h3>
+        <aside class="notes">
+          Apontar: o StyleSheet.create é o mesmo da Aula 3. O alignItems é o
+          mesmo Flexbox. A Aula 4 ACRESCENTA; não substitui.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O ciclo de vida do toque</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  A["Dedo encosta na tela"] -->|"onPressIn"| B["Pressionando"]
+  B -->|"solta antes de 500ms"| C["onPressOut e entao onPress"]
+  B -->|"segura por 500ms"| D["onLongPress"]
+  B -->|"arrasta para fora e solta"| E["onPressOut, sem onPress"]
+  C --> F["A acao acontece"]
+  D -->|"ao soltar"| G["onPressOut"]
+  E --> H["O usuario cancelou"]
+        </pre>
+        <aside class="notes">
+          DESENHAR NA LOUSA ANTES de mostrar o slide. É o conteúdo que mais
+          rende no semestre inteiro, porque explica bugs que eles vão
+          encontrar sozinhos.
+
+          Leitura em voz alta: o toque começa em onPressIn, e daí saem TRÊS
+          caminhos. Solta antes de 500ms: onPressOut e então onPress — a ação
+          acontece. Segura mais que isso: onLongPress, e onPressOut ainda
+          dispara ao soltar. Arrasta para fora e solta lá: só onPressOut —
+          o usuário CANCELOU, e esse terceiro caminho é o slide seguinte.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2><code>onPress</code> dispara quando o dedo <span class="destaque">SOLTA</span>.</h2>
+        <h3>Ação vai em <code>onPress</code>. Feedback vai no <code>pressed</code>.</h3>
+        <aside class="notes">
+          Este slide é uma pausa retórica. Deixar no ar.
+
+          Quem coloca a ação em onPressIn cria DOIS bugs de uma vez:
+          1. a ação acontece cedo demais
+          2. o usuário perde a chance de CANCELAR arrastando o dedo para fora
+
+          O gesto de cancelar é universal em interface de toque, e todo mundo
+          usa sem pensar. Se você põe a ação no onPressIn, você tira isso
+          do usuário.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Qual callback usar</h2>
+        <table>
+          <tr>
+            <th>Callback</th>
+            <th>Quando usar</th>
+          </tr>
+          <tr>
+            <td><b class="destaque">onPress</b></td>
+            <td><b>a ação.</b> Salvar, marcar, abrir, alternar</td>
+          </tr>
+          <tr>
+            <td><code>onPressIn</code></td>
+            <td>efeito instantâneo e <b>reversível</b> (som, vibração leve)</td>
+          </tr>
+          <tr>
+            <td><code>onPressOut</code></td>
+            <td>desfazer algo que começou no <code>onPressIn</code></td>
+          </tr>
+          <tr>
+            <td><code>onLongPress</code></td>
+            <td>ação secundária: menu, excluir, seleção múltipla</td>
+          </tr>
+          <tr>
+            <td><code>onPressMove</code></td>
+            <td>arrastar; quase nunca na disciplina</td>
+          </tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>A única sintaxe nova: <code>style</code> como função</h2>
+        <pre><code class="language-tsx" data-trim>
+// Aula 3 — array com condicional vinda do SEU estado
+&lt;View style={[styles.card, concluido &amp;&amp; styles.cardConcluido]} /&gt;
+
+// Aula 4 — o MESMO array; quem decide agora é o framework
+&lt;Pressable style={({ pressed }) =&gt; [styles.card, pressed &amp;&amp; styles.cardPressionado]}&gt;
+  &lt;Text&gt;Beber água&lt;/Text&gt;
+&lt;/Pressable&gt;
+      </code></pre>
+        <h3>Mesma precedência da Aula 3: o último vence, <code>false</code> é descartado.</h3>
+        <aside class="notes">
+          PERGUNTAR antes de explicar: "o que mudou aqui?"
+          A resposta que você quer ouvir: mudou QUEM entrega o booleano.
+
+          Não é uma regra nova de estilo. É a regra da Aula 3, com uma fonte
+          diferente para a condição.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O que isso substitui</h2>
+        <div class="colunas">
+          <div>
+            <h3>Na web</h3>
+            <pre><code class="language-css" data-trim>
+.card:active {
+  background: #F3E9DC;
+}
+        </code></pre>
+            <p class="fraco">Pseudo-classe. O navegador aplica.</p>
+          </div>
+          <div>
+            <h3>No React Native</h3>
+            <pre><code class="language-tsx" data-trim>
+style={({ pressed }) =&gt; [
+  styles.card,
+  pressed &amp;&amp; styles.cardPressionado,
+]}
+        </code></pre>
+            <p class="fraco">Parâmetro. Você aplica.</p>
+          </div>
+        </div>
+        <h3>Não existe <code>:active</code>. E não existe <code>:hover</code> — não existe mouse.</h3>
+        <aside class="notes">
+          Mesma lição da Aula 3: o CSS não foi portado, foi substituído.
+          O estado do toque chega POR PARÂMETRO, não por seletor.
+        </aside>
+      </section>
+
+      <section>
+        <h2><code>children</code> também aceita função</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Pressable onPress={marcarConcluido}&gt;
+  {({ pressed }) =&gt; &lt;Text&gt;{pressed ? 'Soltando...' : 'Marcar concluído'}&lt;/Text&gt;}
+&lt;/Pressable&gt;
+      </code></pre>
+        <p>Use quando o <b>conteúdo</b> muda, não só o estilo.</p>
+        <h3>Na maioria dos casos, mudar o estilo basta.</h3>
+      </section>
+
+      <section>
+        <h2><code>hitSlop</code> — o mais útil e o menos usado</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Pressable onPress={remover} hitSlop={12}&gt;
+  &lt;Text style={styles.iconeRemover}&gt;✕&lt;/Text&gt;
+&lt;/Pressable&gt;
+      </code></pre>
+        <p>Aumenta a área <b>sensível</b> — <b class="destaque">sem</b> mudar nada do layout.</p>
+        <div class="caixa-alerta">
+          🔴 O erro correspondente: aumentar o <code>padding</code> "para o toque pegar".
+        </div>
+        <aside class="notes">
+          `padding` empurra os vizinhos, quebra o alinhamento e cria buracos
+          no gap. `hitSlop` deixa o desenho intacto.
+
+          padding = aparência. hitSlop = área de toque. São coisas diferentes.
+
+          Aceita número (quatro lados) ou objeto {top,bottom,left,right}.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Área e tempo: o catálogo</h2>
+        <table>
+          <tr>
+            <th>Sintoma</th>
+            <th>Prop</th>
+            <th>Default</th>
+          </tr>
+          <tr>
+            <td>Alvo pequeno, o usuário erra</td>
+            <td><code>hitSlop</code></td>
+            <td>nenhum</td>
+          </tr>
+          <tr>
+            <td>O toque cancela se o dedo escorrega</td>
+            <td><code>pressRetentionOffset</code></td>
+            <td><code>{t:20, l:20, r:20, b:30}</code></td>
+          </tr>
+          <tr>
+            <td>O item pisca enquanto eu rolo</td>
+            <td><code>unstable_pressDelay</code></td>
+            <td>nenhum</td>
+          </tr>
+          <tr>
+            <td>500 ms de long press é muito/pouco</td>
+            <td><code>delayLongPress</code></td>
+            <td><code>500</code></td>
+          </tr>
+        </table>
+        <h3><code>unstable_pressDelay</code> é a prop que você vai querer na Parte 3.</h3>
+        <aside class="notes">
+          Guardar o nome: quando o Pressable estiver DENTRO DE UMA LISTA,
+          um atraso de ~80ms evita o item acender enquanto o dedo só está
+          iniciando a rolagem.
+
+          `unstable_` avisa que o NOME pode mudar. A função, não.
+
+          pressRetentionOffset já vem generoso — é por isso que "arrastar um
+          pouquinho" não cancela o toque.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Android: <code>android_ripple</code></h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Pressable
+  onPress={marcar}
+  android_ripple={{ color: '#FFB132', borderless: false }}
+  style={({ pressed }) =&gt; [styles.card, pressed &amp;&amp; styles.cardPressionado]}
+&gt;
+      </code></pre>
+        <ul>
+          <li>No <b>iOS não faz nada</b> — e isso é o esperado, não um bug</li>
+          <li>Aceita <code>PlatformColor</code>: a ondinha acompanha claro/escuro do sistema</li>
+          <li><code>android_disableSound</code> desliga o som do toque</li>
+        </ul>
+        <h3>Prop com prefixo de plataforma é um <span class="destaque">contrato honesto</span>.</h3>
+        <aside class="notes">
+          O framework está dizendo, no próprio NOME, "isto só existe de um
+          lado". Muito melhor que uma prop que silenciosamente não faz nada
+          em metade dos aparelhos.
+
+          Guardar esse fio: na Parte 4 vem o contra-exemplo — uma prop cujo
+          DEFAULT difere entre plataformas sem avisar ninguém.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Acessibilidade em duas props</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Pressable
+  onPress={marcarConcluido}
+  accessibilityRole="button"
+  accessibilityLabel="Marcar hábito Beber água como concluído"
+  disabled={carregando}
+&gt;
+      </code></pre>
+        <ul>
+          <li><code>accessibilityRole="button"</code> — sem isso, o leitor anuncia um agrupamento sem propósito</li>
+          <li><code>accessibilityLabel</code> — escreva a <b>ação</b>, não o desenho</li>
+          <li><code>disabled</code> — desliga o toque <b>e</b> informa o estado</li>
+        </ul>
+        <aside class="notes">
+          Existe também a prop `role`, mais nova, que tem PRECEDÊNCIA sobre
+          accessibilityRole e usa o mesmo valor "button".
+
+          Duas props, uma frase cada, seguir. Não virar aula de acessibilidade.
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 O que você vai encontrar por aí</h2>
+        <p>Praticamente todo tutorial monta botões com <b>TouchableOpacity</b>.</p>
+        <p>A documentação oficial <b>do próprio TouchableOpacity</b> avisa, no topo da página:</p>
+        <blockquote>
+          <i>"If you're looking for a more extensive and future-proof way to handle touch-based input,
+            check out the <b>Pressable</b> API."</i>
+        </blockquote>
+        <h3>Quando encontrar um exemplo com ele: <span class="destaque">troque pelo Pressable</span>.</h3>
+        <aside class="notes">
+          Mostrar de onde vem e PARAR AÍ. Não abrir a API do Touchable* —
+          não é o assunto de hoje.
+
+          O que a turma precisa saber é QUAL usar, não como usar o antigo.
+
+          A pergunta que vai aparecer: "e a animação de encolher quando aperta?"
+          Resposta: "ótima pergunta, e não é o assunto de hoje."
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h1>✋ Checkpoint 1</h1>
+        <h3>60 segundos em duplas, e a gente responde em voz alta.</h3>
+        <aside class="notes">
+          1. onPressIn × onPress: onde vai a ação de salvar, e por quê?
+          2. Ícone de 16x16 e o usuário erra o toque: padding ou outra coisa?
+          3. Escreva a assinatura do `style` que escurece o card enquanto pressionado.
+          4. android_ripple no iPhone: o que acontece?
+
+          Não avançar sem isso.
+
+          Se travar: voltar ao TAPETE SENSOR, não inventar analogia nova.
+          Se a confusão for no `style`, escrever na lousa a versão da Aula 3
+          e a de hoje, uma embaixo da outra. A maioria vê na hora que é o
+          mesmo array.
+        </aside>
+      </section>
+
+      <section>
+        <h2>✋ Checkpoint 1 — as perguntas</h2>
+        <ol>
+          <li><code>onPressIn</code> × <code>onPress</code>: onde vai a ação de salvar, e por quê?</li>
+          <li>Ícone de 16×16 e o usuário erra o toque: <code>padding</code> ou outra coisa?</li>
+          <li>Escreva a assinatura do <code>style</code> que escurece o card enquanto pressionado.</li>
+          <li><code>android_ripple</code> no iPhone: o que acontece?</li>
+        </ol>
+      </section>
+
+      <!-- ==================== PARTE 2 — FLATLIST ==================== -->
+
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 2</h1>
+        <h2>FlatList — só renderiza o que se vê</h2>
+      </section>
+
+      <section>
+        <h2>Você já sabe montar uma lista</h2>
+        <pre><code class="language-tsx" data-trim>
+// ❌ Funciona com 5 itens. Trava com 5 000.
+&lt;ScrollView&gt;
+  {habitos.map((h) =&gt; &lt;CardHabito key={h.id} habito={h} /&gt;)}
+&lt;/ScrollView&gt;
+      </code></pre>
+        <h3>Isso não está errado por princípio.</h3>
+        <p>A <code>ScrollView</code> cumpre o contrato dela: <b>montar todos os filhos de uma vez</b>.</p>
+        <p>O erro é usá-la para conteúdo que <b class="alerta">cresce sem limite</b>.</p>
+        <aside class="notes">
+          DEMONSTRAR AO VIVO. Dois arquivos prontos, alt-tab entre eles:
+          A) ScrollView + map com 5000 itens — mostrar o tempo até aparecer
+          B) o MESMO array em FlatList — abre na hora
+
+          PERGUNTAR ANTES DE EXPLICAR: "os dois mostram a mesma coisa.
+          Por que um trava?"
+        </aside>
+      </section>
+
+      <section class="centro">
+        <h1>🚄 A janela do trem</h1>
+        <h3>A paisagem tem 300 km. A janela tem um metro.</h3>
+        <p>O trem não carrega a paisagem inteira — mostra o pedaço que passa, mais um pouco antes e um pouco
+          depois.</p>
+        <p class="fraco">Acelerou demais? Você vê <b>borrão</b>.</p>
+        <aside class="notes">
+          O borrão é a "área em branco" — o vocabulário oficial que vem no
+          próximo slide.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O que muda</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  D["Mesmo array de 5000 itens"] --> SV["ScrollView + map"]
+  D --> FL["FlatList"]
+  SV --> S1["Monta os 5000 de uma vez"]
+  S1 --> S2["Custo cresce com N: app engasga"]
+  FL --> F1["Monta so a janela em volta da viewport"]
+  F1 --> F2["Custo constante: app fluido"]
+        </pre>
+        <aside class="notes">
+          Leitura: à esquerda o custo cresce junto com o dado. À direita, o
+          custo não depende de quantos itens existem no total.
+
+          O nome disso é VIRTUALIZAÇÃO.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O vocabulário oficial</h2>
+        <table>
+          <tr>
+            <th>Termo</th>
+            <th>O que é</th>
+          </tr>
+          <tr>
+            <td><b>Viewport</b></td>
+            <td>a área visível na tela</td>
+          </tr>
+          <tr>
+            <td><b>Janela</b> (<i>window</i>)</td>
+            <td>a área em que os itens ficam montados — bem maior</td>
+          </tr>
+          <tr>
+            <td><b>Área em branco</b></td>
+            <td>o vazio quando você rola mais rápido do que ela renderiza</td>
+          </tr>
+          <tr>
+            <td><b><code>VirtualizedList</code></b></td>
+            <td>o componente <b>por baixo</b> do <code>FlatList</code> e do <code>SectionList</code></td>
+          </tr>
+        </table>
+        <h3>Com esses quatro termos você <span class="destaque">descreve</span> o bug, em vez de dizer "está lento".
+        </h3>
+        <aside class="notes">
+          VirtualizedList: citar o nome porque ele APARECE NA MENSAGEM DE ERRO
+          mais comum de listas — que vem daqui a alguns slides.
+          Não abrir a API dele.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O mínimo funcional</h2>
+        <pre><code class="language-tsx" data-trim>
+// Declarada FORA do componente: criada uma vez, não a cada render.
+function renderHabito({ item }: { item: Habito }) {
+  return (
+    &lt;View style={styles.item}&gt;
+      &lt;Text style={styles.titulo}&gt;{item.titulo}&lt;/Text&gt;
+      &lt;Text style={styles.legenda}&gt;{item.categoria} · {item.streakDias} dias&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+&lt;FlatList style={styles.lista} data={HABITOS} renderItem={renderHabito} /&gt;
+      </code></pre>
+        <h3>O corpo do <code>renderItem</code> é <span class="destaque">o mesmo</span> que ia dentro do
+          <code>map</code>.</h3>
+        <aside class="notes">
+          O que mudou é QUEM CHAMA a função e QUANDO — agora é a lista,
+          sob demanda, conforme você rola.
+
+          renderItem recebe { item, index, separators }. Na prática, quase
+          sempre só `item`.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>🔴 "Sempre defina <code>keyExtractor</code>."</h2>
+        <h3 class="destaque">Não. A documentação diz o contrário.</h3>
+        <p>O extractor padrão checa <code>item.key</code>, depois <code>item.id</code>, e só então o índice.</p>
+        <aside class="notes">
+          Este é um dos fatos zumbis mais repetidos do ecossistema.
+
+          Consequência prática: se o seu objeto tem `id` — e o Habito tem —
+          você NÃO PRECISA ESCREVER NADA. Escrever keyExtractor={(i) => i.id}
+          é ruído: repete o default.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Então quando escrever <code>keyExtractor</code>?</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;FlatList
+  data={habitos}
+  renderItem={renderHabito}
+  keyExtractor={(item) =&gt; item.codigo}   // não é `key` nem `id`
+/&gt;
+      </code></pre>
+        <div class="caixa-alerta">
+          O que é <b>de fato</b> errado: cair no <b>índice</b> numa lista que reordena, filtra ou remove.
+        </div>
+        <aside class="notes">
+          Sintoma inconfundível: você marca o segundo hábito como concluído,
+          aplica um filtro, e o "concluído" aparece no item errado.
+
+          É a mesma discussão de `key` em .map() que eles já viram em React
+          na web. A regra é a mesma: a chave identifica o DADO, não a POSIÇÃO.
+        </aside>
+      </section>
+
+      <section>
+        <h2>As molduras da lista</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  H["ListHeaderComponent"] --> I1["Item"]
+  I1 --> S1["ItemSeparatorComponent"]
+  S1 --> I2["Item"]
+  I2 --> S2["ItemSeparatorComponent"]
+  S2 --> I3["Item"]
+  I3 --> F["ListFooterComponent"]
+  E["ListEmptyComponent: ocupa o lugar dos itens quando data esta vazio"]
+        </pre>
+        <aside class="notes">
+          Leitura: cabeçalho antes de todos, rodapé depois de todos, separador
+          ENTRE os itens e nunca nas pontas. O componente de vazio é o único
+          que não convive com os itens.
+        </aside>
+      </section>
+
+      <section>
+        <h2>As molduras — para que serve cada uma</h2>
+        <table>
+          <tr>
+            <th>Prop</th>
+            <th>Para quê</th>
+          </tr>
+          <tr>
+            <td><code>ListHeaderComponent</code></td>
+            <td>título, busca, filtros — <b>rola junto</b></td>
+          </tr>
+          <tr>
+            <td><code>ListFooterComponent</code></td>
+            <td>total, aviso de fim, "carregando mais"</td>
+          </tr>
+          <tr>
+            <td><b class="destaque">ListEmptyComponent</b></td>
+            <td><b>estado vazio</b></td>
+          </tr>
+          <tr>
+            <td><code>ItemSeparatorComponent</code></td>
+            <td>a linha entre itens</td>
+          </tr>
+          <tr>
+            <td><code>contentContainerStyle</code></td>
+            <td><code>padding</code> e <code>gap</code> do conteúdo que rola</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>Lista vazia é <span class="destaque">estado de produto</span>, não caso de borda.</h2>
+        <h3>Primeiro acesso · filtro sem resultado · busca sem match</h3>
+        <p>Uma tela em branco parece <b>bug</b> para quem está usando.</p>
+        <aside class="notes">
+          Isso ENTRA NOS CRITÉRIOS DE AVALIAÇÃO da atividade aplicada.
+          Dizer isso em voz alta agora, para não ser surpresa depois.
+
+          E a atividade cobra mais: o vazio de BUSCA não pode ter o mesmo
+          texto do vazio de PRIMEIRO ACESSO. São situações diferentes para
+          o usuário.
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 Dois erros nas molduras</h2>
+        <pre><code class="language-tsx" data-trim>
+// ❌ sobra margem depois do último item
+item: { paddingVertical: 12, marginBottom: 8 }
+
+// ✅ o separador não existe nas pontas
+ItemSeparatorComponent={Separador}
+
+// ✅ ou: gap no contêiner (é uma View flex — Aula 3)
+contentContainerStyle={{ gap: 8, padding: 16 }}
+      </code></pre>
+        <pre><code class="language-tsx" data-trim>
+// ❌ tipo de componente novo a cada render → remonta
+&lt;FlatList ListHeaderComponent={() =&gt; &lt;Cabecalho /&gt;} /&gt;
+
+// ✅ passe o elemento, ou uma referência estável
+&lt;FlatList ListHeaderComponent={&lt;Cabecalho /&gt;} /&gt;
+      </code></pre>
+        <aside class="notes">
+          O sintoma do segundo erro é assustador e parece não ter explicação:
+          você põe um TextInput de busca no cabeçalho, e ELE PERDE O FOCO A
+          CADA TECLA DIGITADA. É o cabeçalho sendo remontado a cada render.
+
+          Vale contar essa história — eles vão bater nisso na Atividade 1.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A lista que não atualiza</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  A["Voce muda o estado"] --> B{"data mudou de identidade?"}
+  B -->|"Sim: array novo"| C["FlatList re-renderiza"]
+  B -->|"Nao: mesmo array mutado"| D["FlatList e PureComponent: nada acontece"]
+  D --> E["Correcao 1: criar array novo com map"]
+  D --> F["Correcao 2: passar extraData"]
+        </pre>
+        <aside class="notes">
+          É o bug de lista número 1 do semestre.
+
+          A documentação é explícita: FlatList é um PureComponent — "não
+          re-renderiza se as props continuarem shallow-equal".
+
+          Se travar no checkpoint: escrever na lousa `arrayAntigo === arrayNovo`
+          e perguntar o que o === responde depois de um push.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Mutar × criar</h2>
+        <pre><code class="language-tsx" data-trim>
+// ❌ mutou: `habitos` continua sendo o MESMO array. A lista não muda.
+const alvo = habitos.find((h) =&gt; h.id === id);
+if (alvo) alvo.status = 'concluido';
+setHabitos(habitos);
+
+// ✅ array novo, objeto novo: a identidade muda, a lista re-renderiza
+setHabitos((atuais) =&gt;
+  atuais.map((h) =&gt; (h.id === id ? { ...h, status: 'concluido' } : h)),
+);
+      </code></pre>
+        <h3>E quando o dado que muda <b>não está</b> em <code>data</code>? Aí sim: <code>extraData</code>.</h3>
+        <aside class="notes">
+          extraData conserta o SINTOMA. A imutabilidade conserta a CAUSA.
+          A própria descrição da prop na doc usa a palavra "immutably".
+
+          O outro lado do mesmo contrato: o ESTADO INTERNO de um item não é
+          preservado quando ele sai da janela. Se você guardar "está
+          expandido" dentro do componente do item, isso se perde ao rolar
+          para longe e voltar.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>A pergunta que decide:</h2>
+        <h3>isso é <span class="destaque">dado do domínio</span> ou <span class="destaque">estado de tela</span>?</h3>
+        <p>Dado do domínio → imutabilidade. &nbsp;·&nbsp; Estado de tela → <code>extraData</code>.</p>
+        <aside class="notes">
+          "Está concluído" é propriedade do hábito → imutabilidade.
+          "Está selecionado nesta tela" é propriedade da TELA → extraData.
+
+          Essa distinção é o Exercício 7. Vale plantar aqui.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Colunas, carrossel e recarregar</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;FlatList numColumns={2} columnWrapperStyle={{ gap: 12 }} ... /&gt;
+      </code></pre>
+        <ul>
+          <li><code>numColumns</code> — só com <code>horizontal={false}</code>, e os itens precisam ter <b>a mesma
+              altura</b></li>
+          <li><code>horizontal</code> — carrossel</li>
+          <li><code>refreshing</code> + <code>onRefresh</code> — puxar para atualizar, sem componente extra</li>
+          <li><code>onEndReached</code> + <code>onEndReachedThreshold</code> — rolagem infinita</li>
+        </ul>
+        <h3>Hoje, com array local. Buscar de uma API é assunto das Aulas 10 a 12.</h3>
+        <aside class="notes">
+          A doc é explícita: masonry não é suportado no numColumns.
+          Se alguém quiser Pinterest, "ótima pergunta, não é o assunto de hoje".
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 Erro 1: <code>FlatList</code> dentro de <code>ScrollView</code></h2>
+        <div class="caixa-alerta">
+          <code>VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it
+            can break windowing and other functionality — use another VirtualizedList-backed container
+            instead.</code>
+        </div>
+        <p><b>Por que acontece:</b> você quer que "a tela inteira role".</p>
+        <p><b>Por que é grave:</b> a <code>ScrollView</code> dá altura infinita à lista → a janela deixa de fazer
+          sentido → <b class="alerta">tudo</b> é montado.</p>
+        <h3>Você reintroduziu exatamente o problema que veio resolver.</h3>
+        <aside class="notes">
+          Correção: não aninhe. O que vinha antes da lista vira
+          ListHeaderComponent; o que vinha depois, ListFooterComponent.
+
+          QUEBRAR AO VIVO para eles verem o warning. Vale 30 segundos.
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 Erro 2: <code>renderItem</code> anônimo no JSX</h2>
+        <pre><code class="language-tsx" data-trim>
+// ❌ função nova a cada render
+&lt;FlatList renderItem={({ item }) =&gt; &lt;ItemHabito habito={item} /&gt;} /&gt;
+
+// ✅ declarada fora do componente: criada uma vez só
+function renderHabito({ item }: { item: Habito }) { ... }
+&lt;FlatList renderItem={renderHabito} /&gt;
+      </code></pre>
+        <div class="caixa-ok">
+          🧩 <b>Nota honesta:</b> existe uma ferramenta do React feita exatamente para isso.
+          Ela <b>não é assunto de hoje</b> — chega na <b>Aula 6, sobre Hooks</b>.
+        </div>
+        <aside class="notes">
+          DIZER ISSO COM TODAS AS LETRAS. Não fingir que o problema não existe,
+          e não ensinar a ferramenta fora de hora.
+
+          Gancho pronto para a Aula 6: "lembram do renderItem que a gente teve
+          que empurrar para fora do componente? Hoje eu mostro a ferramenta
+          que deixa ele ficar dentro."
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 Erro 3: lista sem altura</h2>
+        <pre><code class="language-tsx" data-trim>
+// ❌ nada aparece
+&lt;View&gt;
+  &lt;FlatList data={habitos} renderItem={renderHabito} /&gt;
+&lt;/View&gt;
+
+// ✅
+&lt;View style={{ flex: 1 }}&gt;
+  &lt;FlatList data={habitos} renderItem={renderHabito} /&gt;
+&lt;/View&gt;
+      </code></pre>
+        <h3>Mesma regra da Aula 3: <span class="destaque">Flexbox distribui espaço que existe</span>.</h3>
+        <aside class="notes">
+          Antes de culpar a lista, pergunte se o contêiner tem tamanho.
+          É literalmente a mesma frase do Passo 4.3 da Aula 3.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Os botões de ajuste</h2>
+        <table>
+          <tr>
+            <th>Prop</th>
+            <th>Default</th>
+            <th>O que faz</th>
+          </tr>
+          <tr>
+            <td><code>initialNumToRender</code></td>
+            <td><code>10</code></td>
+            <td>itens no primeiro lote</td>
+          </tr>
+          <tr>
+            <td><code>windowSize</code></td>
+            <td><code>21</code></td>
+            <td>tamanho da janela, em múltiplos da viewport</td>
+          </tr>
+          <tr>
+            <td><code>maxToRenderPerBatch</code></td>
+            <td><code>10</code></td>
+            <td>itens por lote a cada rolagem</td>
+          </tr>
+          <tr>
+            <td><code>updateCellsBatchingPeriod</code></td>
+            <td><code>50</code> ms</td>
+            <td>intervalo entre lotes</td>
+          </tr>
+          <tr>
+            <td><code>removeClippedSubviews</code></td>
+            <td><code>true</code> no Android</td>
+            <td>desanexa views fora da viewport</td>
+          </tr>
+          <tr>
+            <td><code>getItemLayout</code></td>
+            <td>—</td>
+            <td>dispensa a medição, se a altura é fixa</td>
+          </tr>
+        </table>
+        <h3>A regra: <span class="alerta">não mexa antes de medir</span>. Todo ajuste é uma troca.</h3>
+        <aside class="notes">
+          windowSize maior → menos branco, mais memória.
+          maxToRenderPerBatch maior → menos branco, mais JS travando a interface.
+          initialNumToRender menor → abre mais rápido, pode abrir com branco.
+
+          getItemLayout é o único quase sempre vantajoso — QUANDO a altura
+          é fixa.
+        </aside>
+      </section>
+
+      <section>
+        <h2>🔴 <code>removeClippedSubviews</code> não é otimização grátis</h2>
+        <p>A própria documentação avisa:</p>
+        <blockquote>
+          <i>"this implementation can have bugs, such as missing content (mainly observed on iOS)… this does not save
+            significant memory because the views are not deallocated, only detached."</i>
+        </blockquote>
+        <h3>Conteúdo sumindo no iOS. E a economia de memória que <span class="alerta">não existe</span>.</h3>
+        <aside class="notes">
+          Esse é um caso perfeito de leitura crítica de documentação: a prop
+          está lá, tem default true no Android, e a própria doc que a
+          descreve avisa que ela pode quebrar sua tela.
+
+          Ler a doc inteira, não só o nome da prop.
+        </aside>
+      </section>
+
+      <!-- ==================== PARTE 3 — SECTIONLIST ==================== -->
+
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 3</h1>
+        <h2>SectionList — quando o dado vem agrupado</h2>
+      </section>
+
+      <section class="centro">
+        <h2>O critério, em uma pergunta</h2>
+        <h1 class="destaque">Os meus dados têm grupos com título?</h1>
+        <p><b>Sim</b> → <code>SectionList</code> &nbsp;·&nbsp; <b>Não</b> → <code>FlatList</code></p>
+        <p class="fraco">Hábitos por período · contatos por letra · tarefas por status · mensagens por data</p>
+        <p>O que <b>não</b> justifica trocar: querer um título no topo. Isso é <code>ListHeaderComponent</code>.</p>
+      </section>
+
+      <section>
+        <h2>O formato de <code>sections</code></h2>
+        <pre><code class="language-tsx" data-trim>
+const SECOES = [
+  { title: 'Manhã', data: [habito1, habito2] },
+  { title: 'Noite', data: [habito3] },
+];
+      </code></pre>
+        <div class="caixa-alerta">
+          🔴 "A seção precisa ter <code>title</code>." <b>Não precisa.</b>
+        </div>
+        <p>A documentação define <b class="destaque">data</b> como o campo obrigatório.
+          <code>title</code> é um campo <b>seu</b>.</p>
+        <aside class="notes">
+          RENOMEAR AO VIVO: trocar `title` por `periodo` no array e no
+          renderSectionHeader, e mostrar que continua funcionando.
+          A ficha cai na hora.
+
+          Detalhe útil: o renderItem do SectionList recebe também `section` —
+          dá para renderizar o item diferente conforme o grupo.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cabeçalhos, rodapés e os <b>dois</b> separadores</h2>
+        <table>
+          <tr>
+            <th>Componente</th>
+            <th>Onde aparece</th>
+          </tr>
+          <tr>
+            <td><code>renderSectionHeader</code></td>
+            <td>no topo de cada seção</td>
+          </tr>
+          <tr>
+            <td><code>renderSectionFooter</code></td>
+            <td>no fim de cada seção</td>
+          </tr>
+          <tr>
+            <td><code>ItemSeparatorComponent</code></td>
+            <td><b>entre</b> itens, nunca nas pontas</td>
+          </tr>
+          <tr>
+            <td><code>SectionSeparatorComponent</code></td>
+            <td><b>no topo e no fim</b> de cada seção</td>
+          </tr>
+        </table>
+        <h3><code>Item…</code> cuida do espaço <b>dentro</b> do grupo. <code>Section…</code>, <b>em volta</b> dele.
+        </h3>
+        <aside class="notes">
+          Essa é a confusão clássica. Vale desenhar na lousa.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>🔴 O bug "funciona no meu celular"</h2>
+        <h1 class="destaque">stickySectionHeadersEnabled</h1>
+        <h3>iOS: default <code>true</code> &nbsp;·&nbsp; Android: default <code>false</code></h3>
+        <aside class="notes">
+          O aluno com iPhone vê o cabeçalho grudar. O com Android, não.
+          NENHUM DOS DOIS está com o app quebrado — os dois estão com o app
+          INDEFINIDO.
+
+          Ter os dois aparelhos à mão para este slide. A diferença só convence
+          quando se vê lado a lado.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A correção: declarar</h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;SectionList
+  sections={SECOES}
+  renderItem={renderHabito}
+  stickySectionHeadersEnabled
+/&gt;
+      </code></pre>
+        <h3>Default de plataforma é <span class="destaque">decisão de produto disfarçada de omissão</span>.</h3>
+        <aside class="notes">
+          Vale muito além desta prop. Toda vez que você omite uma prop cujo
+          default difere entre iOS e Android, você entregou a decisão para o
+          sistema operacional — e o seu app virou dois apps diferentes.
+
+          Contraste com o android_ripple da Parte 1: lá o NOME avisava.
+          Aqui, não avisa nada.
+        </aside>
+      </section>
+
+      <section>
+        <h2>De dados planos para seções</h2>
+        <pre><code class="language-tsx" data-trim>
+function agruparPorStatus(habitos: Habito[]): Secao[] {
+  const rotulos: Record&lt;StatusHabito, string&gt; = {
+    pendente: 'Pendentes', concluido: 'Concluídos', pulado: 'Pulados',
+  };
+  const ordem: StatusHabito[] = ['pendente', 'concluido', 'pulado'];
+
+  return ordem
+    .map((s) =&gt; ({ title: rotulos[s], data: habitos.filter((h) =&gt; h.status === s) }))
+    .filter((secao) =&gt; secao.data.length &gt; 0);   // não mostrar grupo vazio
+}
+      </code></pre>
+        <h3>JavaScript comum. <span class="destaque">O SectionList não agrupa nada.</span></h3>
+        <aside class="notes">
+          Agrupar é TRANSFORMAÇÃO DE DADO, e acontece antes de chegar no JSX.
+          Confundir isso é a origem de metade da confusão com esse componente.
+
+          O .filter no final é decisão de produto: seção vazia com cabeçalho
+          é ruído visual.
+
+          A ORDEM dos grupos também é decisão: 'pendente' primeiro coloca o
+          que exige ação do usuário em cima. Alfabética enterraria isso no meio.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A árvore de decisão</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  A["Preciso mostrar uma colecao"] --> B{"Quantidade cresce sem limite?"}
+  B -->|"Nao, e conhecida"| C["ScrollView (Aula 3)"]
+  B -->|"Sim"| D{"Os dados tem grupos com titulo?"}
+  D -->|"Nao"| E["FlatList"]
+  D -->|"Sim"| F["SectionList"]
+  E --> G["Titulo unico no topo: ListHeaderComponent"]
+        </pre>
+        <aside class="notes">
+          Leitura: duas perguntas decidem tudo. A primeira separa ScrollView
+          de lista virtualizada — o critério é se a quantidade cresce sem
+          limite. A segunda separa FlatList de SectionList — o critério é se
+          o dado tem grupos.
+
+          Um título único no topo NÃO É GRUPO. É cabeçalho de lista.
+        </aside>
+      </section>
+
+      <section>
+        <h2><code>FlatList</code> × <code>SectionList</code></h2>
+        <table>
+          <tr>
+            <th></th>
+            <th><code>FlatList</code></th>
+            <th><code>SectionList</code></th>
+          </tr>
+          <tr>
+            <td>Dados</td>
+            <td><code>data</code> (array)</td>
+            <td><code>sections</code> (array de <code>{ data }</code>)</td>
+          </tr>
+          <tr>
+            <td>Cabeçalho por grupo</td>
+            <td>não tem</td>
+            <td><code>renderSectionHeader</code></td>
+          </tr>
+          <tr>
+            <td><code>renderItem</code> recebe</td>
+            <td><code>{ item, index, separators }</code></td>
+            <td><code>{ item, index, <b>section</b>, separators }</code></td>
+          </tr>
+          <tr>
+            <td>Sticky header</td>
+            <td>—</td>
+            <td><code>stickySectionHeadersEnabled</code></td>
+          </tr>
+          <tr>
+            <td>Por baixo</td>
+            <td><code>VirtualizedList</code></td>
+            <td><code>VirtualizedList</code></td>
+          </tr>
+        </table>
+        <h3><code>keyExtractor</code>, separadores, vazio, <code>extraData</code>, <code>onRefresh</code>:
+          <span class="destaque">iguais nos dois</span>.</h3>
+      </section>
+
+      <section>
+        <h2>E as bibliotecas de lista? (contexto)</h2>
+        <p>Existem bibliotecas de terceiros focadas em desempenho de lista.</p>
+        <h3>A disciplina ensina <span class="destaque">o que vem no framework</span>.</h3>
+        <p>Dois motivos: é o que você encontra em qualquer código base, e virtualização, janela,
+          <code>keyExtractor</code> e imutabilidade são os <b>mesmos conceitos</b> em todas elas.</p>
+        <aside class="notes">
+          Trocar de biblioteca é fácil depois que se entende o problema.
+          O contrário, não.
+
+          Se alguém insistir: "ótima pergunta — não é o assunto de hoje."
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h1>✋ Checkpoint 2</h1>
+        <h3>60 segundos em duplas.</h3>
+        <aside class="notes">
+          Se travar: retomar a JANELA DO TREM.
+          Para o extraData: escrever `arrayAntigo === arrayNovo` na lousa e
+          perguntar o que o === responde depois de um push.
+        </aside>
+      </section>
+
+      <section>
+        <h2>✋ Checkpoint 2 — as perguntas</h2>
+        <ol>
+          <li>12 campos num formulário: <code>ScrollView</code> ou <code>FlatList</code>? Justifique pelo
+            <b>contrato</b>.</li>
+          <li>Mudei o estado e a lista não atualizou. <b>Duas</b> causas e as correções.</li>
+          <li><code>keyExtractor</code> devolvendo índice: em que situação isso quebra?</li>
+          <li>O cabeçalho gruda no iPhone da sua dupla e não no seu Android. Quem está errado?</li>
+        </ol>
+      </section>
+
+      <!-- ==================== PARTE 4 — HANDS-ON ==================== -->
+
+      <section class="centro divisor">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-preto.png" alt="CESAR School">
+        <h1>Parte 4</h1>
+        <h2>Hands-on — 38 minutos</h2>
+      </section>
+
+      <section>
+        <h2>O roteiro do hands-on</h2>
+        <table>
+          <tr>
+            <th>#</th>
+            <th>O quê</th>
+            <th>Tempo</th>
+          </tr>
+          <tr>
+            <td>1 e 2</td>
+            <td>Associação + caça ao erro — <b>sem computador</b></td>
+            <td>8 min</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><code>BotaoAcao</code> com <code>Pressable</code>, <code>pressed</code>, <code>hitSlop</code>, ripple
+            </td>
+            <td>8 min</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Previsão do ciclo do toque — <b>prever antes de rodar</b></td>
+            <td>5 min</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><code>FlatList</code> completa: chave, separador, vazio, cabeçalho</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><code>SectionList</code> de dados planos + sticky nas duas plataformas</td>
+            <td>7 min</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><i>(sobra)</i> a lista que não atualiza</td>
+            <td>casa</td>
+          </tr>
+        </table>
+        <h3>Domínio <b>Hábito</b> → <code>exercises.md</code> · Domínio <b>Pet</b> → <code>practice.md</code></h3>
+        <aside class="notes">
+          CIRCULAR PELA SALA. Erros previsíveis com resposta pronta:
+          - ação em onPressIn
+          - style ainda array, esperando `pressed`
+          - Pressable vazio (não desenha nada)
+          - FlatList dentro de ScrollView → mostrar o warning
+          - texto solto no renderItem (o erro nº1 da Aula 3, que volta aqui)
+          - lista sem flex: 1
+          - renderItem anônimo → mover para fora
+          - mutar o item → criar array novo
+          - section.title indefinido
+          - sticky não gruda no Android → declarar a prop
+        </aside>
+      </section>
+
+      <section>
+        <h2>Atividade aplicada — a tela de lista de verdade</h2>
+        <p><b>SectionList</b> agrupando por status · itens tocáveis com <b>Pressable</b> · ação secundária no <b>toque
+            longo</b></p>
+        <h3>Os <span class="destaque">quatro</span> estados da lista, todos implementados:</h3>
+        <ol>
+          <li><b>com dados</b> — o caso normal</li>
+          <li><b>vazio</b> — com texto que diga o que fazer</li>
+          <li><b>atualizando</b> — <code>refreshing</code> + <code>onRefresh</code></li>
+          <li><b>filtrado sem resultado</b> — e o texto <b class="alerta">não</b> pode ser o mesmo do estado 2</li>
+        </ol>
+        <h3>Mínimo de <b>20 itens</b> no mock. Lista de 3 não prova nada.</h3>
+        <aside class="notes">
+          Restrições que decidem a nota:
+          - nenhuma ScrollView envolvendo a lista
+          - nenhuma mutação de estado
+          - agrupamento e filtro FORA do componente de tela, em lib/
+          - nada de ajustar windowSize: com 20 itens não há o que otimizar,
+          e mexer sem medir é o antipadrão que a aula alertou
+
+          Detalhes completos e critérios de avaliação em exercises.md /
+          practice.md.
+        </aside>
+      </section>
+
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h2>Você entrou com uma tela bonita que só sabia mostrar <span class="destaque">três</span> itens.</h2>
+        <h3>Sai com um toque de verdade e uma lista cujo custo não depende do tamanho dos dados.</h3>
+        <p class="fraco">Aula 5: sensores do dispositivo — e o dado da lista deixa de ser mock.</p>
+        <aside class="notes">
+          Fechar o arco: as duas dívidas da Aula 3 foram pagas.
+          1. o remendo do Text com onPress virou Pressable
+          2. a ScrollView que montava tudo virou lista virtualizada
+
+          Leitura para a próxima aula: ver student-notes.md.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Atalhos desta apresentação</h2>
+        <table>
+          <tr>
+            <th>Tecla</th>
+            <th>Ação</th>
+          </tr>
+          <tr>
+            <td><code>→</code> / espaço · <code>←</code></td>
+            <td>avançar · voltar</td>
+          </tr>
+          <tr>
+            <td><b>S</b></td>
+            <td><b>modo apresentador</b> — notas, cronômetro e próximo slide</td>
+          </tr>
+          <tr>
+            <td><code>F</code></td>
+            <td>tela cheia</td>
+          </tr>
+          <tr>
+            <td><code>O</code> ou <code>Esc</code></td>
+            <td>visão geral de todos os slides</td>
+          </tr>
+          <tr>
+            <td><code>B</code> ou <code>.</code></td>
+            <td>tela preta</td>
+          </tr>
+          <tr>
+            <td><code>?</code></td>
+            <td>lista completa de atalhos</td>
+          </tr>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <script src="vendor/reveal/reveal.js"></script>
+  <script src="vendor/reveal/plugin/highlight.js"></script>
+  <script src="vendor/reveal/plugin/notes.js"></script>
+  <script src="vendor/reveal/plugin/search.js"></script>
+  <script src="vendor/reveal/plugin/zoom.js"></script>
+  <script src="vendor/mermaid/mermaid.min.js"></script>
+
+  <script>
+    // --------------------------------------------------------------------------
+    // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
+    // descobertas renderizando a página de verdade num navegador:
+    //
+    // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
+    //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
+    //    ainda vazios e os diagramas saem cortados.
+    //
+    // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
+    //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
+    //    dimensionar as caixas — dentro de um elemento `display: none` toda
+    //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
+    //    renderizam (a conta de layout estoura com dimensão zero).
+    //
+    //    Solução: forçar os slides visíveis SÓ durante a renderização dos
+    //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
+    //    e remover esse estilo antes de inicializar o reveal.
+    //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
+    //    inteiro, que é justamente o que precisamos medir.
+    // --------------------------------------------------------------------------
+
+    // Paleta fixa da CESAR School (não acompanha o tema do sistema —
+    // todos os diagramas ficam em slides de fundo creme).
+    mermaid.initialize({
+      startOnLoad: false,          // nós disparamos manualmente, abaixo
+      theme: 'base',
+      securityLevel: 'loose',      // permite <br/> dentro dos rótulos
+      themeVariables: {
+        fontSize: '18px',
+        fontFamily: 'Barlow, Helvetica, sans-serif',
+        primaryColor: '#FEF7EE',
+        primaryTextColor: '#191919',
+        primaryBorderColor: '#FF6002',
+        lineColor: '#232323',
+        secondaryColor: '#F3E9DC',
+        tertiaryColor: '#FFB132',
+        clusterBkg: '#F3E9DC',
+        clusterBorder: '#FF6002',
+        pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+        pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+        pieOuterStrokeColor: '#FEF7EE',
+        pieSectionTextColor: '#FEF7EE',
+      },
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+    });
+
+    (async () => {
+      // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
+      const estiloMedicao = document.createElement('style');
+      estiloMedicao.textContent = `
+      .reveal { opacity: 0 !important; }
+      .reveal .slides,
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+      }
+    `;
+      document.head.appendChild(estiloMedicao);
+
+      try {
+        // Renderiza um a um: um diagrama com problema não pode impedir os outros
+        // de aparecerem no meio da aula.
+        for (const el of document.querySelectorAll('pre.mermaid')) {
+          try {
+            await mermaid.run({ nodes: [el] });
+          } catch (erro) {
+            console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+          }
+        }
+      } finally {
+        estiloMedicao.remove();
+      }
+
+      Reveal.initialize({
+        hash: true,              // URL acompanha o slide — dá para linkar um slide
+        slideNumber: 'c/t',      // "12 / 48" no canto
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controls: true,
+        progress: true,
+        overview: true,
+        center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
+        width: 1280,
+        height: 800,
+        margin: 0.06,
+        minScale: 0.2,
+        maxScale: 1.8,
+        pdfSeparateFragments: false,
+        plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+      });
+
+      // Slides marcados com .centro centralizam verticalmente também.
+      Reveal.on('ready', () => document.body.classList.add('pronto'));
+    })();
+  </script>
+</body>
+
