@@ -1,0 +1,1729 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 5 — Sensores do dispositivo</title>
+
+  <!--
+    ============================================================================
+    APRESENTAÇÃO DA AULA 5 — reveal.js
+    ============================================================================
+
+    COMO ABRIR
+      Basta dar duplo clique neste arquivo. Ele funciona offline: todas as
+      dependências estão em vendor/, nada é baixado da internet.
+
+    ATALHOS DE TECLADO
+      →  ou  espaço   avança
+      ←               volta
+      S               modo apresentador (notas + cronômetro + próximo slide)
+      F               tela cheia
+      O  ou  Esc      visão geral de todos os slides
+      B  ou  .        tela preta (para chamar atenção de volta)
+      Ctrl + clique   zoom em um ponto do slide
+      ?               ajuda com todos os atalhos
+
+    IMPRIMIR / GERAR PDF
+      Abra com ?print-pdf no final da URL e mande imprimir pelo navegador.
+      Ex.: file:///.../presentation.html?print-pdf
+
+    ONDE EDITAR O CONTEÚDO
+      Cada <section> é um slide. Notas do apresentador vão em <aside class="notes">.
+      Diagramas vão em <pre class="mermaid">.
+    ============================================================================
+  -->
+
+  <link rel="stylesheet" href="vendor/reveal/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/theme/white.css" id="theme">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    /* ---------------------------------------------------------------------
+       Identidade visual CESAR School (ver TEMPLATE.pdf / TEMPLATE.pptx da
+       Aula 1): fundo creme, laranja de marca, títulos em Barlow Condensed
+       caixa-alta, corpo de texto em Barlow, formas circulares decorativas.
+       Fontes embutidas em vendor/fonts/ para manter a aula 100% offline.
+       --------------------------------------------------------------------- */
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-400.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
+    }
+
+    :root {
+      --cor-fundo: #FEF7EE;
+      --cor-fundo-escuro: #232323;
+      --cor-preto: #191919;
+      --cor-destaque: #FF6002;
+      --cor-destaque2: #FB6B00;
+      --cor-amarelo: #FFB132;
+      --cor-alerta: #c62828;
+      --cor-ok: #2e7d32;
+      --cor-texto-fraco: #6b6459;
+      --cor-fundo-bloco: #F3E9DC;
+      --cor-borda: #E4D6C3;
+      --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      --fonte-corpo: 'Barlow', Arial, sans-serif;
+    }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal,
+    .reveal .slides {
+      background: var(--cor-fundo);
+    }
+
+    .reveal,
+    .reveal p,
+    .reveal li,
+    .reveal td,
+    .reveal th,
+    .reveal blockquote {
+      font-family: var(--fonte-corpo);
+      color: var(--cor-preto);
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      color: var(--cor-preto);
+      letter-spacing: 0.01em;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-transform: uppercase;
+    }
+
+    .reveal h1 {
+      font-size: 1.9em;
+      font-weight: 900;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h3 {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+      font-weight: 700;
+    }
+
+    /* Altura cheia + centralização vertical, só na seção .present: com
+       center:false, por padrão a <section> só teria a altura do próprio
+       conteúdo (top-aligned) — o que grudava tudo no topo e fazia os acentos
+       decorativos em bottom:0/top:0 flutuarem soltos no meio do slide em vez
+       de ficarem presos às bordas reais do palco 1280x800.
+       IMPORTANTE: o seletor tem que incluir ".present" — reveal.css usa
+       "display: none" para esconder as seções não-atuais com esse MESMO
+       seletor base; um "display: flex !important" sem ".present" sobrescreve
+       esse display:none e deixa todos os slides visíveis empilhados ao
+       mesmo tempo (efeito fantasma de texto duplicado). */
+    .reveal .slides>section.present,
+    .reveal .slides>section>section.present {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* flex-shrink:0 nos filhos diretos: sem isso, o flexbox ENCOLHE blocos
+       de conteúdo (ex.: <pre> de código) para caber nos 800px do palco
+       quando o slide é denso — e o <pre> encolhido fica menor que o próprio
+       <code> lá dentro, que passa a vazar por cima do próximo elemento. */
+    .reveal .slides>section.present>*,
+    .reveal .slides>section>section.present>* {
+      flex-shrink: 0;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    .reveal section.centro {
+      text-align: center;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-align: left;
+    }
+
+    .reveal section.centro h1,
+    .reveal section.centro h2,
+    .reveal section.centro h3 {
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Formas decorativas — o motivo de semicírculos do template, aplicado
+       como acento discreto no canto superior direito dos slides de
+       conteúdo e como barra de base à esquerda. Ficam atrás do conteúdo
+       (z-index negativo) para nunca colidir com texto, tabelas ou código.
+       --------------------------------------------------------------------- */
+    .reveal .slides>section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides>section>section:not(.centro):not(:has(.tabela-larga))::before {
+      content: '';
+      position: absolute;
+      top: -70px;
+      right: -50px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--cor-preto);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section:not(.centro)::after,
+    .reveal .slides>section>section:not(.centro)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 15%;
+      min-width: 120px;
+      height: 10px;
+      background: var(--cor-destaque);
+      border-radius: 0 6px 6px 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slide de abertura e de fechamento — fundo escuro, à la capa do manual */
+    .reveal .slides>section.slide-capa {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-capa h1,
+    .reveal .slides>section.slide-capa h2,
+    .reveal .slides>section.slide-capa h3,
+    .reveal .slides>section.slide-capa p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-capa .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-capa::before {
+      content: '';
+      position: absolute;
+      top: -18%;
+      right: -12%;
+      width: 60%;
+      height: 130%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-capa::after {
+      content: '';
+      position: absolute;
+      bottom: -22%;
+      left: -8%;
+      width: 26%;
+      height: 55%;
+      background: var(--cor-fundo);
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides de impacto — mesma pausa retórica dramática do "Por fim" do manual */
+    .reveal .slides>section.slide-impacto {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-impacto h1,
+    .reveal .slides>section.slide-impacto h2,
+    .reveal .slides>section.slide-impacto h3,
+    .reveal .slides>section.slide-impacto p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-impacto .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-impacto::before {
+      content: '';
+      position: absolute;
+      top: -25%;
+      right: -10%;
+      width: 34%;
+      height: 60%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-impacto::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: 6%;
+      width: 20%;
+      height: 45%;
+      border: 3px solid var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides divisores de Parte — bloco de círculos laranja, como as seções
+       numeradas do manual ("1. Princípios gerais...") */
+    .reveal .slides>section.divisor {
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h1 {
+      color: var(--cor-destaque);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h2,
+    .reveal .slides>section.divisor h3 {
+      color: var(--cor-preto);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor::before {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: 6%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.divisor::after {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: -8%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Tabelas: o gargalo real de legibilidade numa aula comparativa */
+    .reveal table {
+      font-size: 0.62em;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.4em 0;
+    }
+
+    .reveal table th {
+      background: var(--cor-fundo-bloco);
+      font-weight: 700;
+      border-bottom: 2px solid var(--cor-borda);
+    }
+
+    .reveal table th,
+    .reveal table td {
+      padding: 0.35em 0.5em;
+      border: 1px solid var(--cor-borda);
+      vertical-align: top;
+    }
+
+    /* Tabela larga rola sozinha */
+    .tabela-larga {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tabela-larga table {
+      font-size: 0.52em;
+      min-width: 900px;
+    }
+
+    /* Código */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      font-size: 0.48em;
+      margin: 0.4em 0;
+    }
+
+    .reveal pre code {
+      padding: 0.9em 1.1em;
+      max-height: 560px;
+      line-height: 1.35;
+      /* reveal.css define ".reveal .hljs { min-height: 100% }". Com a
+         seção agora em flex column, isso vira uma referência circular:
+         o <pre> (flex item, altura "auto") passa a ter uma altura
+         "definida" pelo algoritmo de flex, e o min-height:100% do
+         <code> lá dentro passa a resolver contra ESSA altura em vez de
+         crescer para caber no próprio conteúdo — o código fica cortado
+         menor que o necessário e vaza visualmente por cima do próximo
+         elemento do slide. */
+      min-height: 0 !important;
+    }
+
+    .reveal code:not(pre code) {
+      background: var(--cor-fundo-bloco);
+      color: var(--cor-preto);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    /* Diagramas Mermaid */
+    .reveal .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      margin: 0.3em 0;
+    }
+
+    /* O Mermaid grava `style="max-width: NNNpx"` INLINE no <svg>, e estilo
+       inline vence folha de estilo. Sem !important o diagrama ignora estes
+       limites e estoura o slide. */
+    .reveal .mermaid svg {
+      max-width: 100% !important;
+      max-height: 500px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    /* Diagrama que ocupa o slide inteiro (slide sem texto de apoio) */
+    .reveal .mermaid-grande svg {
+      max-height: 610px !important;
+    }
+
+    /* Blocos de destaque */
+    .reveal blockquote {
+      width: 100%;
+      font-size: 0.8em;
+      background: var(--cor-fundo-bloco);
+      border-left: 5px solid var(--cor-destaque);
+      box-shadow: none;
+      padding: 0.7em 1em;
+      font-style: normal;
+      text-align: left;
+    }
+
+    .destaque {
+      color: var(--cor-destaque);
+      font-weight: 700;
+    }
+
+    .alerta {
+      color: var(--cor-alerta);
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--cor-ok);
+      font-weight: 700;
+    }
+
+    .fraco {
+      color: var(--cor-texto-fraco);
+    }
+
+    .caixa-alerta {
+      background: #fdecea;
+      border-left: 5px solid var(--cor-alerta);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    .caixa-ok {
+      background: #e8f5e9;
+      border-left: 5px solid var(--cor-ok);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    /* Duas colunas */
+    .colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2em;
+      align-items: start;
+    }
+
+    .colunas>div {
+      min-width: 0;
+    }
+
+    /* Marcadores em formato de pílula — o mesmo ícone laranja usado nas
+       colunas de conteúdo do manual, no lugar do disco padrão de lista */
+    .reveal ul,
+    .reveal ol {
+      display: block;
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.3em;
+    }
+
+    .reveal section:not(.centro) ul {
+      list-style: none;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ul>li {
+      position: relative;
+      padding-left: 0.85em;
+    }
+
+    .reveal section:not(.centro) ul>li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      width: 0.42em;
+      height: 0.42em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+    }
+
+    .reveal section:not(.centro) ol {
+      list-style: none;
+      counter-reset: item;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ol>li {
+      counter-increment: item;
+      position: relative;
+      padding-left: 1.5em;
+    }
+
+    .reveal section:not(.centro) ol>li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.05em;
+      height: 1.05em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: var(--cor-fundo);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.78em;
+      line-height: 1.05em;
+      text-align: center;
+    }
+
+    .logo-marca {
+      position: absolute;
+      top: 0.55em;
+      left: 0.7em;
+      height: 1.5em;
+      width: auto;
+      z-index: 2;
+    }
+
+    .rodape-fonte {
+      position: absolute;
+      bottom: 0.4em;
+      left: 0;
+      right: 0;
+      font-size: 0.42em;
+      color: var(--cor-texto-fraco);
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Sem tema escuro automático: a identidade CESAR School é fixa
+       (fundo creme + laranja de marca), como no manual em PDF/PPTX.
+       Slides de impacto usam .slide-impacto / .slide-capa (ver acima).
+       --------------------------------------------------------------------- */
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==================== ABERTURA ==================== -->
+
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h1>Desenvolvimento Mobile</h1>
+        <h3>Aula 5 — Sensores do dispositivo</h3>
+        <p class="fraco">GPS · acelerômetro · giroscópio · câmera · CESAR School 2026.2</p>
+        <aside class="notes">
+          Esta é a aula que MAIS depende de hardware real. Confirmar em voz
+          alta, agora: todo mundo com celular carregado, Expo Go instalado e
+          cabo. Quem não tiver, formar dupla AGORA.
+
+          O iOS Simulator não tem câmera, acelerômetro nem giroscópio.
+
+          Dizer também qual arquivo cada grupo segue: exercises.md (Hábito)
+          ou practice.md (Pet).
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>Até ontem, seu app só sabia <span class="destaque">o que você digitou nele</span>.</h2>
+        <h3>Hoje ele descobre onde está, como está sendo segurado e o que está vendo.</h3>
+        <aside class="notes">
+          Essa é a virada da aula. Até a Aula 4, todo dado nascia dentro do
+          app: useState, um array, o teclado.
+
+          A partir de hoje o dado vem DE FORA — do hardware, pelo sistema
+          operacional. E o SO não entrega de graça.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O sistema operacional não entrega de graça</h2>
+        <ol>
+          <li>Ele <b>pergunta ao dono do aparelho</b> antes &rarr; permissão</li>
+          <li>Ele entrega <b>quando conseguir</b> &rarr; é assíncrono, e pode falhar</li>
+          <li>Ele <b>cobra bateria</b> enquanto você lê</li>
+        </ol>
+        <p class="divisor"></p>
+        <h3>Não existe <code>const local = pegarLocalizacao()</code>.</h3>
+        <aside class="notes">
+          Martelar os três. Eles explicam por que TODA função da aula é async
+          e por que TODA tem um caminho de erro.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Agenda — 3 horas</h2>
+        <table>
+          <tr><th>Bloco</th><th>Tempo</th></tr>
+          <tr><td>Abertura + a virada do dia</td><td>8 min</td></tr>
+          <tr><td><b>1.</b> O contrato de três tempos</td><td>17 min</td></tr>
+          <tr><td><b>2.</b> GPS com <code>expo-location</code></td><td>30 min</td></tr>
+          <tr><td>☕ Intervalo</td><td>10 min</td></tr>
+          <tr><td><b>3.</b> Checkpoint — permissão e GPS</td><td>7 min</td></tr>
+          <tr><td><b>4.</b> Acelerômetro e giroscópio</td><td>25 min</td></tr>
+          <tr><td><b>5.</b> Câmera com <code>expo-camera</code></td><td>28 min</td></tr>
+          <tr><td><b>6.</b> <code>expo-image</code></td><td>15 min</td></tr>
+          <tr><td><b>7.</b> Checkpoint — sensores e imagem</td><td>7 min</td></tr>
+          <tr><td><b>8.</b> Hands-on guiado</td><td>25 min</td></tr>
+          <tr><td><b>9.</b> Atividade aplicada + fechamento</td><td>8 min</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>Quatro pacotes, um contrato só</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart LR
+  A["expo-location&lt;br/&gt;GPS"] --&gt; D["Sua tela"]
+  B["expo-sensors&lt;br/&gt;acelerometro e giroscopio"] --&gt; D
+  C["expo-camera&lt;br/&gt;foto"] --&gt; E["expo-image&lt;br/&gt;exibicao"]
+  E --&gt; D
+        </pre>
+        <h3>Os três primeiros <b>produzem</b> dado. O quarto <b>mostra</b>.</h3>
+        <aside class="notes">
+          Ler o diagrama em voz alta: os três de sensor alimentam a tela
+          direto; a câmera é a única que passa por um intermediário — o
+          arquivo capturado vira pixel através do expo-image.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Ao final da aula você deve conseguir</h2>
+        <ol>
+          <li>Descrever o contrato <b>permissão &rarr; leitura &rarr; parada</b></li>
+          <li>Tratar <code>granted</code>, <code>canAskAgain: false</code> e "serviço desligado" <b>de formas diferentes</b></li>
+          <li>Escolher entre <b>leitura pontual</b> e <b>assinatura contínua</b></li>
+          <li>Obter a posição com a <code>Accuracy</code> certa e ler <code>coords</code> corretamente</li>
+          <li>Ler acelerômetro e giroscópio sabendo <b>o que</b> cada um mede e <b>em que unidade</b></li>
+          <li>Montar a tela de câmera com o gate de permissão de <b>três</b> estados</li>
+          <li>Exibir a imagem com <code>contentFit</code>, <code>placeholder</code> e <code>transition</code></li>
+        </ol>
+      </section>
+
+      <!-- ==================== PARTE 1 — O CONTRATO ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>Parte 1</h1>
+        <h2>O contrato de três tempos</h2>
+      </section>
+
+      <section>
+        <h2>Um sensor não é uma variável</h2>
+        <table>
+          <tr><th>É...</th><th>Porque</th></tr>
+          <tr><td><b>compartilhado</b></td><td>outros apps querem o mesmo hardware</td></tr>
+          <tr><td><b>protegido</b></td><td>o SO exige consentimento do dono</td></tr>
+          <tr><td><b>caro</b></td><td>cada leitura custa bateria</td></tr>
+        </table>
+        <h3>Toda API de sensor é <code>async</code> e <b>pode dizer não</b>.</h3>
+      </section>
+
+      <section>
+        <h2>Os três tempos</h2>
+        <pre class="mermaid mermaid-grande">
+stateDiagram-v2
+  [*] --&gt; Pedir
+  Pedir --&gt; Negado: usuario recusa
+  Pedir --&gt; Concedido: usuario aceita
+  Negado --&gt; [*]
+  Concedido --&gt; Lendo: leitura ou assinatura
+  Lendo --&gt; Parado: subscription.remove
+  Parado --&gt; [*]
+        </pre>
+        <h3>O tempo 3 é o que <span class="alerta">todo mundo esquece</span>.</h3>
+        <aside class="notes">
+          Desenhar na lousa ANTES de abrir código.
+
+          É o esqueleto que se repete nos quatro pacotes, e é o que a turma
+          tem que levar da aula. Voltar a ele em cada bloco.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O mesmo contrato, quatro pacotes</h2>
+        <table class="tabela-larga">
+          <tr><th>Pacote</th><th>Pedir</th><th>Ler</th><th>Parar</th></tr>
+          <tr>
+            <td><code>expo-location</code></td>
+            <td><code>requestForegroundPermissionsAsync()</code></td>
+            <td><code>getCurrentPositionAsync()</code><br><code>watchPositionAsync()</code></td>
+            <td><code>subscription.remove()</code></td>
+          </tr>
+          <tr>
+            <td><code>expo-sensors</code></td>
+            <td class="fraco">—</td>
+            <td><code>Accelerometer.addListener()</code><br><code>Gyroscope.addListener()</code></td>
+            <td><code>subscription.remove()</code></td>
+          </tr>
+          <tr>
+            <td><code>expo-camera</code></td>
+            <td><code>useCameraPermissions()</code></td>
+            <td><code>takePictureAsync()</code></td>
+            <td>desmontar o <code>CameraView</code></td>
+          </tr>
+          <tr>
+            <td><code>expo-image</code></td>
+            <td class="fraco">—</td>
+            <td class="fraco">—</td>
+            <td class="fraco">—</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>Por que acelerômetro e giroscópio <span class="destaque">não pedem permissão</span>?</h2>
+        <h3>Pergunte à turma antes de responder.</h3>
+        <aside class="notes">
+          Resposta: porque eles não identificam a pessoa nem o lugar.
+          Localização, câmera e microfone dizem ONDE você está e COMO você é.
+
+          A regra: a permissão acompanha o RISCO À PRIVACIDADE, não o
+          hardware. É um bom mapa mental para o resto do curso.
+        </aside>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> Permissão é um <b>estado</b>, não um evento</h2>
+        <p>O usuário pode revogar nas Configurações <b>com o app rodando</b>.</p>
+        <table>
+          <tr><th>Campo</th><th>Para quê</th></tr>
+          <tr><td><code>status</code></td><td><code>'granted'</code> / <code>'denied'</code> / <code>'undetermined'</code></td></tr>
+          <tr><td><code>granted</code></td><td>o mesmo, como booleano</td></tr>
+          <tr><td><code>canAskAgain</code></td><td><b>se <code>false</code>, o diálogo não aparece mais</b></td></tr>
+          <tr><td><code>expires</code></td><td>normalmente <code>'never'</code></td></tr>
+        </table>
+        <h3>Consulte <b>toda vez que for usar</b>.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>canAskAgain: false</code></h2>
+        <div class="caixa-alerta">
+          O sistema <b>não vai mostrar o diálogo de novo</b> — por mais vezes que
+          você chame <code>request…</code>. Seu botão "Permitir" virou um botão
+          que não faz nada.
+        </div>
+        <p><b>A única saída:</b></p>
+        <ol>
+          <li><b>Explicar</b> por que o app precisa daquilo</li>
+          <li><b>Levar às Configurações</b> do sistema</li>
+        </ol>
+        <h3>Insistir com o mesmo botão é o que a maioria dos apps faz. E está errado.</h3>
+        <aside class="notes">
+          Se der para demonstrar ao vivo num aparelho com a permissão já
+          bloqueada, é a demo que mais impressiona da aula. Está na lista de
+          preparação prévia do lesson-plan.
+        </aside>
+      </section>
+
+      <section>
+        <h2>As duas formas de perguntar</h2>
+        <div class="colunas">
+          <div>
+            <p class="fraco">Quando importa só na hora da ação:</p>
+            <pre><code class="language-tsx" data-trim>
+const { status } =
+  await Location
+    .requestForegroundPermissionsAsync();
+            </code></pre>
+          </div>
+          <div>
+            <p class="fraco">Quando a tela inteira depende dela:</p>
+            <pre><code class="language-tsx" data-trim>
+const [permissao, pedirPermissao] =
+  useCameraPermissions();
+            </code></pre>
+          </div>
+        </div>
+        <h3>O segundo devolve o mesmo formato do <code>useState</code>. Não é conceito novo.</h3>
+        <aside class="notes">
+          Amarrar: um valor e uma função que mexe nele; chamada no topo do
+          componente, sempre, sem if em volta.
+
+          Usamos a forma 1 no GPS e a forma 2 na câmera, de propósito, para
+          eles verem as duas.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h1>🚰 O copo e a torneira</h1>
+        <h3><code>getCurrentPositionAsync</code> enche um copo.
+          <code>watchPositionAsync</code> <span class="destaque">abre a torneira</span>.</h3>
+        <aside class="notes">
+          Torneira aberta gasta água — aqui, bateria — e alaga a casa se você
+          esquecer de fechar.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A pergunta que decide: um valor, ou um fluxo?</h2>
+        <table>
+          <tr><th>Situação</th><th>O quê</th></tr>
+          <tr><td>"Onde eu estou <b>agora</b>?"</td><td>copo — <code>getCurrentPositionAsync</code></td></tr>
+          <tr><td>"O trajeto <b>enquanto</b> eu corro"</td><td>torneira — <code>watchPositionAsync</code></td></tr>
+          <tr><td>"O usuário chacoalhou?"</td><td>torneira — <code>addListener</code> (não há copo)</td></tr>
+          <tr><td>"Tirar uma foto"</td><td>copo — <code>takePictureAsync</code></td></tr>
+        </table>
+        <h3><span class="alerta">🔴</span> Toda torneira aberta tem uma torneira fechada <b>no mesmo arquivo</b>.</h3>
+      </section>
+
+      <section>
+        <h2>🧩 Nota honesta: o que ainda não temos</h2>
+        <p>Num app de verdade, a torneira abre quando a tela aparece e fecha quando ela sai.
+          A ferramenta do React que faz isso é assunto da <b>Aula 6</b>.</p>
+        <p><b>Hoje:</b> você liga e desliga <b>no botão</b>, e guarda a assinatura num <code>useState</code>.</p>
+        <div class="caixa-alerta">
+          Se você sair da tela com o sensor ligado, ele <b>continua ligado</b>.
+        </div>
+        <aside class="notes">
+          Dizer isso em voz alta e sem rodeio. É um vazamento real e
+          proposital. É o gancho da Aula 6, e vamos repetir mais duas vezes
+          hoje — no bloco de sensores e no fechamento.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O <code>app.json</code> — escreva agora, não em novembro</h2>
+        <pre><code class="language-json" data-trim>
+["expo-location", {
+  "locationWhenInUsePermission":
+    "Precisamos da sua localização para registrar onde o treino aconteceu."
+}]
+        </code></pre>
+        <div class="caixa-alerta">
+          No <b>Expo Go</b> funciona <b>mesmo sem</b> isso — ele herda as permissões
+          do próprio Expo Go. Na <b>build de verdade</b> (Aula 13), <b>não funciona</b>.
+        </div>
+        <h3>E escreva um texto honesto. O usuário lê antes de decidir.</h3>
+      </section>
+
+      <!-- ==================== PARTE 2 — LOCATION ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>Parte 2</h1>
+        <h2>GPS com <code>expo-location</code></h2>
+      </section>
+
+      <section>
+        <h2><code>npx expo install</code>, não <code>npm install</code></h2>
+        <pre><code class="language-bash" data-trim>
+npx expo install expo-location expo-sensors expo-camera expo-image
+        </code></pre>
+        <p>O <code>expo install</code> escolhe a versão <b>compatível com o seu SDK</b>.
+          O <code>npm install</code> pega a mais nova — que pode não ser essa.</p>
+        <h3>"Versão mais nova ≠ versão que você usa" — Aula 1, agora no seu terminal.</h3>
+        <aside class="notes">
+          Instalar os quatro de uma vez, agora, para não parar a aula três
+          vezes.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O copo</h2>
+        <pre><code class="language-tsx" data-trim>
+import * as Location from 'expo-location';
+
+const { status, canAskAgain } =
+  await Location.requestForegroundPermissionsAsync();
+
+const posicao = await Location.getCurrentPositionAsync({
+  accuracy: Location.Accuracy.Balanced,
+});
+        </code></pre>
+        <h3>⏱️ Dentro de prédio, com o GPS frio: <b>vários segundos</b>.</h3>
+        <aside class="notes">
+          DEMONSTRAR AO VIVO, no aparelho, com a tela espelhada. Cronometrar.
+          O número real medido na sala é o melhor argumento do slide seguinte.
+
+          A tela precisa de um estado "buscando..." — isso é useState, eles
+          já sabem fazer.
+        </aside>
+      </section>
+
+      <section>
+        <h2><code>Accuracy</code>: precisão é uma <b>compra</b></h2>
+        <table>
+          <tr><th>Nível</th><th>Erro</th><th>Custo</th></tr>
+          <tr><td><code>Lowest</code></td><td>~3 km</td><td>mínimo</td></tr>
+          <tr><td><code>Low</code></td><td>~1 km</td><td>baixo</td></tr>
+          <tr><td><code>Balanced</code></td><td>~100 m</td><td>médio — <b>default</b></td></tr>
+          <tr><td><code>High</code></td><td>~10 m</td><td>alto</td></tr>
+          <tr><td><code>Highest</code></td><td>o melhor disponível</td><td>muito alto</td></tr>
+          <tr><td><code>BestForNavigation</code></td><td>o melhor, para navegação</td><td>o mais caro</td></tr>
+        </table>
+        <h3>Você paga em <b>tempo de espera</b> e em <b>bateria</b>.</h3>
+      </section>
+
+      <section>
+        <h2>Escolha em voz alta</h2>
+        <table>
+          <tr><th>O app faz</th><th>O que pedir</th></tr>
+          <tr><td>Previsão do tempo da cidade</td><td><code>Low</code></td></tr>
+          <tr><td>Em que academia o treino foi</td><td><code>Balanced</code> ou <code>High</code></td></tr>
+          <tr><td>Trajeto de uma corrida</td><td><code>High</code> · <code>BestForNavigation</code></td></tr>
+        </table>
+        <h3><span class="alerta">🔴</span> O erro: <code>Highest</code> "por garantia". Garantia de gastar bateria.</h3>
+        <aside class="notes">
+          Fazer a turma responder em voz alta antes de mostrar a coluna da
+          direita. Eles quase sempre pedem precisão demais no primeiro caso.
+        </aside>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>accuracy</code> <b>não</b> é nota de qualidade</h2>
+        <pre><code class="language-ts" data-trim>
+coords: {
+  latitude, longitude,
+  accuracy,          // RAIO de incerteza, em METROS
+  altitude, altitudeAccuracy,
+  heading,           // graus — só faz sentido em movimento
+  speed              // m/s  — idem
+}
+        </code></pre>
+        <h3><code>accuracy: 65</code> = "em algum lugar num círculo de <b>65 metros</b>".</h3>
+        <aside class="notes">
+          Desenhar o círculo na lousa. Quase sempre resolve na hora.
+
+          Isso muda como você EXIBE o dado: "perto da Rua X (±65 m)", não uma
+          bolinha exata num ponto que o app não tem como saber.
+
+          heading e speed vêm nulos parado. Não é bug.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O padrão de UX que vale a aula inteira</h2>
+        <pre><code class="language-tsx" data-trim>
+const ultima = await Location.getLastKnownPositionAsync({ maxAge: 60000 });
+if (ultima) setPosicao(ultima);        // algo na tela AGORA
+
+const atual = await Location.getCurrentPositionAsync({ /* ... */ });
+setPosicao(atual);                      // o dado bom, quando chegar
+        </code></pre>
+        <h3>50 ms de resposta em vez de 6 segundos de <i>spinner</i>.</h3>
+      </section>
+
+      <section>
+        <h2>A torneira</h2>
+        <pre><code class="language-tsx" data-trim>
+const assinatura = await Location.watchPositionAsync(
+  { accuracy: Location.Accuracy.High, timeInterval: 5000, distanceInterval: 10 },
+  (posicao) =&gt; setPosicao(posicao),
+);
+
+assinatura.remove();   // ← não é opcional
+        </code></pre>
+        <p><code>timeInterval</code> e <code>distanceInterval</code> são <b>filtros</b>.</p>
+        <div class="caixa-alerta">
+          <code>timeInterval</code> é <b>Android-only</b>. No iPhone ele é ignorado
+          — compila, não avisa, não faz nada. <code>distanceInterval</code> vale nos dois.
+        </div>
+        <aside class="notes">
+          A tipagem do pacote marca timeInterval como @platform android.
+
+          É a mesma armadilha do stickySectionHeadersEnabled da Aula 4: a prop
+          existe, compila, e faz coisas diferentes de cada lado. DECLARAR.
+
+          E distanceInterval ainda é o mais econômico: parado, o app não
+          recebe nada.
+        </aside>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> Permissão concedida ≠ GPS ligado</h2>
+        <pre><code class="language-tsx" data-trim>
+const ligado = await Location.hasServicesEnabledAsync();
+        </code></pre>
+        <table>
+          <tr><th>Situação</th><th>O usuário resolve em</th></tr>
+          <tr><td>Permissão negada</td><td>Configurações <b>do app</b></td></tr>
+          <tr><td>Serviço desligado</td><td>Configurações <b>do sistema</b></td></tr>
+        </table>
+        <h3>Uma mensagem genérica para os dois = desinstalação.</h3>
+        <aside class="notes">
+          "Erro ao obter localização" nos dois casos é o motivo de metade das
+          avaliações de uma estrela em app store. O usuário não sabe o que
+          fazer, então desinstala.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Coordenada &rarr; endereço</h2>
+        <pre><code class="language-tsx" data-trim>
+const enderecos = await Location.reverseGeocodeAsync({ latitude, longitude });
+// street, district, city, region, postalCode, country
+        </code></pre>
+        <p><b>"Boa Viagem, Recife"</b> em vez de <code>-8.1234, -34.9012</code>.</p>
+        <div class="caixa-alerta">
+          A documentação avisa: geocoding é <b>caro</b>. Uma chamada por registro —
+          <b>nunca</b> dentro do <code>watchPositionAsync</code>.
+        </div>
+      </section>
+
+      <section>
+        <h2>✋ Fora do escopo — e a turma vai perguntar</h2>
+        <table>
+          <tr><th>Assunto</th><th>Por quê</th></tr>
+          <tr><td>Mostrar num <b>mapa</b></td><td>biblioteca de terceiro, não está no cronograma</td></tr>
+          <tr><td>Localização em <b>segundo plano</b></td><td>exige <i>development build</i></td></tr>
+          <tr><td><b>Geofencing</b></td><td>idem, e depende do <code>expo-task-manager</code></td></tr>
+        </table>
+        <h3>Hoje, a coordenada é <b>texto</b>.</h3>
+        <aside class="notes">
+          Alguém VAI pedir mapa. "Ótima pergunta, e não é o assunto de hoje."
+          Estacionar e seguir.
+        </aside>
+      </section>
+
+      <!-- ==================== CHECKPOINT 1 ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>✋ Checkpoint 1</h1>
+        <h3>60 segundos em duplas, e a gente responde em voz alta.</h3>
+      </section>
+
+      <section>
+        <h2>Checkpoint 1 — permissão e GPS</h2>
+        <ol>
+          <li>Quais são os <b>três tempos</b>? Qual não existe no <code>getCurrentPositionAsync</code>?</li>
+          <li><code>canAskAgain: false</code>. O que o seu botão "Permitir" deve fazer?</li>
+          <li><code>accuracy: 65</code>. O que é esse 65? Bom ou ruim?</li>
+          <li>Previsão do tempo da cidade: qual <code>Accuracy</code>, e por que <b>não</b> <code>Highest</code>?</li>
+          <li>"Permissão negada" × "serviço desligado": a mensagem pode ser a mesma?</li>
+        </ol>
+        <aside class="notes">
+          Se travar: voltar à torneira e à tabela dos três tempos, em vez de
+          inventar imagem nova. Na 3, desenhar o círculo no mapa da lousa.
+
+          Não avançar sem 2 ou 3 respostas em voz alta.
+        </aside>
+      </section>
+
+      <!-- ==================== PARTE 3 — SENSORS ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>Parte 3</h1>
+        <h2>Acelerômetro e giroscópio</h2>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> O pacote <b>não</b> se chama <code>expo-gyroscope</code></h2>
+        <p>O cronograma da disciplina diz "Expo Gyroscope". <b>Esse pacote não existe.</b></p>
+        <pre><code class="language-tsx" data-trim>
+import { Accelerometer, Gyroscope } from 'expo-sensors';
+        </code></pre>
+        <h3>Quando um nome não resolve, procure o <b>pacote guarda-chuva</b>.</h3>
+        <aside class="notes">
+          Dizer explicitamente que o cronograma está com o nome errado. O
+          aluno precisa disso para conseguir instalar a biblioteca.
+
+          Aconteceria igual com expo-accelerometer.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O que cada um mede</h2>
+        <table>
+          <tr><th></th><th>Acelerômetro</th><th>Giroscópio</th></tr>
+          <tr><td>Mede</td><td><b>translação</b> + gravidade</td><td><b>rotação</b></td></tr>
+          <tr><td>Unidade</td><td><b>g</b> (1 g = 9,81 m/s²)</td><td><b>rad/s</b></td></tr>
+          <tr><td>Parado na mesa</td><td class="alerta"><b>não dá zero</b></td><td class="ok"><b>dá zero</b></td></tr>
+          <tr><td>Responde a</td><td>empurrão, chacoalhada, inclinação</td><td>"estou girando, e quão rápido"</td></tr>
+        </table>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h1>🚌 O passageiro do ônibus</h1>
+        <h3>O <span class="destaque">solavanco</span> da freada é o acelerômetro.
+          O <span class="destaque">rodopio</span> da curva é o giroscópio.</h3>
+        <aside class="notes">
+          Pegar o telefone na mão e fazer os dois movimentos na frente da
+          turma. São sensações diferentes, e uma não substitui a outra.
+        </aside>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> O acelerômetro parado <b>não</b> marca zero</h2>
+        <p>Telefone parado na mesa:</p>
+        <ul>
+          <li><b>Giroscópio:</b> ≈ <code>0</code> nos três eixos</li>
+          <li><b>Acelerômetro:</b> magnitude ≈ <b>1 g</b></li>
+        </ul>
+        <div class="caixa-ok">
+          Não é bug. É a <b>gravidade</b>, que não desliga. E é por isso que o
+          acelerômetro serve para detectar <b>inclinação</b>.
+        </div>
+        <aside class="notes">
+          DEMONSTRAR. Telefone na mesa, os dois números na tela projetada.
+          É a demo mais convincente do bloco inteiro.
+
+          Parado, aquele vetor de 1 g aponta para baixo, e a forma como ele
+          se distribui entre x, y e z diz como o aparelho está posicionado.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A API — a mesma para os dois</h2>
+        <pre><code class="language-tsx" data-trim>
+const disponivel = await Gyroscope.isAvailableAsync();   // simulador não tem
+
+Gyroscope.setUpdateInterval(100);
+
+const assinatura = Gyroscope.addListener(({ x, y, z, timestamp }) =&gt; {
+  setDados({ x, y, z });
+});
+
+assinatura.remove();
+        </code></pre>
+        <h3><span class="alerta">🔴</span> <code>removeAllListeners()</code> está <b>deprecado</b>. Quase todo tutorial usa.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>setUpdateInterval</code> é um <b>pedido</b></h2>
+        <pre><code class="language-tsx" data-trim>
+Accelerometer.setUpdateInterval(16);
+Accelerometer.addListener(setDados);   // ❌ 60 setState por segundo
+        </code></pre>
+        <div class="caixa-alerta">
+          <b>60 <code>setState</code>/s = 60 renderizações/s.</b> Numa tela com
+          <code>FlatList</code>, derruba o app.
+        </div>
+        <p class="fraco">⚠️ Android 12+ limita a 200 Hz por padrão — proteção de privacidade.</p>
+      </section>
+
+      <section>
+        <h2>As duas correções</h2>
+        <p><b>1. Aumente o intervalo.</b> O olho não lê 60 números por segundo.</p>
+        <pre><code class="language-tsx" data-trim>
+Accelerometer.setUpdateInterval(100);   // ✅ 10 Hz
+        </code></pre>
+        <p><b>2. Só chame <code>setState</code> quando o resultado mudar.</b></p>
+        <pre><code class="language-tsx" data-trim>
+setChacoalhou((anterior) =&gt; (anterior === agora ? anterior : agora));
+        </code></pre>
+        <h3>🧩 A ferramenta "certa" para isso usa recursos que ainda não vimos.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> Chacoalhada: use a <b>magnitude</b></h2>
+        <pre><code class="language-tsx" data-trim>
+const magnitude = Math.sqrt(x * x + y * y + z * z);   // parado ≈ 1 g
+const chacoalhou = magnitude &gt; 1.8;                    // limiar EMPÍRICO
+        </code></pre>
+        <p>Olhando só o <code>x</code>, uma chacoalhada de cima para baixo <b>passa batido</b>.</p>
+        <h3>A magnitude é <b>independente da orientação</b> do aparelho.</h3>
+        <aside class="notes">
+          O limiar 1.8 não vem da documentação. É empírico — testar no
+          aparelho e ajustar. Dizer isso é honesto e ensina que nem tudo tem
+          número oficial.
+
+          Muito baixo: dispara ao andar. Muito alto: exige um chacoalhão
+          violento.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Simulador e emulador</h2>
+        <table>
+          <tr><th>Ambiente</th><th>Acelerômetro / Giroscópio</th></tr>
+          <tr><td><b>Aparelho físico</b></td><td class="ok">✅ o único jeito de verdade</td></tr>
+          <tr><td><b>Android Emulator</b></td><td>⚠️ sensores virtuais nos <i>extended controls</i></td></tr>
+          <tr><td><b>iOS Simulator</b></td><td class="alerta">❌ não tem — é para isso que serve <code>isAvailableAsync()</code></td></tr>
+        </table>
+        <h3>Este é o bloco que menos tolera simulador.</h3>
+      </section>
+
+      <!-- ==================== PARTE 4 — CAMERA ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>Parte 4</h1>
+        <h2>Câmera com <code>expo-camera</code></h2>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> O tutorial que você vai achar <b>não compila</b></h2>
+        <table class="tabela-larga">
+          <tr><th>O tutorial de 2023</th><th>O que compila hoje</th></tr>
+          <tr><td><code>import { Camera }</code></td><td><code>import { CameraView, useCameraPermissions }</code></td></tr>
+          <tr><td><code>&lt;Camera type={Camera.Constants.Type.back} /&gt;</code></td><td><code>&lt;CameraView facing="back" /&gt;</code></td></tr>
+          <tr><td><code>CameraType.back</code> (enum)</td><td>a string <code>'back'</code></td></tr>
+          <tr><td><code>Camera.requestCameraPermissionsAsync()</code></td><td><code>useCameraPermissions()</code></td></tr>
+          <tr><td><code>expo-camera/legacy</code></td><td class="alerta"><b>removido no SDK 52</b></td></tr>
+          <tr><td><code>onBarCodeScanned</code></td><td><code>onBarcodeScanned</code></td></tr>
+        </table>
+        <h3>Quando um exemplo não compila: abra a <b>documentação da sua versão</b>.</h3>
+        <aside class="notes">
+          Este pacote foi REESCRITO. A maioria dos tutoriais indexados é
+          anterior à reescrita.
+
+          A lição de método vale mais que a tabela: documentação é
+          versionada; blog não é atualizado.
+        </aside>
+      </section>
+
+      <section>
+        <h2>O gate de permissão tem <b>três</b> estados</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart TB
+  A["useCameraPermissions()"] --&gt; B{"permissao == null?"}
+  B --&gt;|"sim"| C["Tela vazia&lt;br/&gt;ainda nao sabemos"]
+  B --&gt;|"nao"| D{"permissao.granted?"}
+  D --&gt;|"nao"| E["Tela de convencimento&lt;br/&gt;+ botao Permitir"]
+  D --&gt;|"sim"| F["CameraView"]
+        </pre>
+        <h3>São <b>duas</b> perguntas, não uma.</h3>
+      </section>
+
+      <section>
+        <h2>Os três caminhos de <code>return</code></h2>
+        <pre><code class="language-tsx" data-trim>
+const [permissao, pedirPermissao] = useCameraPermissions();
+
+if (!permissao) return &lt;View /&gt;;                    // ainda não sabemos
+
+if (!permissao.granted) {                           // sabemos, e não temos
+  return (
+    &lt;View style={estilos.centro}&gt;
+      &lt;Text&gt;Precisamos da câmera para registrar sua foto.&lt;/Text&gt;
+      &lt;Pressable onPress={pedirPermissao}&gt;&lt;Text&gt;Permitir&lt;/Text&gt;&lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}
+
+return &lt;CameraView style={estilos.camera} facing={lado} /&gt;;
+        </code></pre>
+        <h3>O único nome novo aqui é o <code>useCameraPermissions</code>.</h3>
+        <aside class="notes">
+          O Pressable é da Aula 4, o StyleSheet é da Aula 3. Amarrar.
+        </aside>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>null</code> <b>não</b> é "negado"</h2>
+        <p><code>permissao</code> começa <code>null</code> = <i>"a resposta ainda não chegou"</i>.</p>
+        <div class="caixa-alerta">
+          Se você juntar os dois primeiros casos, a tela de "precisamos da câmera"
+          <b>pisca para todo mundo</b> — inclusive para quem autorizou há semanas.
+        </div>
+        <h3>A tela do estado 2 não é uma tela de erro. É o seu <b>argumento de venda</b>.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>CameraView</code> sem altura = tela preta</h2>
+        <pre><code class="language-tsx" data-trim>
+const estilos = StyleSheet.create({
+  camera: { flex: 1 },   // ← sem isso, você não vê nada
+});
+        </code></pre>
+        <h3>Antes de debugar permissão, confira o estilo.</h3>
+        <aside class="notes">
+          Mostrar a quebra proposital: CameraView sem flex:1, a tela preta, e
+          a turma achando que é a permissão. Está na preparação prévia.
+
+          Mesma regra da Aula 3: dê tamanho ao componente.
+        </aside>
+      </section>
+
+      <section>
+        <h2>As props que são estado</h2>
+        <table>
+          <tr><th>Prop</th><th>Valores</th><th>Default</th></tr>
+          <tr><td><code>facing</code></td><td><code>'back'</code> / <code>'front'</code></td><td><code>'back'</code></td></tr>
+          <tr><td><code>flash</code></td><td><code>'off'</code> / <code>'on'</code> / <code>'auto'</code> / <code>'screen'</code></td><td><code>'off'</code></td></tr>
+          <tr><td><code>enableTorch</code></td><td>booleano</td><td><code>false</code></td></tr>
+          <tr><td><code>zoom</code></td><td><b>0 a 1</b></td><td><code>0</code></td></tr>
+          <tr><td><code>mode</code></td><td><code>'picture'</code> / <code>'video'</code></td><td><code>'picture'</code></td></tr>
+        </table>
+        <h3><span class="alerta">🔴</span> <code>zoom</code> vai de <b>0 a 1</b>, não "2x". E <code>flash</code> ≠ <code>enableTorch</code>.</h3>
+      </section>
+
+      <section>
+        <h2>🧩 Tirar a foto precisa de uma <b>referência</b></h2>
+        <p>A forma canônica é <code>useRef</code>. Ela é <b>Aula 6</b>.</p>
+        <pre><code class="language-tsx" data-trim>
+const [camera, setCamera] = useState&lt;CameraView | null&gt;(null);
+
+&lt;CameraView ref={setCamera} style={estilos.camera} facing={lado} /&gt;
+        </code></pre>
+        <ol>
+          <li>A prop <code>ref</code> <b>aceita uma função</b></li>
+          <li>O React <b>chama</b> essa função com o componente montado</li>
+          <li><code>setCamera</code> <b>é</b> uma função</li>
+        </ol>
+        <h3>Não é hook novo. É o <code>useState</code> que vocês já usam.</h3>
+        <aside class="notes">
+          Ir devagar aqui. É o ponto delicado da aula.
+
+          Dizer a limitação em voz alta: useRef é melhor porque não causa uma
+          renderização a mais. Mas é nome novo, e é Aula 6. Hoje resolvemos
+          com useState, e o resultado funcional é o mesmo.
+
+          No desmonte, o React chama de novo com null — e o estado se
+          atualiza sozinho.
+        </aside>
+      </section>
+
+      <section>
+        <h2><code>takePictureAsync</code></h2>
+        <pre><code class="language-tsx" data-trim>
+async function tirarFoto() {
+  if (!camera) return;                                   // ainda é null no 1º render
+  const foto = await camera.takePictureAsync({ quality: 0.7 });
+  if (foto) setFotoUri(foto.uri);
+}
+        </code></pre>
+        <pre><code class="language-ts" data-trim>
+{ uri, width, height, base64?, exif?, format }
+        </code></pre>
+        <h3>Não peça <code>base64</code> sem precisar. Para exibir, o <code>uri</code> basta.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> A foto <b>não</b> foi para a galeria</h2>
+        <p>O <code>uri</code> aponta para o <b>cache do aplicativo</b>:
+          <code>file:///.../Caches/...</code></p>
+        <div class="caixa-alerta">
+          Se o sistema limpar o cache, <b>ela some</b>. Salvar de verdade é outro
+          pacote, e não está no nosso programa.
+        </div>
+        <h3>Vocês precisam saber disso para não prometerem ao usuário algo que o app não faz.</h3>
+        <aside class="notes">
+          Alguém VAI perguntar como salvar na galeria.
+          "Ótima pergunta, e não é o assunto de hoje." Estacionar.
+        </aside>
+      </section>
+
+      <!-- ==================== PARTE 5 — IMAGE ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>Parte 5</h1>
+        <h2><code>expo-image</code></h2>
+      </section>
+
+      <section>
+        <h2>"A Aula 3 já ensinou <code>Image</code>. Por que outro?"</h2>
+        <table class="tabela-larga">
+          <tr><th>O <code>expo-image</code> traz</th><th>O problema que resolve</th></tr>
+          <tr><td>Cache em memória e disco</td><td>a mesma imagem baixada de novo a cada rolagem</td></tr>
+          <tr><td><code>placeholder</code></td><td>o retângulo cinza piscando</td></tr>
+          <tr><td><code>transition</code></td><td>a imagem aparecendo com corte seco</td></tr>
+          <tr><td><code>contentFit</code></td><td>recorte com a semântica do CSS</td></tr>
+          <tr><td><code>recyclingKey</code></td><td>a <b>foto do item anterior</b> aparecendo</td></tr>
+        </table>
+        <h3>Não é moda. É a lista de problemas que aparecem quando o app cresce.</h3>
+        <aside class="notes">
+          recyclingKey conecta direto com a Aula 4: a FlatList RECICLA as
+          células — é assim que ela é rápida. Sem a prop, a célula reciclada
+          mostra a imagem antiga até a nova chegar.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Fechando o ciclo da aula</h2>
+        <pre><code class="language-tsx" data-trim>
+import { Image } from 'expo-image';
+
+&lt;Image
+  source={{ uri: fotoUri }}
+  style={estilos.previa}
+  contentFit="cover"
+  transition={300}
+/&gt;
+        </code></pre>
+        <h3>Sensor &rarr; dado &rarr; tela. O <code>uri</code> do <code>takePictureAsync</code> entra aqui.</h3>
+      </section>
+
+      <section>
+        <h2>⚠️ <code>Image</code> e <code>Image</code> têm o <b>mesmo nome</b></h2>
+        <ul>
+          <li>Importar os dois no mesmo arquivo &rarr; <b>erro de compilação</b></li>
+          <li>Importar o <b>errado</b> &rarr; <b>bug silencioso</b>: <code>contentFit</code> não faz nada</li>
+        </ul>
+        <div class="caixa-alerta">
+          "O <code>contentFit</code> não funciona" &rarr; confira o <b>import</b>.
+          É a causa nº 1.
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> <code>resizeMode</code> está <b>deprecado</b> no <code>expo-image</code></h2>
+        <table>
+          <tr><th><code>contentFit</code></th><th>Comportamento</th></tr>
+          <tr><td><code>cover</code></td><td>preenche, <b>cortando</b> — <b>default</b></td></tr>
+          <tr><td><code>contain</code></td><td>cabe inteira, com <b>sobra</b></td></tr>
+          <tr><td><code>fill</code></td><td>estica, <b>distorcendo</b></td></tr>
+          <tr><td><code>none</code> · <code>scale-down</code></td><td>sem ajuste · o menor entre os dois</td></tr>
+        </table>
+        <h3>Os valores agora são os do CSS <code>object-fit</code> — iguais nas três plataformas.</h3>
+      </section>
+
+      <section>
+        <h2><code>placeholder</code> e <code>transition</code></h2>
+        <pre><code class="language-tsx" data-trim>
+&lt;Image
+  source={{ uri: fotoUri }}
+  placeholder={{ blurhash }}
+  placeholderContentFit="cover"
+  transition={300}
+/&gt;
+        </code></pre>
+        <p>Blurhash: uma <b>string curta</b> que representa como a imagem <i>parece</i>.</p>
+        <h3>O problema resolvido é de <b>layout</b>: sem placeholder, a lista <b>pula</b>.</h3>
+      </section>
+
+      <section>
+        <h2>🍳 <code>cachePolicy</code> — a cozinha</h2>
+        <table>
+          <tr><th>Valor</th><th>Onde</th></tr>
+          <tr><td><code>'none'</code></td><td>não guarda</td></tr>
+          <tr><td><code>'disk'</code></td><td><b>default</b></td></tr>
+          <tr><td><code>'memory'</code></td><td>some ao fechar o app</td></tr>
+          <tr><td><code>'memory-disk'</code></td><td>os dois</td></tr>
+        </table>
+        <h3><b>Memória</b> = a bancada. <b>Disco</b> = o armário. <b>Rede</b> = o supermercado.</h3>
+      </section>
+
+      <section>
+        <h2><span class="alerta">🔴</span> Quando <b>não</b> trocar</h2>
+        <p>Uma logo local com <code>require()</code> <b>não precisa de nada disso</b>. Já está no bundle.</p>
+        <div class="caixa-ok">
+          Troque quando houver: imagem <b>remota</b>, <b>lista</b>, ou
+          <b>espera perceptível</b>. Fora disso, o <code>Image</code> da Aula 3
+          continua correto.
+        </div>
+        <h3>Saber quando <b>não</b> usar uma ferramenta é parte de saber usá-la.</h3>
+      </section>
+
+      <!-- ==================== CHECKPOINT 2 ==================== -->
+
+      <section class="centro slide-impacto">
+        <h1>✋ Checkpoint 2</h1>
+      </section>
+
+      <section>
+        <h2>Checkpoint 2 — sensores, câmera e imagem</h2>
+        <ol>
+          <li>Telefone parado na mesa: o que marca o giroscópio? E o acelerômetro? Por quê?</li>
+          <li>Detectar chacoalhada: qual sensor, e por que a <b>magnitude</b>?</li>
+          <li>Por que o gate da câmera tem <b>três</b> <code>return</code>s? O que quebra se juntar dois?</li>
+          <li>Como tiramos a foto <b>sem</b> <code>useRef</code>? Qual a desvantagem?</li>
+          <li><code>contentFit</code> não faz efeito. Qual é a <b>primeira</b> coisa que você confere?</li>
+        </ol>
+        <aside class="notes">
+          Na 1, repetir a demonstração do telefone na mesa — é mais
+          convincente que qualquer explicação.
+
+          Na 5, a resposta é o IMPORT.
+        </aside>
+      </section>
+
+      <!-- ==================== HANDS-ON E FECHAMENTO ==================== -->
+
+      <section>
+        <h2>Hands-on — 25 min</h2>
+        <p class="fraco"><code>exercises.md</code> (Hábito) ou <code>practice.md</code> (Pet)</p>
+        <table>
+          <tr><th>#</th><th>Exercício</th><th>Tempo</th></tr>
+          <tr><td>1</td><td>Associação: qual pacote resolve o sintoma</td><td>4 min</td></tr>
+          <tr><td>2</td><td>Caça ao erro: a tela de câmera de 2023</td><td>5 min</td></tr>
+          <tr><td>3</td><td>Complete: o botão "Onde eu estou"</td><td>6 min</td></tr>
+          <tr><td>4</td><td>Complete: o detector de chacoalhada</td><td>6 min</td></tr>
+          <tr><td>5</td><td>Complete: câmera e prévia</td><td>4 min</td></tr>
+        </table>
+        <aside class="notes">
+          Circular com a lista curta do que olhar: import do Image errado,
+          CameraView sem flex:1, remove() ausente, Accuracy.Highest sem
+          motivo, tela de permissão piscando.
+
+          Corrigir NA HORA, não no fim. O objetivo é acurácia, não
+          criatividade.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Atividade aplicada — "O registro com contexto"</h2>
+        <p>A mesma lista da Aula 4, agora com dados que <b>ninguém precisou digitar</b>.</p>
+        <p><b>O que se avalia:</b></p>
+        <ol>
+          <li>Os <b>três tempos</b> aparecem no código: pede, lê, <b>para</b></li>
+          <li>Os estados de falha estão na tela, e são <b>diferentes</b> entre si</li>
+          <li>A <code>Accuracy</code> está <b>justificada</b> no README</li>
+          <li>Nenhuma torneira aberta sem <code>remove()</code></li>
+          <li><code>contentFit</code> explícito, import conferido</li>
+        </ol>
+        <aside class="notes">
+          Conectar com a abertura: o app da Aula 4 sabia só o que o usuário
+          digitou. O da Aula 5 sabe onde ele estava e com o que ele estava.
+        </aside>
+      </section>
+
+      <section class="centro slide-impacto">
+        <h2>Vocês ligaram o sensor <span class="destaque">no braço</span>, com um botão.</h2>
+        <h3>E eu admiti duas vezes que ele continua ligado quando vocês saem da tela.</h3>
+        <aside class="notes">
+          Fechar exatamente assim, palavra por palavra:
+
+          "Isso não é um defeito de vocês — é uma ferramenta que eu ainda não
+          apresentei. Na próxima aula ela chega, e vocês vão voltar neste
+          código para consertá-lo."
+
+          Aula 6: Hooks — useState, useEffect, useContext.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Atalhos desta apresentação</h2>
+        <table>
+          <tr><th>Tecla</th><th>Ação</th></tr>
+          <tr><td><code>→</code> / espaço · <code>←</code></td><td>avançar · voltar</td></tr>
+          <tr><td><code>S</code></td><td>modo apresentador (notas + cronômetro)</td></tr>
+          <tr><td><code>F</code></td><td>tela cheia</td></tr>
+          <tr><td><code>O</code> ou <code>Esc</code></td><td>visão geral dos slides</td></tr>
+          <tr><td><code>B</code> ou <code>.</code></td><td>tela preta</td></tr>
+          <tr><td><code>?</code></td><td>todos os atalhos</td></tr>
+        </table>
+        <p class="rodape-fonte">Dados conferidos em 01/09/2026 · Expo SDK 57 · fontes em <code>lesson-plan.md</code> e <code>student-notes.md</code></p>
+      </section>
+    </div>
+  </div>
+
+  <script src="vendor/reveal/reveal.js"></script>
+  <script src="vendor/reveal/plugin/highlight.js"></script>
+  <script src="vendor/reveal/plugin/notes.js"></script>
+  <script src="vendor/reveal/plugin/search.js"></script>
+  <script src="vendor/reveal/plugin/zoom.js"></script>
+  <script src="vendor/mermaid/mermaid.min.js"></script>
+
+  <script>
+    // --------------------------------------------------------------------------
+    // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
+    // descobertas renderizando a página de verdade num navegador:
+    //
+    // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
+    //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
+    //    ainda vazios e os diagramas saem cortados.
+    //
+    // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
+    //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
+    //    dimensionar as caixas — dentro de um elemento `display: none` toda
+    //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
+    //    renderizam (a conta de layout estoura com dimensão zero).
+    //
+    //    Solução: forçar os slides visíveis SÓ durante a renderização dos
+    //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
+    //    e remover esse estilo antes de inicializar o reveal.
+    //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
+    //    inteiro, que é justamente o que precisamos medir.
+    // --------------------------------------------------------------------------
+
+    // Paleta fixa da CESAR School (não acompanha o tema do sistema —
+    // todos os diagramas ficam em slides de fundo creme).
+    mermaid.initialize({
+      startOnLoad: false,          // nós disparamos manualmente, abaixo
+      theme: 'base',
+      securityLevel: 'loose',      // permite <br/> dentro dos rótulos
+      themeVariables: {
+        fontSize: '18px',
+        fontFamily: 'Barlow, Helvetica, sans-serif',
+        primaryColor: '#FEF7EE',
+        primaryTextColor: '#191919',
+        primaryBorderColor: '#FF6002',
+        lineColor: '#232323',
+        secondaryColor: '#F3E9DC',
+        tertiaryColor: '#FFB132',
+        clusterBkg: '#F3E9DC',
+        clusterBorder: '#FF6002',
+        pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+        pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+        pieOuterStrokeColor: '#FEF7EE',
+        pieSectionTextColor: '#FEF7EE',
+      },
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+    });
+
+    (async () => {
+      // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
+      const estiloMedicao = document.createElement('style');
+      estiloMedicao.textContent = `
+      .reveal { opacity: 0 !important; }
+      .reveal .slides,
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+      }
+    `;
+      document.head.appendChild(estiloMedicao);
+
+      try {
+        // Renderiza um a um: um diagrama com problema não pode impedir os outros
+        // de aparecerem no meio da aula.
+        for (const el of document.querySelectorAll('pre.mermaid')) {
+          try {
+            await mermaid.run({ nodes: [el] });
+          } catch (erro) {
+            console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+          }
+        }
+      } finally {
+        estiloMedicao.remove();
+      }
+
+      Reveal.initialize({
+        hash: true,              // URL acompanha o slide — dá para linkar um slide
+        slideNumber: 'c/t',      // "12 / 48" no canto
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controls: true,
+        progress: true,
+        overview: true,
+        center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
+        width: 1280,
+        height: 800,
+        margin: 0.06,
+        minScale: 0.2,
+        maxScale: 1.8,
+        pdfSeparateFragments: false,
+        plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+      });
+
+      // Slides marcados com .centro centralizam verticalmente também.
+      Reveal.on('ready', () => document.body.classList.add('pronto'));
+    })();
+  </script>
+</body>
+
