@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Aula 5 — Sensores",
+    "slug": "aula05-sensores-demo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "aula05sensores",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Precisamos da sua localização para registrar onde o hábito foi cumprido."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Precisamos da câmera para registrar a foto do seu progresso."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
