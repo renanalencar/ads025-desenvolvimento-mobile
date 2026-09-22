@@ -4,9 +4,9 @@
 > **Domínio deste arquivo:** Rastreador de Micro-hábitos e Condicionamento Físico (`Habito`).
 > **Está no outro projeto?** Se o seu app é o **App de Gestão e Rotina Pet**, use o arquivo `practice.md` — mesma estrutura, mesmos conceitos, domínio `Pet`.
 
-| Projeto | Repositório | Branch da disciplina |
-|---|---|---|
-| Rastreador de Micro-hábitos e Condicionamento Físico | `habit-tracker-expo` | `feature/aula_05` |
+| Projeto                                              | Repositório          | Branch da disciplina       |
+| ---------------------------------------------------- | -------------------- | -------------------------- |
+| Rastreador de Micro-hábitos e Condicionamento Físico | `habit-tracker-expo` | `feature/aula_05_sensores` |
 
 ## Como usar este arquivo
 
@@ -71,7 +71,7 @@ npx expo start
 ```bash
 git clone <url-do-seu-repositorio> habit-tracker-expo
 cd habit-tracker-expo
-git checkout -b feature/aula_05
+git checkout -b feature/aula_05_sensores
 npm install
 npx expo install expo-location expo-sensors expo-camera expo-image
 npx expo start
@@ -115,11 +115,11 @@ Para cada situação, escreva **o pacote** e **a função ou prop** que resolve.
 
 ---
 
-## Exercício 2 — Caça ao erro: a tela de câmera do tutorial de 2023
+## Exercício 2 — Caça ao erro: a tela de câmera
 
 **Dificuldade:** ⭐⭐ · **Tempo:** 5 min · **Onde:** no papel
 
-O código abaixo foi copiado de um tutorial bem avaliado — de 2023. Ele **não compila**, e mesmo se compilasse teria problemas.
+O código abaixo foi copiado de um tutorial bem avaliado. Ele **não compila**, e mesmo se compilasse teria problemas.
 
 **Encontre 7 problemas.** Para cada um: diga o que está errado e escreva a linha corrigida.
 
@@ -298,23 +298,23 @@ export default function TelaChacoalhada() {
   const [indisponivel, setIndisponivel] = useState(false);
 
   async function ligar() {
-    // TODO 1: confira se o acelerômetro existe neste aparelho.
+    // TODO 7: confira se o acelerômetro existe neste aparelho.
     //         Se não existir, marque `indisponivel` e saia.
 
-    // TODO 2: peça o intervalo de atualização.
+    // TODO 8: peça o intervalo de atualização.
 
-    // TODO 3: assine o acelerômetro. Dentro do callback:
+    // TODO 9: assine o acelerômetro. Dentro do callback:
     //         a) calcule a MAGNITUDE do vetor (x, y, z) — não olhe um eixo só;
     //         b) compare com LIMIAR_G;
     //         c) atualize `chacoalhou`;
     //         d) some 1 em `contador` APENAS na transição de "não" para "sim"
     //            (senão você conta 10 chacoalhadas por segundo).
 
-    // TODO 4: guarde a assinatura no estado.
+    // TODO 10: guarde a assinatura no estado.
   }
 
   function desligar() {
-    // TODO 5: encerre a assinatura e limpe o estado.
+    // TODO 11: encerre a assinatura e limpe o estado.
     //         Use o método correto — `removeAllListeners()` está deprecado.
   }
 
@@ -374,22 +374,22 @@ export default function TelaFotoHabito() {
   const [fotoUri, setFotoUri] = useState<string | null>(null);
 
   async function tirarFoto() {
-    // TODO 1: proteja contra a referência ainda null.
-    // TODO 2: tire a foto com qualidade 0.7 e guarde o uri.
+    // TODO 12: proteja contra a referência ainda null.
+    // TODO 13: tire a foto com qualidade 0.7 e guarde o uri.
     //         Não peça base64 — você só vai exibir.
   }
 
-  // TODO 3: primeiro estado — a resposta da permissão ainda não chegou.
+  // TODO 14: primeiro estado — a resposta da permissão ainda não chegou.
   //         Sem isto, a tela de "sem permissão" PISCA para quem já autorizou.
 
-  // TODO 4: segundo estado — sabemos, e não temos.
+  // TODO 15: segundo estado — sabemos, e não temos.
   //         Devolva uma tela que EXPLIQUE por que o app precisa da câmera,
   //         com um Pressable que chama pedirPermissao.
 
-  // TODO 5: terceiro estado — temos.
+  // TODO 16: terceiro estado — temos.
   return (
     <View style={estilos.tela}>
-      {/* TODO 6: renderize o CameraView. Ele precisa de:
+      {/* TODO 17: renderize o CameraView. Ele precisa de:
                   - a referência (use o callback ref com setCamera)
                   - o estilo (que precisa dar ALTURA a ele)
                   - a prop de qual câmera usar */}
@@ -406,7 +406,7 @@ export default function TelaFotoHabito() {
           <Text style={estilos.textoBotao}>Virar câmera</Text>
         </Pressable>
 
-        {/* TODO 7: quando houver fotoUri, exiba a prévia com o Image do expo-image.
+        {/* TODO 18: quando houver fotoUri, exiba a prévia com o Image do expo-image.
                     contentFit explícito e uma transição de 300 ms. */}
       </View>
     </View>
@@ -456,14 +456,14 @@ export default function TelaGiroscopio() {
   const [girandoRapido, setGirandoRapido] = useState(false);
 
   async function ligar() {
-    // TODO 1: cheque disponibilidade, peça intervalo de 100 ms e assine.
-    // TODO 2: guarde x, y e z no estado.
-    // TODO 3: marque `girandoRapido` quando a magnitude passar de 3 rad/s.
-    // TODO 4: guarde a assinatura.
+    // TODO 19: cheque disponibilidade, peça intervalo de 100 ms e assine.
+    // TODO 20: guarde x, y e z no estado.
+    // TODO 21: marque `girandoRapido` quando a magnitude passar de 3 rad/s.
+    // TODO 22: guarde a assinatura.
   }
 
   function desligar() {
-    // TODO 5: encerre.
+    // TODO 23: encerre.
   }
 
   return (
@@ -508,6 +508,16 @@ O código abaixo **roda**, mas tem quatro defeitos visíveis quando a lista tem 
 ### Esqueleto — o código quebrado, pronto para rodar
 
 ```tsx
+// TODO 24: encontre os quatro defeitos e corrija. (Há uma dica no enunciado.)
+
+// TODO 25: escreva aqui, em 2–3 linhas, qual dos quatro é o MAIS GRAVE para o
+//          usuário e por quê. Não é "o mais feio" — é o que causa mais dano a
+//          quem usa a galeria.
+//
+//   Resposta: ______________________________________________________________
+//   ________________________________________________________________________
+//   ________________________________________________________________________
+
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'react-native';
 
@@ -560,7 +570,7 @@ const estilos = StyleSheet.create({
 
 ## Atividade 1 — O registro com contexto
 
-**Dificuldade:** ⭐⭐⭐ · **Tempo:** 2 a 3 horas · **Onde:** `habit-tracker-expo`, branch `feature/aula_05`
+**Dificuldade:** ⭐⭐⭐ · **Tempo:** 2 a 3 horas · **Onde:** `habit-tracker-expo`, branch `feature/aula_05_sensores`
 
 ### Contexto
 
@@ -588,6 +598,7 @@ Uma tela **Registrar hábito** que:
 **O tipo, estendido:**
 
 ```tsx
+//types/habito.ts
 interface Habito {
   id: string;
   titulo: string;
@@ -602,6 +613,7 @@ interface Habito {
 **O card da lista, com a miniatura opcional:**
 
 ```tsx
+//components/CardHabito.tsx
 import { Image } from 'expo-image';
 
 function CardHabito({ item }: { item: Habito }) {
@@ -621,7 +633,7 @@ function CardHabito({ item }: { item: Habito }) {
 
       <View style={estilos.corpo}>
         <Text style={estilos.titulo}>{item.titulo}</Text>
-        {/* TODO: quando houver local, mostre-o de forma legível para HUMANOS,
+        {/* TODO 5.1: quando houver local, mostre-o de forma legível para HUMANOS,
                   incluindo o raio de precisão. Coordenada crua com 14 casas
                   decimais não é informação para o usuário. */}
       </View>
@@ -984,17 +996,17 @@ async function registrarLocal() {
 
 ```tsx
 async function ligar() {
-  // TODO 1
+  // TODO 7
   const disponivel = await Accelerometer.isAvailableAsync();
   if (!disponivel) {
     setIndisponivel(true);
     return;
   }
 
-  // TODO 2
+  // TODO 8
   Accelerometer.setUpdateInterval(INTERVALO_MS);
 
-  // TODO 3
+  // TODO 9
   const nova = Accelerometer.addListener(({ x, y, z }) => {
     const magnitude = Math.sqrt(x * x + y * y + z * z);
     const agora = magnitude > LIMIAR_G;
@@ -1006,12 +1018,12 @@ async function ligar() {
     });
   });
 
-  // TODO 4
+  // TODO 10
   setAssinatura(nova);
 }
 
 function desligar() {
-  // TODO 5
+  // TODO 11
   assinatura?.remove();
   setAssinatura(null);
   setChacoalhou(false);
@@ -1036,17 +1048,17 @@ function desligar() {
 
 ```tsx
 async function tirarFoto() {
-  // TODO 1
+  // TODO 12
   if (!camera) return;
-  // TODO 2 — sem base64: só vamos exibir
+  // TODO 13 — sem base64: só vamos exibir
   const foto = await camera.takePictureAsync({ quality: 0.7 });
   if (foto) setFotoUri(foto.uri);
 }
 
-// TODO 3 — a resposta ainda não chegou. `null` NÃO é "negado".
+// TODO 14 — a resposta ainda não chegou. `null` NÃO é "negado".
 if (!permissao) return <View style={estilos.tela} />;
 
-// TODO 4
+// TODO 15
 if (!permissao.granted) {
   return (
     <View style={estilos.centro}>
@@ -1063,10 +1075,10 @@ if (!permissao.granted) {
 ```
 
 ```tsx
-{/* TODO 6 */}
+{/* TODO 17 */}
 <CameraView ref={setCamera} style={estilos.camera} facing={lado} />
 
-{/* TODO 7 */}
+{/* TODO 18 */}
 {fotoUri && (
   <Image
     source={{ uri: fotoUri }}
@@ -1093,23 +1105,23 @@ if (!permissao.granted) {
 
 ```tsx
 async function ligar() {
-  // TODO 1
+  // TODO 19
   if (!(await Gyroscope.isAvailableAsync())) return;
   Gyroscope.setUpdateInterval(100);
 
   const nova = Gyroscope.addListener(({ x, y, z }) => {
-    // TODO 2
+    // TODO 20
     setEixos({ x, y, z });
-    // TODO 3
+    // TODO 21
     setGirandoRapido(Math.sqrt(x * x + y * y + z * z) > 3);
   });
 
-  // TODO 4
+  // TODO 22
   setAssinatura(nova);
 }
 
 function desligar() {
-  // TODO 5
+  // TODO 23
   assinatura?.remove();
   setAssinatura(null);
   setEixos({ x: 0, y: 0, z: 0 });
@@ -1130,7 +1142,7 @@ function desligar() {
 <details>
 <summary><b>Gabarito — Exercício 7 (a galeria que pisca)</b></summary>
 
-**Os quatro defeitos, e as correções:**
+**TODO 24 — os quatro defeitos, e as correções:**
 
 **1. Import errado — a causa de tudo.** `Image` vem do `react-native`, então não há cache em disco, nem placeholder, nem `contentFit`. Toda vez que a célula é reciclada, a imagem é buscada de novo.
 ```tsx
@@ -1183,7 +1195,7 @@ function ItemHabito({ item }: { item: Habito }) {
 }
 ```
 
-**Qual é o mais grave, e por quê** (resposta esperada, em 2–3 linhas):
+**TODO 25 — qual é o mais grave, e por quê** (resposta esperada, em 2–3 linhas):
 
 > O **`recyclingKey` ausente** é o mais grave, porque não é um problema estético: ele mostra ao usuário **a foto errada associada ao texto certo**. Numa galeria de treinos, isso é informação incorreta na tela, ainda que por meio segundo. Os outros três degradam a experiência; este **mente**.
 
