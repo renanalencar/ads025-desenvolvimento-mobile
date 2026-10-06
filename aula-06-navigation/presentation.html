@@ -1,0 +1,2216 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 6 — Galeria, câmera e navegação com Expo Router</title>
+
+  <!--
+    ============================================================================
+    APRESENTAÇÃO DA AULA 6 — reveal.js
+    ============================================================================
+
+    COMO ABRIR
+      Basta dar duplo clique neste arquivo. Ele funciona offline: todas as
+      dependências estão em vendor/, nada é baixado da internet.
+
+    ATALHOS DE TECLADO
+      →  ou  espaço   avança
+      ←               volta
+      S               modo apresentador (notas + cronômetro + próximo slide)
+      F               tela cheia
+      O  ou  Esc      visão geral de todos os slides
+      B  ou  .        tela preta (para chamar atenção de volta)
+      Ctrl + clique   zoom em um ponto do slide
+      ?               ajuda com todos os atalhos
+
+    IMPRIMIR / GERAR PDF
+      Use o script da disciplina, a partir da pasta 2026.2.DM (o ?print-pdf
+      do navegador quebra o tema):
+        node tools/slides-to-pdf.mjs "aulas/aula-06-image-picker-expo-router/presentation.html"
+
+    ONDE EDITAR O CONTEÚDO
+      A fonte é presentation.md (mesma ordem de slides).
+      Cada <section> é um slide. Notas do apresentador vão em <aside class="notes">.
+      Diagramas vão em <pre class="mermaid">.
+    ============================================================================
+  -->
+
+  <link rel="stylesheet" href="vendor/reveal/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/theme/white.css" id="theme">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    /* ---------------------------------------------------------------------
+       Identidade visual CESAR School (ver TEMPLATE.pdf / TEMPLATE.pptx da
+       Aula 1): fundo creme, laranja de marca, títulos em Barlow Condensed
+       caixa-alta, corpo de texto em Barlow, formas circulares decorativas.
+       Fontes embutidas em vendor/fonts/ para manter a aula 100% offline.
+       --------------------------------------------------------------------- */
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-400.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
+    }
+
+    :root {
+      --cor-fundo: #FEF7EE;
+      --cor-fundo-escuro: #232323;
+      --cor-preto: #191919;
+      --cor-destaque: #FF6002;
+      --cor-destaque2: #FB6B00;
+      --cor-amarelo: #FFB132;
+      --cor-alerta: #c62828;
+      --cor-ok: #2e7d32;
+      --cor-texto-fraco: #6b6459;
+      --cor-fundo-bloco: #F3E9DC;
+      --cor-borda: #E4D6C3;
+      --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      --fonte-corpo: 'Barlow', Arial, sans-serif;
+    }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal,
+    .reveal .slides {
+      background: var(--cor-fundo);
+    }
+
+    .reveal,
+    .reveal p,
+    .reveal li,
+    .reveal td,
+    .reveal th,
+    .reveal blockquote {
+      font-family: var(--fonte-corpo);
+      color: var(--cor-preto);
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      color: var(--cor-preto);
+      letter-spacing: 0.01em;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-transform: uppercase;
+    }
+
+    .reveal h1 {
+      font-size: 1.9em;
+      font-weight: 900;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h3 {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+      font-weight: 700;
+    }
+
+    /* Altura cheia + centralização vertical, só na seção .present: com
+       center:false, por padrão a <section> só teria a altura do próprio
+       conteúdo (top-aligned) — o que grudava tudo no topo e fazia os acentos
+       decorativos em bottom:0/top:0 flutuarem soltos no meio do slide em vez
+       de ficarem presos às bordas reais do palco 1280x800.
+       IMPORTANTE: o seletor tem que incluir ".present" — reveal.css usa
+       "display: none" para esconder as seções não-atuais com esse MESMO
+       seletor base; um "display: flex !important" sem ".present" sobrescreve
+       esse display:none e deixa todos os slides visíveis empilhados ao
+       mesmo tempo (efeito fantasma de texto duplicado). */
+    .reveal .slides>section.present,
+    .reveal .slides>section>section.present {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* flex-shrink:0 nos filhos diretos: sem isso, o flexbox ENCOLHE blocos
+       de conteúdo (ex.: <pre> de código) para caber nos 800px do palco
+       quando o slide é denso — e o <pre> encolhido fica menor que o próprio
+       <code> lá dentro, que passa a vazar por cima do próximo elemento. */
+    .reveal .slides>section.present>*,
+    .reveal .slides>section>section.present>* {
+      flex-shrink: 0;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    .reveal section.centro {
+      text-align: center;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-align: left;
+    }
+
+    .reveal section.centro h1,
+    .reveal section.centro h2,
+    .reveal section.centro h3 {
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Formas decorativas — o motivo de semicírculos do template, aplicado
+       como acento discreto no canto superior direito dos slides de
+       conteúdo e como barra de base à esquerda. Ficam atrás do conteúdo
+       (z-index negativo) para nunca colidir com texto, tabelas ou código.
+       --------------------------------------------------------------------- */
+    .reveal .slides>section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides>section>section:not(.centro):not(:has(.tabela-larga))::before {
+      content: '';
+      position: absolute;
+      top: -70px;
+      right: -50px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--cor-preto);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section:not(.centro)::after,
+    .reveal .slides>section>section:not(.centro)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 15%;
+      min-width: 120px;
+      height: 10px;
+      background: var(--cor-destaque);
+      border-radius: 0 6px 6px 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slide de abertura e de fechamento — fundo escuro, à la capa do manual */
+    .reveal .slides>section.slide-capa {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-capa h1,
+    .reveal .slides>section.slide-capa h2,
+    .reveal .slides>section.slide-capa h3,
+    .reveal .slides>section.slide-capa p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-capa .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-capa::before {
+      content: '';
+      position: absolute;
+      top: -18%;
+      right: -12%;
+      width: 60%;
+      height: 130%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-capa::after {
+      content: '';
+      position: absolute;
+      bottom: -22%;
+      left: -8%;
+      width: 26%;
+      height: 55%;
+      background: var(--cor-fundo);
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides de impacto — mesma pausa retórica dramática do "Por fim" do manual */
+    .reveal .slides>section.slide-impacto {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-impacto h1,
+    .reveal .slides>section.slide-impacto h2,
+    .reveal .slides>section.slide-impacto h3,
+    .reveal .slides>section.slide-impacto p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-impacto .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-impacto::before {
+      content: '';
+      position: absolute;
+      top: -25%;
+      right: -10%;
+      width: 34%;
+      height: 60%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-impacto::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: 6%;
+      width: 20%;
+      height: 45%;
+      border: 3px solid var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Slides divisores de Parte — bloco de círculos laranja, como as seções
+       numeradas do manual ("1. Princípios gerais...") */
+    .reveal .slides>section.divisor {
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h1 {
+      color: var(--cor-destaque);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h2,
+    .reveal .slides>section.divisor h3 {
+      color: var(--cor-preto);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor::before {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: 6%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.divisor::after {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: -8%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Tabelas: o gargalo real de legibilidade numa aula comparativa */
+    .reveal table {
+      font-size: 0.62em;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.4em 0;
+    }
+
+    .reveal table th {
+      background: var(--cor-fundo-bloco);
+      font-weight: 700;
+      border-bottom: 2px solid var(--cor-borda);
+    }
+
+    .reveal table th,
+    .reveal table td {
+      padding: 0.35em 0.5em;
+      border: 1px solid var(--cor-borda);
+      vertical-align: top;
+    }
+
+    /* Tabela larga rola sozinha */
+    .tabela-larga {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tabela-larga table {
+      font-size: 0.52em;
+      min-width: 900px;
+    }
+
+    /* Código */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      font-size: 0.48em;
+      margin: 0.4em 0;
+    }
+
+    .reveal pre code {
+      padding: 0.9em 1.1em;
+      max-height: 560px;
+      line-height: 1.35;
+      /* reveal.css define ".reveal .hljs { min-height: 100% }". Com a
+         seção agora em flex column, isso vira uma referência circular:
+         o <pre> (flex item, altura "auto") passa a ter uma altura
+         "definida" pelo algoritmo de flex, e o min-height:100% do
+         <code> lá dentro passa a resolver contra ESSA altura em vez de
+         crescer para caber no próprio conteúdo — o código fica cortado
+         menor que o necessário e vaza visualmente por cima do próximo
+         elemento do slide. */
+      min-height: 0 !important;
+    }
+
+    .reveal code:not(pre code) {
+      background: var(--cor-fundo-bloco);
+      color: var(--cor-preto);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    /* Diagramas Mermaid */
+    .reveal .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      margin: 0.3em 0;
+    }
+
+    /* O Mermaid grava `style="max-width: NNNpx"` INLINE no <svg>, e estilo
+       inline vence folha de estilo. Sem !important o diagrama ignora estes
+       limites e estoura o slide. */
+    .reveal .mermaid svg {
+      max-width: 100% !important;
+      max-height: 500px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    /* Diagrama que ocupa o slide inteiro (slide sem texto de apoio) */
+    .reveal .mermaid-grande svg {
+      max-height: 610px !important;
+    }
+
+    /* Blocos de destaque */
+    .reveal blockquote {
+      width: 100%;
+      font-size: 0.8em;
+      background: var(--cor-fundo-bloco);
+      border-left: 5px solid var(--cor-destaque);
+      box-shadow: none;
+      padding: 0.7em 1em;
+      font-style: normal;
+      text-align: left;
+    }
+
+    .destaque {
+      color: var(--cor-destaque);
+      font-weight: 700;
+    }
+
+    .alerta {
+      color: var(--cor-alerta);
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--cor-ok);
+      font-weight: 700;
+    }
+
+    .fraco {
+      color: var(--cor-texto-fraco);
+    }
+
+    .caixa-alerta {
+      background: #fdecea;
+      border-left: 5px solid var(--cor-alerta);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    .caixa-ok {
+      background: #e8f5e9;
+      border-left: 5px solid var(--cor-ok);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    /* Duas colunas */
+    .colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2em;
+      align-items: start;
+    }
+
+    .colunas>div {
+      min-width: 0;
+    }
+
+    /* Marcadores em formato de pílula — o mesmo ícone laranja usado nas
+       colunas de conteúdo do manual, no lugar do disco padrão de lista */
+    .reveal ul,
+    .reveal ol {
+      display: block;
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.3em;
+    }
+
+    .reveal section:not(.centro) ul {
+      list-style: none;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ul>li {
+      position: relative;
+      padding-left: 0.85em;
+    }
+
+    .reveal section:not(.centro) ul>li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      width: 0.42em;
+      height: 0.42em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+    }
+
+    .reveal section:not(.centro) ol {
+      list-style: none;
+      counter-reset: item;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ol>li {
+      counter-increment: item;
+      position: relative;
+      padding-left: 1.5em;
+    }
+
+    .reveal section:not(.centro) ol>li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.05em;
+      height: 1.05em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: var(--cor-fundo);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.78em;
+      line-height: 1.05em;
+      text-align: center;
+    }
+
+    .logo-marca {
+      position: absolute;
+      top: 0.55em;
+      left: 0.7em;
+      height: 1.5em;
+      width: auto;
+      z-index: 2;
+    }
+
+    .rodape-fonte {
+      position: absolute;
+      bottom: 0.4em;
+      left: 0;
+      right: 0;
+      font-size: 0.42em;
+      color: var(--cor-texto-fraco);
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------------------
+       Sem tema escuro automático: a identidade CESAR School é fixa
+       (fundo creme + laranja de marca), como no manual em PDF/PPTX.
+       Slides de impacto usam .slide-impacto / .slide-capa (ver acima).
+       --------------------------------------------------------------------- */
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- slide 1 -->
+      <section class="centro slide-capa">
+<img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+<h1>Desenvolvimento Mobile</h1>
+<h3>Aula 6 — Galeria, câmera e telas de verdade</h3>
+<p class="fraco">expo-image-picker · Expo Router · CESAR School 2026.2</p>
+<aside class="notes">
+Antes de começar: a metade de navegação roda em simulador; a câmera NÃO
+(o iOS Simulator não tem câmera).
+
+Expo Go em iPhone físico agora exige login: `npx expo login`, mesma conta
+no CLI e no app. Resolver isso AGORA — a aula começa pela câmera e pela galeria.
+
+Dizer qual arquivo cada grupo segue: exercises.md (Hábito) ou practice.md (Pet).
+</aside>
+      </section>
+
+      <!-- slide 2 -->
+      <section>
+<h2>Agenda</h2>
+<ol>
+<li><strong><code>expo-image-picker</code></strong>: a galeria</li>
+<li><strong><code>expo-image-picker</code></strong>: a câmera e as permissões</li>
+<li>✋ Checkpoint 1 · ☕ Intervalo</li>
+<li><strong>Expo Router</strong>: roteamento por arquivos</li>
+<li><code>_layout.tsx</code> e <code>Stack</code>: a pilha de telas</li>
+<li><code>Link</code> e <code>router</code>: andar pela pilha</li>
+<li>✋ Checkpoint 2</li>
+<li>Levando para o seu projeto</li>
+<li>Hands-on guiado · Atividade aplicada</li>
+</ol>
+      </section>
+
+      <!-- slide 3 -->
+      <section>
+<h2>Ao final da aula você deve conseguir</h2>
+<ol>
+<li>Escolher foto da galeria e ler <code>{ canceled, assets }</code> corretamente</li>
+<li>Tirar foto com a câmera do sistema tratando os <strong>três estados</strong> da permissão</li>
+<li>Decidir entre <code>expo-image-picker</code> e <code>expo-camera</code></li>
+<li>Prever o <strong>endereço</strong> de uma tela só olhando o caminho do arquivo</li>
+<li>Montar o <code>_layout.tsx</code> com <code>Stack</code> e dar <strong>título</strong> a cada tela</li>
+<li>Navegar com <code>Link</code> e com <code>router.push</code> / <code>router.back</code> — e saber <strong>qual</strong> usar</li>
+<li>Explicar a navegação como uma <strong>pilha</strong></li>
+<li>Migrar um projeto de <code>App.tsx</code> para o Expo Router</li>
+</ol>
+      </section>
+
+      <!-- slide 4 -->
+      <section>
+<h2>O que entra hoje</h2>
+<ul>
+<li><strong><code>expo-image-picker</code></strong> — galeria e câmera do sistema</li>
+<li><strong>A base do Expo Router</strong> — arquivos viram telas, <code>_layout</code> com <code>Stack</code>, <code>Link</code> e <code>router</code></li>
+</ul>
+<blockquote>
+<p>Hoje cada tela <strong>se vira sozinha</strong>. Levar informação de uma tela para outra é o assunto da <strong>próxima aula</strong>.</p>
+</blockquote>
+<aside class="notes">
+Nota curta de escopo para a turma. A lista detalhada do que fica de fora
+está no lesson-plan.md — não projetar.
+</aside>
+      </section>
+
+      <!-- slide 5 -->
+      <section>
+<h2>Duas ferramentas, um app com cara de app</h2>
+<pre class="mermaid mermaid-grande">
+flowchart LR
+  A["index.tsx&lt;br/&gt;lista"] --&gt;|"Link / push"| B["registrar-foto.tsx"]
+  B --&gt;|"back"| A
+  B --&gt; C["Galeria do sistema"]
+  B --&gt; D["Camera do sistema"]
+  A --&gt;|"Link"| E["sobre.tsx"]
+</pre>
+<h3>Fotos que o usuário <strong>já tem</strong> e telas com <strong>endereço</strong>.</h3>
+<aside class="notes">
+Começamos pelas fotos (galeria e câmera do sistema) e depois damos
+endereço às telas.
+
+Leitura do diagrama: a tela inicial leva por Link ou push à tela de
+registrar foto e à tela "sobre"; a tela de foto volta com back, e de
+dentro dela o app abre a galeria ou a câmera DO SISTEMA, pelo
+expo-image-picker.
+</aside>
+      </section>
+
+      <!-- slide 6 -->
+      <section class="centro slide-impacto">
+<h1>Parte 1</h1>
+<h2><code>expo-image-picker</code>: a galeria</h2>
+      </section>
+
+      <!-- slide 7 -->
+      <section>
+<h2>Cozinhar × pedir no balcão</h2>
+<p><strong><code>expo-image-picker</code></strong> abre a <strong>tela do sistema</strong> para o usuário escolher uma foto da galeria ou tirar uma com a câmera — e <strong>devolve o arquivo</strong> para o seu app.</p>
+<ul>
+<li>🍳 <strong><code>expo-camera</code> (Aula 5) é montar a cozinha:</strong> fogão, panela, botão, layout — tudo seu</li>
+<li>🛎️ <strong><code>expo-image-picker</code> é pedir no balcão:</strong> o sistema entrega o prato pronto, do jeito dele</li>
+</ul>
+      </section>
+
+      <!-- slide 8 -->
+      <section>
+<h2>O que isso significa na prática</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>expo-camera</code> (Aula 5)</th>
+<th><code>expo-image-picker</code> (hoje)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A interface</td>
+<td><strong>sua</strong> — <code>CameraView</code> na tela</td>
+<td><strong>do sistema</strong> — abre por cima</td>
+</tr>
+<tr>
+<td>Galeria</td>
+<td>não tem</td>
+<td>tem</td>
+</tr>
+<tr>
+<td>Recorte</td>
+<td>você construiria</td>
+<td><code>allowsEditing</code></td>
+</tr>
+<tr>
+<td>Flash, zoom, sobreposição</td>
+<td>controle total</td>
+<td>nenhum</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>gate + <code>CameraView</code> + referência</td>
+<td><strong>uma chamada <code>await</code></strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Se a câmera <strong>é</strong> a funcionalidade → <code>expo-camera</code>. Se a foto é <strong>um anexo</strong> → <code>expo-image-picker</code>.</p>
+</blockquote>
+<aside class="notes">
+Exemplos de anexo: foto de perfil, foto do hábito, foto do pet.
+Exemplos de câmera-funcionalidade: scanner, filtro, câmera contínua.
+</aside>
+      </section>
+
+      <!-- slide 9 -->
+      <section>
+<h2>O contrato de três tempos, de novo</h2>
+<pre><code class="language-bash" data-trim>npx expo install expo-image-picker</code></pre>
+<table>
+<thead>
+<tr>
+<th>Pacote</th>
+<th>Pedir</th>
+<th>Ler</th>
+<th>Parar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>picker — galeria</td>
+<td><strong>não precisa</strong></td>
+<td><code>launchImageLibraryAsync()</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>picker — câmera</td>
+<td><code>requestCameraPermissionsAsync()</code></td>
+<td><code>launchCameraAsync()</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3>É um <strong>copo d'água</strong>, não uma torneira: não existe <code>remove()</code>.</h3>
+<aside class="notes">
+Voltar à tabela da Aula 5 na lousa e acrescentar as duas linhas.
+npx expo install, não npm install — regra da Aula 5.
+</aside>
+      </section>
+
+      <!-- slide 10 -->
+      <section>
+<h2>Por que a galeria não pede permissão</h2>
+<ul>
+<li>Quem mostra as fotos é o <strong>sistema</strong>, não o seu app</li>
+<li>O seu app só recebe a foto que o usuário <strong>escolheu</strong></li>
+<li>O usuário já decidiu — <strong>foto por foto</strong></li>
+</ul>
+<h3>A permissão acompanha o risco (Aula 5).</h3>
+      </section>
+
+      <!-- slide 11 -->
+      <section>
+<h2>Abrir a galeria</h2>
+<pre><code class="language-tsx" data-trim>import * as ImagePicker from 'expo-image-picker';
+
+async function escolherDaGaleria() {
+  const resultado = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'],
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 0.7,
+  });
+
+  if (resultado.canceled) return;
+  setFotoUri(resultado.assets[0].uri);
+}</code></pre>
+<aside class="notes">
+Chamado de dentro do onPress de um Pressable. Demonstrar ao vivo,
+projetando a tela do aparelho.
+</aside>
+      </section>
+
+      <!-- slide 12 -->
+      <section>
+<h2>As opções</h2>
+<table>
+<thead>
+<tr>
+<th>Opção</th>
+<th>Valores</th>
+<th>Default</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mediaTypes</code></td>
+<td><code>['images']</code></td>
+<td><code>'images'</code></td>
+<td>o que aparece para escolher</td>
+</tr>
+<tr>
+<td><code>allowsEditing</code></td>
+<td>booleano</td>
+<td><code>false</code></td>
+<td>abre o <strong>recorte</strong> depois da escolha</td>
+</tr>
+<tr>
+<td><code>aspect</code></td>
+<td><code>[largura, altura]</code></td>
+<td>—</td>
+<td>proporção do recorte — <strong>só Android</strong></td>
+</tr>
+<tr>
+<td><code>quality</code></td>
+<td><strong>0 a 1</strong></td>
+<td><code>1</code></td>
+<td>compressão do JPEG</td>
+</tr>
+<tr>
+<td><code>allowsMultipleSelection</code></td>
+<td>booleano</td>
+<td><code>false</code></td>
+<td>escolher várias</td>
+</tr>
+<tr>
+<td><code>selectionLimit</code></td>
+<td>número</td>
+<td><code>0</code> = máximo</td>
+<td>teto da seleção</td>
+</tr>
+<tr>
+<td><code>base64</code></td>
+<td>booleano</td>
+<td><code>false</code></td>
+<td><strong>não peça sem precisar</strong></td>
+</tr>
+</tbody>
+</table>
+      </section>
+
+      <!-- slide 13 -->
+      <section>
+<h2>O resultado: <code>canceled</code> e <code>assets</code></h2>
+<pre><code class="language-ts" data-trim>// usuário escolheu
+{ canceled: false, assets: [{ uri, width, height, fileName, fileSize, mimeType, type }] }
+// usuário desistiu
+{ canceled: true, assets: null }</code></pre>
+<ul>
+<li><strong>Cancelar não é erro.</strong> Não cai em <code>catch</code>. É resultado <strong>normal</strong></li>
+<li><strong><code>assets</code> é sempre uma lista</strong> — mesmo com uma foto só. Por isso <code>assets[0]</code></li>
+<li>Depois do <code>if (resultado.canceled) return;</code>, o TypeScript <strong>sabe</strong> que <code>assets</code> não é <code>null</code></li>
+</ul>
+<aside class="notes">
+Demo de 20 s: tirar o if e ver o erro do TypeScript aparecer em assets[0].
+Narrowing ao vivo.
+</aside>
+      </section>
+
+      <!-- slide 14 -->
+      <section>
+<h2>Zumbis do picker</h2>
+<table>
+<thead>
+<tr>
+<th>O tutorial que você vai achar</th>
+<th>O que compila hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mediaTypes: ImagePicker.MediaTypeOptions.Images</code></td>
+<td><code>mediaTypes: ['images']</code> — <strong>deprecado</strong></td>
+</tr>
+<tr>
+<td><code>if (!result.cancelled)</code> — dois &quot;l&quot;</td>
+<td><strong><code>result.canceled</code></strong> — um &quot;l&quot;</td>
+</tr>
+<tr>
+<td><code>setImage(result.uri)</code></td>
+<td><strong><code>result.assets[0].uri</code></strong></td>
+</tr>
+<tr>
+<td><code>Permissions.askAsync(Permissions.CAMERA_ROLL)</code></td>
+<td>cada pacote traz as suas funções</td>
+</tr>
+<tr>
+<td><code>requestCameraRollPermissionsAsync()</code></td>
+<td><code>requestMediaLibraryPermissionsAsync()</code></td>
+</tr>
+</tbody>
+</table>
+      </section>
+
+      <!-- slide 15 -->
+      <section class="centro slide-impacto">
+<h2>O pior dos cinco é o <code>cancelled</code>.</h2>
+<h3>Em JavaScript sem tipagem, <code>result.cancelled</code> é <code>undefined</code> — <span class="destaque">falso</span> — e o código segue como se o usuário tivesse escolhido. <span class="destaque">O TypeScript pega; o tutorial em JS, não.</span></h3>
+      </section>
+
+      <!-- slide 16 -->
+      <section>
+<h2>Recorte: cada plataforma do seu jeito</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Android</th>
+<th>iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allowsEditing</code></td>
+<td>recorta <strong>e gira</strong></td>
+<td>só recorta</td>
+</tr>
+<tr>
+<td><code>aspect: [4, 3]</code></td>
+<td>respeitado</td>
+<td><strong>ignorado</strong> — recorte sempre <strong>quadrado</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>A opção existe, compila, e faz coisas diferentes de cada lado.</h3>
+<p>Mesma lição do <code>timeInterval</code> da Aula 5: <strong>declare</strong> — não prometa &quot;4:3&quot; a quem usa iPhone.</p>
+      </section>
+
+      <!-- slide 17 -->
+      <section>
+<h2>Seleção múltipla</h2>
+<pre><code class="language-tsx" data-trim>const resultado = await ImagePicker.launchImageLibraryAsync({
+  mediaTypes: ['images'],
+  allowsMultipleSelection: true,
+  selectionLimit: 5,
+});
+if (!resultado.canceled) setFotos(resultado.assets);</code></pre>
+<ul>
+<li><code>allowsMultipleSelection</code> <strong>desliga</strong> o <code>allowsEditing</code> — não dá para recortar cinco de uma vez</li>
+<li>O resultado já é uma <strong>lista</strong> → direto para uma <code>FlatList</code> (Aula 4)</li>
+</ul>
+      </section>
+
+      <!-- slide 18 -->
+      <section>
+<h2>Exibir — e onde está o arquivo</h2>
+<pre><code class="language-tsx" data-trim>import { Image } from 'expo-image';
+
+&lt;Image source={{ uri: fotoUri }} style={estilos.previa} contentFit="cover" transition={300} /&gt;</code></pre>
+<ul>
+<li><strong>Nada novo:</strong> o <code>expo-image</code> da Aula 5 — <code>contentFit</code> explícito, <strong>import conferido</strong></li>
+<li>O <code>uri</code> aponta para uma <strong>cópia no cache do app</strong></li>
+<li>Igual à foto do <code>takePictureAsync</code>: <strong>não é permanente</strong></li>
+</ul>
+<aside class="notes">
+A pergunta que vai aparecer: "e como eu guardo essa foto de verdade?"
+→ "ótima pergunta, e não é o assunto de hoje."
+</aside>
+      </section>
+
+      <!-- slide 19 -->
+      <section class="centro slide-impacto">
+<h1>Parte 2</h1>
+<h2>A câmera e as permissões</h2>
+      </section>
+
+      <!-- slide 20 -->
+      <section>
+<h2><code>launchCameraAsync</code>: mesma chamada, outra fonte</h2>
+<pre><code class="language-tsx" data-trim>async function tirarFoto() {
+  const permissao = await ImagePicker.requestCameraPermissionsAsync();
+  if (!permissao.granted) {
+    setFalha(permissao.canAskAgain ? 'camera-negada' : 'camera-bloqueada');
+    return;
+  }
+
+  const resultado = await ImagePicker.launchCameraAsync({
+    mediaTypes: ['images'],
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 0.7,
+  });
+
+  if (resultado.canceled) return;
+  setFotoUri(resultado.assets[0].uri);
+}</code></pre>
+<aside class="notes">
+Fazer a turma APONTAR cada tempo do contrato no código: pedir, tratar o
+"não", ler. Mesmas opções e mesmo resultado da galeria — a diferença é uma
+só: a câmera sempre pede permissão.
+</aside>
+      </section>
+
+      <!-- slide 21 -->
+      <section>
+<h2>O caminho da foto</h2>
+<pre class="mermaid mermaid-grande">
+flowchart TB
+  T["Toque em Tirar foto"] --&gt; P{"Permissao concedida?"}
+  P --&gt;|"nao"| N["Mensagem + oferecer galeria"]
+  P --&gt;|"sim"| C["Camera do sistema"]
+  C --&gt; X{"canceled?"}
+  X --&gt;|"sim"| V["Tela fica como estava"]
+  X --&gt;|"nao"| M["Previa com assets[0].uri"]
+</pre>
+<aside class="notes">
+Leitura do diagrama: o toque leva ao pedido de permissão; se for negada, a
+tela explica e oferece a galeria; se for concedida, abre a câmera do
+sistema; se o usuário cancelar, nada muda; se escolher, a prévia aparece
+com o uri do primeiro asset.
+</aside>
+      </section>
+
+      <!-- slide 22 -->
+      <section>
+<h2>Os três estados da permissão</h2>
+<table>
+<thead>
+<tr>
+<th>Estado</th>
+<th>O que a tela faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>granted</code></td>
+<td>abre a câmera</td>
+</tr>
+<tr>
+<td><code>!granted</code> e <code>canAskAgain: true</code></td>
+<td>explica, deixa pedir de novo — e <strong>oferece a galeria</strong></td>
+</tr>
+<tr>
+<td><code>!granted</code> e <code>canAskAgain: false</code></td>
+<td>o diálogo <strong>não volta</strong>: explica o caminho nas <strong>Configurações</strong> do aparelho</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Sempre existe um caminho:</strong> a galeria não precisa de permissão.</p>
+</blockquote>
+<aside class="notes">
+Regra da Aula 5: estados de falha são MENSAGENS DIFERENTES na tela.
+Insistir com o mesmo botão quando canAskAgain é false é o comportamento errado.
+
+Mensagem sugerida: "A câmera foi bloqueada. Para liberar, abra Ajustes →
+[nome do app] → Câmera. Enquanto isso, escolha uma foto da galeria."
+</aside>
+      </section>
+
+      <!-- slide 23 -->
+      <section>
+<h2>As duas formas de perguntar</h2>
+<table>
+<thead>
+<tr>
+<th>Forma</th>
+<th>Câmera</th>
+<th>Galeria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chamada direta, no <code>onPress</code></td>
+<td><code>requestCameraPermissionsAsync()</code></td>
+<td><code>requestMediaLibraryPermissionsAsync()</code></td>
+</tr>
+<tr>
+<td>o par <code>[estado, pedir]</code>, no topo</td>
+<td><code>useCameraPermissions()</code></td>
+<td><code>useMediaLibraryPermissions()</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Para o picker, a <strong>chamada direta</strong> é a natural.</h3>
+<p>A permissão só importa <strong>no momento do toque</strong> — a tela não muda de forma por causa dela.</p>
+<aside class="notes">
+O par [estado, pedir] fazia sentido no CameraView, porque a tela inteira
+dependia da permissão. Aqui não.
+</aside>
+      </section>
+
+      <!-- slide 24 -->
+      <section>
+<h2>⚠️ A documentação discorda dela mesma</h2>
+<ul>
+<li>O <strong>texto</strong> do <code>expo-image-picker</code>: <em>&quot;No permissions request is necessary for launching the image library.&quot;</em></li>
+<li>O <strong>exemplo oficial</strong>, logo abaixo: pede <code>requestMediaLibraryPermissionsAsync()</code> antes</li>
+</ul>
+<h3>As duas coisas são verdade em contextos diferentes.</h3>
+<ul>
+<li>o picker <strong>do sistema</strong> não precisa</li>
+<li>a permissão de biblioteca é para quem vai <strong>ler a galeria inteira</strong> por conta própria</li>
+</ul>
+<blockquote>
+<p>A aula segue o texto. E a lição é maior que a regra: <strong>leia documentação com desconfiança</strong>.</p>
+</blockquote>
+      </section>
+
+      <!-- slide 25 -->
+      <section>
+<h2>O config plugin</h2>
+<pre><code class="language-json" data-trim>{
+  "expo": {
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Usamos suas fotos para você anexar a imagem do seu hábito.",
+          "cameraPermission": "Usamos a câmera para você registrar a foto do seu hábito.",
+          "microphonePermission": false
+        }
+      ]
+    ]
+  }
+}</code></pre>
+<ul>
+<li>Escreva o <strong>porquê</strong> — o usuário lê antes de decidir</li>
+<li><strong><code>microphonePermission: false</code></strong>: por padrão o pacote pede microfone no Android (por causa de vídeo)</li>
+</ul>
+<aside class="notes">
+Frase da Aula 5: no Expo Go não faz diferença visível; na build de verdade,
+faz. Escrevam agora.
+</aside>
+      </section>
+
+      <!-- slide 26 -->
+      <section>
+<h2>Simulador, emulador e aparelho</h2>
+<table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>Galeria</th>
+<th>Câmera</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS Simulator</td>
+<td>✅ — arraste imagens do Mac para dentro</td>
+<td>❌ <strong>não tem câmera</strong></td>
+</tr>
+<tr>
+<td>Android Emulator</td>
+<td>✅</td>
+<td>✅ câmera virtual (cena 3D)</td>
+</tr>
+<tr>
+<td>Aparelho físico</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3>Galeria em qualquer lugar; <strong>câmera em aparelho físico</strong>.</h3>
+      </section>
+
+      <!-- slide 27 -->
+      <section>
+<h2>Citado, não ensinado</h2>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>O que é</th>
+<th>Por que não hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mediaTypes: ['videos']</code></td>
+<td>escolher ou gravar vídeo</td>
+<td>outro arquivo, outra permissão (microfone)</td>
+</tr>
+<tr>
+<td><code>getPendingResultAsync()</code></td>
+<td>recupera a foto quando o Android <strong>mata o app</strong> com a câmera aberta</td>
+<td>caso raro, de aparelho com pouca memória</td>
+</tr>
+<tr>
+<td>salvar na galeria</td>
+<td>outro pacote</td>
+<td>não está no programa</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+Uma frase cada, e seguir.
+</aside>
+      </section>
+
+      <!-- slide 28 -->
+      <section>
+<h2>✋ Checkpoint 1 — picker</h2>
+<ol>
+<li>Foto de perfil: <code>expo-camera</code> ou <code>expo-image-picker</code>? E um leitor de QR code?</li>
+<li>Por que a galeria não pede permissão e a câmera pede?</li>
+<li>O usuário tocou em &quot;Cancelar&quot;. O que vem em <code>resultado</code>? Cai no <code>catch</code>?</li>
+<li><code>if (!result.cancelled) setImage(result.uri)</code> — quantos problemas?</li>
+<li>Pedi <code>aspect: [4, 3]</code> e no iPhone veio quadrado. É bug?</li>
+</ol>
+<aside class="notes">
+60 s em duplas, 2–3 respostas em voz alta. Não avançar sem isso.
+Na 1, voltar à cozinha × balcão. Na 3, escrever os dois objetos de
+resultado lado a lado. Na 4: dois problemas — canceled e assets[0].uri.
+</aside>
+      </section>
+
+      <!-- slide 29 -->
+      <section class="centro slide-impacto">
+<h2>☕ Intervalo — 10 min</h2>
+      </section>
+
+      <!-- slide 30 -->
+      <section class="centro slide-impacto">
+<h1>Parte 3</h1>
+<h2>Roteamento por arquivos: a pasta é o mapa</h2>
+      </section>
+
+      <!-- slide 31 -->
+      <section class="centro slide-impacto">
+<h2>Na aula passada, o voltar do Android <span class="destaque">fechou o app inteiro</span>.</h2>
+<h3>Hoje o app ganha telas de verdade — com endereço, pilha e um voltar que volta.</h3>
+<aside class="notes">
+Gancho: na Aula 5, para mostrar a câmera, vocês esconderam a lista com um
+if e um useState. Funcionou — e o botão de voltar do Android fechou o app.
+
+Perguntar quem percebeu isso testando. Normalmente alguém percebeu.
+</aside>
+      </section>
+
+      <!-- slide 32 -->
+      <section>
+<h2>Um app de verdade tem várias telas</h2>
+<ul>
+<li>Até agora: <strong>um componente só</strong>, que trocava o que mostrava com um <code>if</code></li>
+<li>Um app de verdade: o usuário <strong>anda</strong> — entra, volta, entra em outra</li>
+<li>Esse andar tem regras que o sistema <strong>já conhece</strong>:
+<ul>
+<li>gesto de voltar no iPhone</li>
+<li>botão de voltar no Android</li>
+<li>título no topo de cada tela</li>
+</ul>
+</li>
+</ul>
+<h3>Você não quer reimplementar nenhuma delas.</h3>
+<aside class="notes">
+A virada conceitual da segunda metade: até aqui a foto vive numa tela só.
+Agora o app ganha várias telas, e a tela de foto vira uma delas.
+</aside>
+      </section>
+
+      <!-- slide 33 -->
+      <section>
+<h2>O que é o Expo Router</h2>
+<p><strong>Cada arquivo dentro de <code>src/app/</code> vira uma tela</strong> — e o caminho do arquivo <strong>é</strong> o endereço da tela.</p>
+<ul>
+<li>🏢 <strong>O prédio e a placa da porta:</strong> a pasta é a planta; cada arquivo é uma sala; o nome está na porta</li>
+<li>Para mandar alguém a uma sala, você não descreve o caminho — diz o número: <code>/sobre</code></li>
+<li>Quem já fez web: é o <code>sobre.html</code> que vira <code>/sobre</code>. E o mesmo app roda na web</li>
+</ul>
+<h3>Vocês já usam o Router desde a Aula 3 — sem saber.</h3>
+      </section>
+
+      <!-- slide 34 -->
+      <section>
+<h2>A regra de conversão</h2>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Endereço (<code>href</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/app/index.tsx</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>src/app/sobre.tsx</code></td>
+<td><code>/sobre</code></td>
+</tr>
+<tr>
+<td><code>src/app/registrar-foto.tsx</code></td>
+<td><code>/registrar-foto</code></td>
+</tr>
+<tr>
+<td><code>src/app/configuracoes/index.tsx</code></td>
+<td><code>/configuracoes</code></td>
+</tr>
+<tr>
+<td><code>src/app/configuracoes/notificacoes.tsx</code></td>
+<td><code>/configuracoes/notificacoes</code></td>
+</tr>
+<tr>
+<td><code>src/app/_layout.tsx</code></td>
+<td><strong>nenhum</strong> — é moldura, não tela</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+Na lousa, fazer a turma completar as três últimas linhas ANTES de mostrar.
+
+O truque: ler o caminho do arquivo em voz alta, tirando "src/app" e ".tsx".
+É literalmente a regra.
+</aside>
+      </section>
+
+      <!-- slide 35 -->
+      <section>
+<h2>A pasta, desenhada</h2>
+<pre class="mermaid mermaid-grande">
+flowchart TB
+  R["src/app/"] --&gt; I["index.tsx&lt;br/&gt;/"]
+  R --&gt; S["sobre.tsx&lt;br/&gt;/sobre"]
+  R --&gt; F["registrar-foto.tsx&lt;br/&gt;/registrar-foto"]
+  R --&gt; C["configuracoes/"]
+  C --&gt; CI["index.tsx&lt;br/&gt;/configuracoes"]
+  C --&gt; CN["notificacoes.tsx&lt;br/&gt;/configuracoes/notificacoes"]
+  R --&gt; L["_layout.tsx&lt;br/&gt;moldura, sem endereco"]
+</pre>
+<aside class="notes">
+Leitura do diagrama: cada arquivo aparece com o endereço que ganha; a
+subpasta configuracoes/ acrescenta um nível ao endereço, e o _layout.tsx é
+o único que não vira tela.
+</aside>
+      </section>
+
+      <!-- slide 36 -->
+      <section>
+<h2>Três regras que saem da tabela</h2>
+<ol>
+<li><strong><code>index.tsx</code> é a tela padrão da pasta</strong> — em <code>src/app/</code>, é a primeira tela do app</li>
+<li><strong>Pasta vira pedaço do endereço</strong> — subpasta = mais um <code>/</code></li>
+<li><strong>Arquivo que começa com <code>_</code> não é tela</strong> — o <code>_layout.tsx</code></li>
+</ol>
+<blockquote>
+<p>Nome de arquivo vira URL: <strong>minúsculas e hífen</strong> — <code>registrar-foto.tsx</code>, nunca <code>RegistrarFoto.tsx</code>.</p>
+</blockquote>
+<aside class="notes">
+No Android/Linux maiúscula importa. /RegistrarFoto e /registrar-foto são
+endereços diferentes.
+</aside>
+      </section>
+
+      <!-- slide 37 -->
+      <section>
+<h2>Uma tela é só um componente num lugar especial</h2>
+<pre><code class="language-tsx" data-trim>// src/app/sobre.tsx
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function TelaSobre() {
+  return (
+    &lt;View style={estilos.tela}&gt;
+      &lt;Text&gt;Rastreador de Micro-hábitos — versão da Aula 6.&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+const estilos = StyleSheet.create({
+  tela: { flex: 1, padding: 24, justifyContent: 'center' },
+});</code></pre>
+<aside class="notes">
+É assim que o Router acha o componente da tela. Sem export default, ele
+avisa que a rota não tem componente e a tela não abre.
+</aside>
+      </section>
+
+      <!-- slide 38 -->
+      <section>
+<h2>O erro nº 1: componente dentro de <code>src/app/</code></h2>
+<ul>
+<li><strong>Tudo</strong> em <code>src/app/</code> é tratado como rota</li>
+<li><code>CardHabito.tsx</code> lá dentro vira uma tela <code>/CardHabito</code> — que ninguém pediu</li>
+<li>O resto mora <strong>fora</strong>: <code>src/components/</code>, <code>src/types/</code>, <code>src/services/</code>, <code>src/screens/</code></li>
+</ul>
+<blockquote>
+<p>O próprio template avisa, no <code>npm run reset-project</code>:
+<em>&quot;Put all your application code in /src, only screens and layout files should be in /src/app.&quot;</em></p>
+</blockquote>
+<aside class="notes">
+É exatamente a estrutura que os repositórios de vocês já têm: src/components,
+src/screens, src/types. Só falta o src/app.
+</aside>
+      </section>
+
+      <!-- slide 39 -->
+      <section>
+<h2>Zumbi: <code>app/</code> × <code>src/app/</code></h2>
+<table>
+<thead>
+<tr>
+<th>O que valia no passado</th>
+<th>O que vale hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>As rotas ficavam em <code>app/</code>, na raiz do projeto</td>
+<td>Desde o <strong>SDK 55</strong>, o template cria <strong><code>src/app/</code></strong></td>
+</tr>
+<tr>
+<td>—</td>
+<td>Se existirem as duas, <strong>só <code>src/app/</code> é usada</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>app/</code> na raiz <strong>ainda funciona</strong> — mas não é mais recomendado!</li>
+<li><strong>Não misture:</strong> com as duas pastas, a de fora é <strong>ignorada em silêncio</strong></li>
+</ul>
+<h3>Leia o terminal: <code>Using src/app as the root directory for Expo Router.</code></h3>
+<aside class="notes">
+Essa linha resolve metade dos "eu editei e não mudou nada".
+</aside>
+      </section>
+
+      <!-- slide 40 -->
+      <section>
+<h2>Quem liga o Router</h2>
+<p>Nas aulas anteriores: <code>index.ts</code> com <code>registerRootComponent(App)</code>.</p>
+<p>Com o Router, quem começa o app é o próprio Router:</p>
+<pre><code class="language-json" data-trim>{ "main": "expo-router/entry" }</code></pre>
+<h3>Não existe mais <code>App.tsx</code>. O papel dele foi dividido em dois:</h3>
+<ul>
+<li>a <strong>moldura</strong> → <code>src/app/_layout.tsx</code></li>
+<li>a <strong>primeira tela</strong> → <code>src/app/index.tsx</code></li>
+</ul>
+<aside class="notes">
+Voltamos a isso na Parte 6, quando migrarmos o projeto de vocês.
+</aside>
+      </section>
+
+      <!-- slide 41 -->
+      <section class="centro slide-impacto">
+<h1>Parte 4</h1>
+<h2><code>_layout.tsx</code> e <code>Stack</code>: a pilha de telas</h2>
+      </section>
+
+      <!-- slide 42 -->
+      <section>
+<h2>O que é um layout</h2>
+<p>O <code>_layout.tsx</code> <strong>envolve</strong> as telas da pasta e decide <strong>como</strong> se anda entre elas.</p>
+<ul>
+<li>🖼️ <strong>A moldura do quadro:</strong> as telas são os quadros que você troca; o layout é a moldura que fica</li>
+<li>O cabeçalho com título e voltar <strong>é da moldura</strong>, não do quadro</li>
+<li>Hoje a moldura é sempre um <strong><code>Stack</code></strong> — pilha</li>
+</ul>
+<aside class="notes">
+Existem outros tipos de moldura. Não são o assunto de hoje — se perguntarem,
+"ótima pergunta, e não é o assunto de hoje".
+</aside>
+      </section>
+
+      <!-- slide 43 -->
+      <section>
+<h2>O layout mínimo</h2>
+<pre><code class="language-tsx" data-trim>// src/app/_layout.tsx
+import { Stack } from 'expo-router';
+
+export default function LayoutRaiz() {
+  return &lt;Stack /&gt;;
+}</code></pre>
+<h3>É exatamente o arquivo que o <code>reset-project</code> gera.</h3>
+<p>Só com isso: cabeçalho, botão de voltar, gesto do iOS e voltar do Android.</p>
+<aside class="notes">
+Abrir o projeto de alguém da turma e mostrar o arquivo. Está lá desde a Aula 3.
+</aside>
+      </section>
+
+      <!-- slide 44 -->
+      <section class="centro slide-impacto">
+<h2>A pilha de pratos</h2>
+<h3>Cada tela nova é um prato <span class="destaque">colocado em cima</span> (<code>push</code>). Voltar é <span class="destaque">tirar o de cima</span> (<code>back</code>).</h3>
+<aside class="notes">
+Desenhar na lousa antes de mostrar mais código. É o modelo mental que
+sustenta todo o resto.
+</aside>
+      </section>
+
+      <!-- slide 45 -->
+      <section>
+<h2>A pilha, desenhada</h2>
+<pre class="mermaid mermaid-grande">
+stateDiagram-v2
+  direction LR
+  [*] --&gt; Inicio: app abre
+  Inicio --&gt; Perfil: push /perfil
+  Perfil --&gt; Inicio: back
+  Inicio --&gt; Sobre: push /sobre
+  Sobre --&gt; Inicio: back
+</pre>
+<aside class="notes">
+Leitura do diagrama: o app abre na tela inicial; cada push coloca uma tela
+nova por cima, e cada back tira a de cima e revela de novo a inicial, no
+mesmo estado em que ficou.
+</aside>
+      </section>
+
+      <!-- slide 46 -->
+      <section>
+<h2>&quot;No mesmo estado em que ficou&quot;</h2>
+<div class="colunas">
+<div>
+<h3>A tela de <strong>baixo</strong></h3>
+<ul>
+<li><strong>não</strong> é recriada quando você volta</li>
+<li>rolou a lista até o meio? continua no meio</li>
+</ul>
+</div>
+<div>
+<h3>A tela de <strong>cima</strong></h3>
+<ul>
+<li>sai da pilha e é <strong>destruída</strong></li>
+<li>o <code>useState</code> dela <strong>some</strong></li>
+</ul>
+</div>
+</div>
+<blockquote>
+<p>Escolheu uma foto em <code>/registrar-foto</code> e voltou? <strong>A foto se foi.</strong> Guardem isso.</p>
+</blockquote>
+<aside class="notes">
+Demonstrar ao vivo com uma lista longa: rolar, entrar, voltar.
+A segunda coluna é o gancho do fim da aula.
+</aside>
+      </section>
+
+      <!-- slide 47 -->
+      <section>
+<h2>Configurar as telas</h2>
+<pre><code class="language-tsx" data-trim>// src/app/_layout.tsx
+import { Stack } from 'expo-router';
+
+export default function LayoutRaiz() {
+  return (
+    &lt;Stack screenOptions={{ headerTintColor: '#f26522' }}&gt;
+      &lt;Stack.Screen name="index" options={{ title: 'Meus hábitos' }} /&gt;
+      &lt;Stack.Screen name="registrar-foto" options={{ title: 'Foto do hábito' }} /&gt;
+      &lt;Stack.Screen name="sobre" options={{ title: 'Sobre o app' }} /&gt;
+    &lt;/Stack&gt;
+  );
+}</code></pre>
+      </section>
+
+      <!-- slide 48 -->
+      <section>
+<h2>As três regras do <code>Stack.Screen</code></h2>
+<ol>
+<li><strong><code>name</code> é o nome do arquivo sem extensão</strong> — <code>name=&quot;registrar-foto&quot;</code> → <code>registrar-foto.tsx</code></li>
+<li><strong><code>screenOptions</code> vale para todas; <code>options</code> vale para uma</strong> — a de uma tela vence</li>
+<li><strong>Listar não é obrigatório</strong> — arquivo já é rota. Você lista para <strong>configurar</strong>, não para <strong>registrar</strong></li>
+</ol>
+<aside class="notes">
+Errou o name? O Router avisa no console que não achou a rota, e a opção
+simplesmente não é aplicada. Mostrar o aviso ao vivo, se der tempo.
+
+Existe uma segunda forma — Stack.Screen dentro da própria tela. Faz sentido
+quando o título depende de um dado da tela, que é assunto da próxima aula.
+Citar e seguir.
+</aside>
+      </section>
+
+      <!-- slide 49 -->
+      <section>
+<h2>Expo Navigation - Stack</h2>
+<table>
+<thead>
+<tr>
+<th>Opção</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>texto do cabeçalho</td>
+</tr>
+<tr>
+<td><code>headerShown</code></td>
+<td><code>false</code> esconde o cabeçalho</td>
+</tr>
+<tr>
+<td><code>headerTintColor</code></td>
+<td>cor do título e do voltar</td>
+</tr>
+<tr>
+<td><code>headerStyle</code></td>
+<td><code>{ backgroundColor }</code> do cabeçalho</td>
+</tr>
+<tr>
+<td><code>headerBackTitle</code></td>
+<td>texto ao lado da seta, no iOS</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+A pergunta que vai aparecer: "e aquela barra de abas embaixo, como no
+Instagram?" → "ótima pergunta, e não é o assunto de hoje."
+</aside>
+      </section>
+
+      <!-- slide 50 -->
+      <section class="centro slide-impacto">
+<h1>Parte 5</h1>
+<h2><code>Link</code> e <code>router</code>: andar pela pilha</h2>
+      </section>
+
+      <!-- slide 51 -->
+      <section>
+<h2><code>Link</code>: o caminho declarado</h2>
+<pre><code class="language-tsx" data-trim>import { Link } from 'expo-router';
+
+&lt;Link href="/sobre" style={estilos.link}&gt;
+  Sobre o app
+&lt;/Link&gt;
+
+&lt;Link href="/registrar-foto" asChild&gt;
+  &lt;Pressable style={estilos.botao}&gt;
+    &lt;Text style={estilos.textoBotao}&gt;Registrar com foto&lt;/Text&gt;
+  &lt;/Pressable&gt;
+&lt;/Link&gt;</code></pre>
+<ul>
+<li><code>Link</code> é um <strong><code>Text</code> que navega</strong></li>
+<li><strong><code>asChild</code></strong>: o <code>Link</code> passa o toque para o <strong>seu</strong> <code>Pressable</code> (Aula 4)</li>
+</ul>
+      </section>
+
+      <!-- slide 52 -->
+      <section>
+<h2><code>href</code> começa com <code>/</code></h2>
+<ul>
+<li><code>href=&quot;/sobre&quot;</code> → endereço <strong>absoluto</strong></li>
+<li><code>href=&quot;sobre&quot;</code> → endereço <strong>relativo</strong> à tela atual — numa subpasta, leva a <strong>outro lugar</strong></li>
+</ul>
+<h3>Utilize <strong>sempre com barra</strong>.</h3>
+      </section>
+
+      <!-- slide 53 -->
+      <section>
+<h2><code>router</code>: navegar depois de uma ação</h2>
+<pre><code class="language-tsx" data-trim>import { useRouter } from 'expo-router';
+
+export default function TelaInicial() {
+  const router = useRouter();
+  // ...
+  &lt;Pressable onPress={() =&gt; router.push('/registrar-foto')}&gt;...&lt;/Pressable&gt;
+}</code></pre>
+<table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Na pilha</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>router.push('/rota')</code></td>
+<td><strong>empilha</strong></td>
+</tr>
+<tr>
+<td><code>router.back()</code></td>
+<td><strong>desempilha</strong> — o mesmo que o voltar</td>
+</tr>
+<tr>
+<td><code>router.canGoBack()</code></td>
+<td>existe tela embaixo?</td>
+</tr>
+<tr>
+<td><code>router.replace('/rota')</code></td>
+<td><strong>troca</strong> o topo, sem deixar a anterior <em>(citar)</em></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+useRouter() é chamado no topo do componente, sem condicional — a mesma
+regra do useState e do useCameraPermissions da Aula 5. Mesma forma; a
+diferença é que devolve UM OBJETO, não um par.
+
+replace em 30 s: com push o voltar retorna; com replace a anterior sumiu.
+Mostrar uma vez, não exercitar.
+</aside>
+      </section>
+
+      <!-- slide 54 -->
+      <section>
+<h2><code>Link</code> ou <code>router.push</code>?</h2>
+<h3>A navegação acontece porque o usuário tocou <strong>num link</strong> — ou <strong>depois que algo terminou</strong>?</h3>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Toque em <em>Sobre</em> leva para a tela Sobre&quot;</td>
+<td><strong><code>Link</code></strong> — destino fixo, escrito na tela</td>
+</tr>
+<tr>
+<td>&quot;Depois que a foto foi escolhida, volta&quot;</td>
+<td><strong><code>router.back()</code></strong>, depois do <code>await</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong><code>Link</code> no JSX; <code>router</code> dentro de função.</strong></p>
+</blockquote>
+      </section>
+
+      <!-- slide 55 -->
+      <section>
+<h2>O TypeScript conhece as suas rotas</h2>
+<p>O template vem com <code>&quot;experiments&quot;: { &quot;typedRoutes&quot;: true }</code>. Depois do primeiro <code>npx expo start</code>, o Router <strong>gera os tipos</strong> das rotas.</p>
+<pre><code class="language-tsx" data-trim>&lt;Link href="/novaFoto"&gt;...&lt;/Link&gt;   // o arquivo se chama registrar-foto.tsx</code></pre>
+<pre><code class="language-plaintext" data-trim>Type '"/novaFoto"' is not assignable to type ...
+Did you mean '"/registrar-foto"'?</code></pre>
+<h3><code>href</code> errado é pego <strong>no editor</strong>, antes de rodar.</h3>
+<aside class="notes">
+Demo ao vivo. Rodar npx expo start uma vez ANTES da aula para os tipos
+existirem. Se renomear um arquivo, os tipos só se atualizam no próximo
+expo start.
+</aside>
+      </section>
+
+      <!-- slide 56 -->
+      <section>
+<h2>Duas plataformas, um voltar</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Voltar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>iOS</strong></td>
+<td>seta no cabeçalho + <strong>gesto de arrastar da borda esquerda</strong></td>
+</tr>
+<tr>
+<td><strong>Android</strong></td>
+<td>seta no cabeçalho + <strong>botão/gesto de voltar do sistema</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>Os dois chamam o mesmo <code>back</code>. Você não escreve nada.</h3>
+      </section>
+
+      <!-- slide 57 -->
+      <section>
+<h2>Zumbis da navegação</h2>
+<table>
+<thead>
+<tr>
+<th>O que valia no passado</th>
+<th>O que vale hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NavigationContainer</code> + <code>createNativeStackNavigator()</code> no <code>App.tsx</code></td>
+<td><code>&lt;Stack /&gt;</code> no <code>_layout.tsx</code></td>
+</tr>
+<tr>
+<td><code>navigation.navigate('Sobre')</code> — <strong>nome</strong> da tela</td>
+<td><code>router.push('/sobre')</code> — <strong>endereço</strong></td>
+</tr>
+<tr>
+<td><code>import ... from '@react-navigation/native'</code> no app</td>
+<td>importar de <strong><code>expo-router</code></strong> (SDK 56+)</td>
+</tr>
+<tr>
+<td>&quot;<code>router.navigate</code> volta se a tela já existe&quot;</td>
+<td>desde o SDK 52, <strong><code>navigate</code> empilha</strong> — use <code>push</code></td>
+</tr>
+<tr>
+<td>&quot;Expo Router v4 / v5&quot;</td>
+<td>o pacote segue o SDK: <code>expo-router@57</code></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+Por que tanto tutorial assim: o Expo Router é construído POR CIMA do React
+Navigation. Os tutoriais de React Navigation continuam certos para o React
+Navigation — mas vocês não usam a API dele diretamente.
+</aside>
+      </section>
+
+      <!-- slide 58 -->
+      <section class="centro slide-impacto">
+<h2>Hoje cada tela <span class="destaque">se vira sozinha</span>.</h2>
+<h3>Abrir &quot;o hábito que eu toquei&quot; ou levar a foto para a lista exige <span class="destaque">levar informação de uma tela para outra</span>. É a próxima aula.</h3>
+<aside class="notes">
+Dizer em voz alta. Se insistirem: "ótima pergunta, e é a próxima aula."
+Não mostrar código.
+</aside>
+      </section>
+
+      <!-- slide 59 -->
+      <section>
+<h2>✋ Checkpoint 2 — rotas e pilha</h2>
+<ol>
+<li>Qual o endereço de <code>src/app/configuracoes/index.tsx</code>? E de <code>src/app/_layout.tsx</code>?</li>
+<li>Coloquei o <code>CardHabito.tsx</code> em <code>src/app/</code>. O que acontece, e onde ele deveria estar?</li>
+<li>Fiz <code>push('/registrar-foto')</code> e depois <code>back()</code>. A lista da tela inicial é recriada? E o <code>useState</code> da tela de foto?</li>
+<li>Botão &quot;Sobre&quot;: <code>Link</code> ou <code>router.push</code>? E o &quot;Concluir&quot;, que só volta <strong>depois</strong> da foto escolhida?</li>
+<li>O tutorial diz <code>navigation.navigate('Sobre')</code>. Como fica no nosso projeto?</li>
+</ol>
+<aside class="notes">
+Mesmo formato do Checkpoint 1.
+Se travar: pilha de pratos de novo na lousa, com nomes de tela.
+</aside>
+      </section>
+
+      <!-- slide 60 -->
+      <section class="centro slide-impacto">
+<h1>Parte 6</h1>
+<h2>Levando para o seu projeto: de <code>App.tsx</code> para <code>src/app/</code></h2>
+<aside class="notes">
+Os dois repositórios começaram no blank-typescript e abrem pelo App.tsx.
+Fazer a migração junto com a turma, no projeto de um grupo, projetando.
+</aside>
+      </section>
+
+      <!-- slide 61 -->
+      <section>
+<h2>A migração — parte 1</h2>
+<pre><code class="language-bash" data-trim>npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
+npx expo install expo-image-picker</code></pre>
+<ol>
+<li><strong>Ponto de entrada</strong> no <code>package.json</code>: <code>&quot;main&quot;: &quot;expo-router/entry&quot;</code></li>
+<li><strong><code>scheme</code></strong> no <code>app.json</code> — ex.: <code>&quot;scheme&quot;: &quot;habittracker&quot;</code></li>
+<li>O <code>npx expo install</code> <strong>já adiciona</strong> <code>&quot;expo-router&quot;</code> em <code>plugins</code> — <strong>confira, não duplique</strong></li>
+</ol>
+      </section>
+
+      <!-- slide 62 -->
+      <section>
+<h2>A migração — parte 2</h2>
+<ol start="4" style="counter-reset: item 3">
+<li><strong>Moldura:</strong> <code>src/app/_layout.tsx</code> com <code>&lt;Stack /&gt;</code></li>
+<li><strong>A tela atual vira a rota inicial</strong> — sem mover código:</li>
+</ol>
+<pre><code class="language-tsx" data-trim>// src/app/index.tsx
+export { default } from '../screens/tela-habitos';</code></pre>
+<ol start="6" style="counter-reset: item 5">
+<li><strong>Apagar</strong> <code>App.tsx</code> e <code>index.ts</code></li>
+<li><strong>Reiniciar limpando o cache:</strong> <code>npx expo start --clear</code></li>
+</ol>
+<h3>Conferir: <code>Using src/app as the root directory for Expo Router.</code></h3>
+<aside class="notes">
+A tela continua morando em src/screens/; a rota só APONTA para ela. É a
+regra de "em src/app, só telas e layouts" aplicada.
+</aside>
+      </section>
+
+      <!-- slide 63 -->
+      <section>
+<h2>O que costuma dar errado na migração</h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>o app abre o <code>App.tsx</code> antigo, ou reclama que ele sumiu</td>
+<td><code>&quot;main&quot;</code> não foi trocado</td>
+</tr>
+<tr>
+<td>uma tela aparece duas vezes, ou uma rota estranha surge</td>
+<td>componente <strong>dentro</strong> de <code>src/app/</code> <em>e</em> em <code>src/screens/</code></td>
+</tr>
+<tr>
+<td>&quot;editei e não mudou&quot;</td>
+<td>faltou <code>--clear</code>, ou existe <code>app/</code> <strong>e</strong> <code>src/app/</code></td>
+</tr>
+<tr>
+<td><code>&quot;expo-router&quot;</code> duas vezes em <code>plugins</code></td>
+<td>adicionado à mão depois do <code>expo install</code></td>
+</tr>
+</tbody>
+</table>
+      </section>
+
+      <!-- slide 64 -->
+      <section>
+<h2>Hands-on guiado — 30 min</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Exercício</th>
+<th>Tempo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Complete: o botão &quot;Escolher da galeria&quot;</td>
+<td>7 min</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Caça ao erro: o picker do tutorial de 2022</td>
+<td>6 min</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Associação: qual arquivo, qual endereço</td>
+<td>4 min</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Complete: o <code>_layout.tsx</code> com três telas</td>
+<td>5 min</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Caça ao erro: a navegação do tutorial</td>
+<td>6 min</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Para casa:</strong> 3 (seleção múltipla em <code>FlatList</code>) e 4 (câmera com os três estados — aparelho físico).</p>
+<p>Hábito → <code>exercises.md</code> · Pet → <code>practice.md</code></p>
+<aside class="notes">
+Circular com a lista curta do que olhar: componente dentro de src/app,
+name do Stack.Screen com extensão ou maiúscula, href sem barra,
+if (resultado.canceled) ausente, import do Image errado.
+
+Corrigir NA HORA, não no fim. O objetivo é acurácia, não criatividade.
+</aside>
+      </section>
+
+      <!-- slide 65 -->
+      <section>
+<h2>Atividade aplicada — &quot;O app com mais de uma tela&quot;</h2>
+<p>Migrar o projeto para o Expo Router e entregar <strong>três rotas estáticas</strong>:</p>
+<ul>
+<li><strong><code>/</code></strong> — a lista que já existe desde a Aula 4</li>
+<li><strong><code>/registrar-foto</code></strong> — galeria <strong>ou</strong> câmera, com prévia em <code>expo-image</code></li>
+<li><strong><code>/sobre</code></strong> — informações do app</li>
+</ul>
+<p>Navegação por <code>Link</code> <strong>e</strong> por <code>router</code>.</p>
+<aside class="notes">
+Conectar com a abertura: o app da Aula 5 trocava de "tela" com um if e
+fechava inteiro no voltar do Android. O da Aula 6 tem endereços, pilha e
+voltar que volta.
+</aside>
+      </section>
+
+      <!-- slide 66 -->
+      <section>
+<h2>O que se avalia</h2>
+<ol>
+<li>Em <code>src/app/</code> <strong>só</strong> há telas e o <code>_layout.tsx</code></li>
+<li>O <code>_layout.tsx</code> dá <strong>título a todas as telas</strong></li>
+<li><code>Link</code> onde o destino é fixo; <code>router</code> <strong>depois</strong> de uma ação — e o grupo sabe explicar</li>
+<li>O picker trata <strong>cancelar</strong> e os <strong>três estados</strong> da câmera, e sempre oferece a galeria</li>
+<li><strong>Nenhum zumbi:</strong> <code>['images']</code>, <code>canceled</code>, <code>assets[0].uri</code>, nada de <code>@react-navigation/*</code></li>
+<li>O README <strong>declara a limitação</strong>: a foto escolhida não volta para a lista</li>
+</ol>
+<aside class="notes">
+Repetir em voz alta: é isso que será corrigido.
+</aside>
+      </section>
+
+      <!-- slide 67 -->
+      <section class="centro slide-impacto">
+<h2>Hoje vocês têm três telas, e elas <span class="destaque">não conversam</span>.</h2>
+<h3>A foto ficou presa na tela onde foi escolhida. Na Aula 7, <span class="destaque">as telas começam a conversar</span>.</h3>
+<aside class="notes">
+Fechar exatamente assim, palavra por palavra:
+
+"Hoje vocês têm três telas, e elas não conversam. A foto ficou presa na
+tela onde foi escolhida, e tocar num hábito ainda não abre aquele hábito.
+Isso não é defeito do código de vocês — é a peça que falta. Na Aula 7, as
+telas começam a conversar."
+</aside>
+      </section>
+
+      <!-- slide 68 -->
+      <section>
+<h2>Atalhos desta apresentação</h2>
+<table>
+<thead>
+<tr>
+<th>Tecla</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>→</code> / espaço · <code>←</code></td>
+<td>avançar · voltar</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td>modo apresentador (notas + cronômetro)</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>tela cheia</td>
+</tr>
+<tr>
+<td><code>O</code> ou <code>Esc</code></td>
+<td>visão geral dos slides</td>
+</tr>
+<tr>
+<td><code>B</code> ou <code>.</code></td>
+<td>tela preta</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>todos os atalhos</td>
+</tr>
+</tbody>
+</table>
+<p class="rodape-fonte">Dados conferidos em 06/10/2026 · Expo SDK 57 · fontes em <code>lesson-plan.md</code> e <code>student-notes.md</code></p>      </section>
+    </div>
+  </div>
+
+  <script src="vendor/reveal/reveal.js"></script>
+  <script src="vendor/reveal/plugin/highlight.js"></script>
+  <script src="vendor/reveal/plugin/notes.js"></script>
+  <script src="vendor/reveal/plugin/search.js"></script>
+  <script src="vendor/reveal/plugin/zoom.js"></script>
+  <script src="vendor/mermaid/mermaid.min.js"></script>
+
+  <script>
+    // --------------------------------------------------------------------------
+    // DUAS ARMADILHAS AQUI — as duas custaram diagramas quebrados até serem
+    // descobertas renderizando a página de verdade num navegador:
+    //
+    // 1) ORDEM: o Mermaid precisa desenhar os SVGs ANTES de o reveal.js
+    //    inicializar. Se inverter, o reveal calcula o layout com os <pre>
+    //    ainda vazios e os diagramas saem cortados.
+    //
+    // 2) VISIBILIDADE: o reveal.css esconde TODOS os slides com `display: none`
+    //    até o Reveal.initialize() rodar. E o Mermaid precisa medir o texto para
+    //    dimensionar as caixas — dentro de um elemento `display: none` toda
+    //    medida dá zero. Resultado: flowcharts de 16x16 pixels, e alguns nem
+    //    renderizam (a conta de layout estoura com dimensão zero).
+    //
+    //    Solução: forçar os slides visíveis SÓ durante a renderização dos
+    //    diagramas, com a página em opacity 0 para o usuário não ver o flash,
+    //    e remover esse estilo antes de inicializar o reveal.
+    //    `opacity: 0` (e não `visibility: hidden`) porque preserva o layout
+    //    inteiro, que é justamente o que precisamos medir.
+    // --------------------------------------------------------------------------
+
+    // Paleta fixa da CESAR School (não acompanha o tema do sistema —
+    // todos os diagramas ficam em slides de fundo creme).
+    mermaid.initialize({
+      startOnLoad: false,          // nós disparamos manualmente, abaixo
+      theme: 'base',
+      securityLevel: 'loose',      // permite <br/> dentro dos rótulos
+      themeVariables: {
+        fontSize: '18px',
+        fontFamily: 'Barlow, Helvetica, sans-serif',
+        primaryColor: '#FEF7EE',
+        primaryTextColor: '#191919',
+        primaryBorderColor: '#FF6002',
+        lineColor: '#232323',
+        secondaryColor: '#F3E9DC',
+        tertiaryColor: '#FFB132',
+        clusterBkg: '#F3E9DC',
+        clusterBorder: '#FF6002',
+        pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+        pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+        pieOuterStrokeColor: '#FEF7EE',
+        pieSectionTextColor: '#FEF7EE',
+      },
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+    });
+
+    (async () => {
+      // Torna todos os slides mensuráveis, sem mostrá-los ao usuário.
+      const estiloMedicao = document.createElement('style');
+      estiloMedicao.textContent = `
+      .reveal { opacity: 0 !important; }
+      .reveal .slides,
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+      }
+    `;
+      document.head.appendChild(estiloMedicao);
+
+      try {
+        // Renderiza um a um: um diagrama com problema não pode impedir os outros
+        // de aparecerem no meio da aula.
+        for (const el of document.querySelectorAll('pre.mermaid')) {
+          try {
+            await mermaid.run({ nodes: [el] });
+          } catch (erro) {
+            console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+          }
+        }
+      } finally {
+        estiloMedicao.remove();
+      }
+
+      Reveal.initialize({
+        hash: true,              // URL acompanha o slide — dá para linkar um slide
+        slideNumber: 'c/t',      // "12 / 48" no canto
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controls: true,
+        progress: true,
+        overview: true,
+        center: false,           // conteúdo alinhado ao topo; slides .centro centralizam
+        width: 1280,
+        height: 800,
+        margin: 0.06,
+        minScale: 0.2,
+        maxScale: 1.8,
+        pdfSeparateFragments: false,
+        plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+      });
+
+      // Slides marcados com .centro centralizam verticalmente também.
+      Reveal.on('ready', () => document.body.classList.add('pronto'));
+    })();
+  </script>
+</body>
+
