@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 8 — Hooks (useState, useEffect, useContext) e Estado Global com Zustand</title>
+
+  <!--
+    ============================================================================
+    APRESENTAÇÃO DA AULA 8 — reveal.js
+    ============================================================================
+
+    COMO ABRIR
+      Basta dar duplo clique neste arquivo. Ele funciona offline: todas as
+      dependências estão em vendor/, nada é baixado da internet.
+
+    ATALHOS DE TECLADO
+      →  ou  espaço   avança
+      ←               volta
+      S               modo apresentador (notas + cronômetro + próximo slide)
+      F               tela cheia
+      O  ou  Esc      visão geral de todos os slides
+      B  ou  .        tela preta (para chamar atenção de volta)
+      Ctrl + clique   zoom em um ponto do slide
+      ?               ajuda com todos os atalhos
+
+    ONDE EDITAR O CONTEÚDO
+      A fonte é presentation.md (mesma ordem de slides).
+      Cada <section> é um slide. Notas do apresentador vão em <aside class="notes">.
+      Diagramas vão em <pre class="mermaid">.
+    ============================================================================
+  -->
+
+  <link rel="stylesheet" href="vendor/reveal/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/theme/white.css" id="theme">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    /* ---------------------------------------------------------------------
+       Identidade visual CESAR School: fundo creme, laranja de marca,
+       títulos em Barlow Condensed caixa-alta, corpo de texto em Barlow,
+       formas circulares decorativas.
+       Fontes embutidas em vendor/fonts/ para manter a aula 100% offline.
+       --------------------------------------------------------------------- */
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-400.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlow-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-500.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-600.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-700.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-800.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Barlow Condensed';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('vendor/fonts/barlowcondensed-900.woff2') format('woff2');
+    }
+
+    :root {
+      --cor-fundo: #FEF7EE;
+      --cor-fundo-escuro: #232323;
+      --cor-preto: #191919;
+      --cor-destaque: #FF6002;
+      --cor-destaque2: #FB6B00;
+      --cor-amarelo: #FFB132;
+      --cor-alerta: #c62828;
+      --cor-ok: #2e7d32;
+      --cor-texto-fraco: #6b6459;
+      --cor-fundo-bloco: #F3E9DC;
+      --cor-borda: #E4D6C3;
+      --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      --fonte-corpo: 'Barlow', Arial, sans-serif;
+    }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal,
+    .reveal .slides {
+      background: var(--cor-fundo);
+    }
+
+    .reveal,
+    .reveal p,
+    .reveal li,
+    .reveal td,
+    .reveal th,
+    .reveal blockquote {
+      font-family: var(--fonte-corpo);
+      color: var(--cor-preto);
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      color: var(--cor-preto);
+      letter-spacing: 0.01em;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-transform: uppercase;
+    }
+
+    .reveal h1 {
+      font-size: 1.9em;
+      font-weight: 900;
+    }
+
+    .reveal h2 {
+      font-size: 1.35em;
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h3 {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+      font-weight: 700;
+    }
+
+    .reveal .slides>section.present,
+    .reveal .slides>section>section.present {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .reveal .slides>section.present>*,
+    .reveal .slides>section>section.present>* {
+      flex-shrink: 0;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    .reveal section.centro {
+      text-align: center;
+    }
+
+    .reveal h1,
+    .reveal h2 {
+      text-align: left;
+    }
+
+    .reveal section.centro h1,
+    .reveal section.centro h2,
+    .reveal section.centro h3 {
+      text-align: center;
+    }
+
+    .reveal .slides>section:not(.centro):not(:has(.tabela-larga))::before,
+    .reveal .slides>section>section:not(.centro):not(:has(.tabela-larga))::before {
+      content: '';
+      position: absolute;
+      top: -70px;
+      right: -50px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--cor-preto);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section:not(.centro)::after,
+    .reveal .slides>section>section:not(.centro)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 15%;
+      min-width: 120px;
+      height: 10px;
+      background: var(--cor-destaque);
+      border-radius: 0 6px 6px 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-capa {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-capa h1,
+    .reveal .slides>section.slide-capa h2,
+    .reveal .slides>section.slide-capa h3,
+    .reveal .slides>section.slide-capa p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-capa .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-capa::before {
+      content: '';
+      position: absolute;
+      top: -18%;
+      right: -12%;
+      width: 60%;
+      height: 130%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-capa::after {
+      content: '';
+      position: absolute;
+      bottom: -22%;
+      left: -8%;
+      width: 26%;
+      height: 55%;
+      background: var(--cor-fundo);
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-impacto {
+      background: var(--cor-fundo-escuro);
+    }
+
+    .reveal .slides>section.slide-impacto h1,
+    .reveal .slides>section.slide-impacto h2,
+    .reveal .slides>section.slide-impacto h3,
+    .reveal .slides>section.slide-impacto p {
+      color: var(--cor-fundo);
+    }
+
+    .reveal .slides>section.slide-impacto .destaque {
+      color: var(--cor-destaque2);
+    }
+
+    .reveal .slides>section.slide-impacto::before {
+      content: '';
+      position: absolute;
+      top: -25%;
+      right: -10%;
+      width: 34%;
+      height: 60%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.slide-impacto::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: 6%;
+      width: 20%;
+      height: 45%;
+      border: 3px solid var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.divisor {
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h1 {
+      color: var(--cor-destaque);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor h2,
+    .reveal .slides>section.divisor h3 {
+      color: var(--cor-preto);
+      text-align: left;
+    }
+
+    .reveal .slides>section.divisor::before {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: 6%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal .slides>section.divisor::after {
+      content: '';
+      position: absolute;
+      top: -12%;
+      right: -8%;
+      width: 30%;
+      height: 70%;
+      background: var(--cor-destaque);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .reveal table {
+      font-size: 0.62em;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.4em 0;
+    }
+
+    .reveal table th {
+      background: var(--cor-fundo-bloco);
+      font-weight: 700;
+      border-bottom: 2px solid var(--cor-borda);
+    }
+
+    .reveal table th,
+    .reveal table td {
+      padding: 0.35em 0.5em;
+      border: 1px solid var(--cor-borda);
+      vertical-align: top;
+    }
+
+    .tabela-larga {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tabela-larga table {
+      font-size: 0.52em;
+      min-width: 900px;
+    }
+
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      font-size: 0.48em;
+      margin: 0.4em 0;
+    }
+
+    .reveal pre code {
+      padding: 0.9em 1.1em;
+      max-height: 560px;
+      line-height: 1.35;
+      min-height: 0 !important;
+    }
+
+    .reveal code:not(pre code) {
+      background: var(--cor-fundo-bloco);
+      color: var(--cor-preto);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    .reveal .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      margin: 0.3em 0;
+    }
+
+    .reveal .mermaid svg {
+      max-width: 100% !important;
+      max-height: 500px !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    .reveal .mermaid-grande svg {
+      max-height: 610px !important;
+    }
+
+    .reveal blockquote {
+      width: 100%;
+      font-size: 0.8em;
+      background: var(--cor-fundo-bloco);
+      border-left: 5px solid var(--cor-destaque);
+      box-shadow: none;
+      padding: 0.7em 1em;
+      font-style: normal;
+      text-align: left;
+    }
+
+    .destaque {
+      color: var(--cor-destaque);
+      font-weight: 700;
+    }
+
+    .alerta {
+      color: var(--cor-alerta);
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--cor-ok);
+      font-weight: 700;
+    }
+
+    .fraco {
+      color: var(--cor-texto-fraco);
+    }
+
+    .caixa-alerta {
+      background: #fdecea;
+      border-left: 5px solid var(--cor-alerta);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    .caixa-ok {
+      background: #e8f5e9;
+      border-left: 5px solid var(--cor-ok);
+      padding: 0.7em 1em;
+      border-radius: 4px;
+      margin: 0.5em 0;
+    }
+
+    .colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2em;
+      align-items: start;
+    }
+
+    .colunas>div {
+      min-width: 0;
+    }
+
+    .reveal ul,
+    .reveal ol {
+      display: block;
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.3em;
+    }
+
+    .reveal section:not(.centro) ul {
+      list-style: none;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ul>li {
+      position: relative;
+      padding-left: 0.85em;
+    }
+
+    .reveal section:not(.centro) ul>li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      width: 0.42em;
+      height: 0.42em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+    }
+
+    .reveal section:not(.centro) ol {
+      list-style: none;
+      counter-reset: item;
+      margin-left: 0.2em;
+    }
+
+    .reveal section:not(.centro) ol>li {
+      counter-increment: item;
+      position: relative;
+      padding-left: 1.5em;
+    }
+
+    .reveal section:not(.centro) ol>li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.05em;
+      height: 1.05em;
+      border-radius: 50%;
+      background: var(--cor-destaque);
+      color: var(--cor-fundo);
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.78em;
+      line-height: 1.05em;
+      text-align: center;
+    }
+
+    .logo-marca {
+      position: absolute;
+      top: 0.55em;
+      left: 0.7em;
+      height: 1.5em;
+      width: auto;
+      z-index: 2;
+    }
+
+    .rodape-fonte {
+      position: absolute;
+      bottom: 0.4em;
+      left: 0;
+      right: 0;
+      font-size: 0.42em;
+      color: var(--cor-texto-fraco);
+      text-align: center;
+    }
+      @page { size: 1017.12pt 636pt; margin: 0; }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- slide 1 -->
+      <section class="centro slide-capa">
+        <img class="logo-marca" src="vendor/img/cesar-school-logo-creme.png" alt="CESAR School">
+        <h1>Desenvolvimento Mobile</h1>
+        <h3>Aula 8 — Hooks, Estado Global com Zustand e Persistência em Disco</h3>
+        <p class="fraco">useState · useEffect · useContext · Zustand · AsyncStorage · SQLite · CESAR School 2026.2</p>
+        <aside class="notes">
+          Gancho: "Na Aula 7 nós criamos abas (Home e Estatísticas) e a rota dinâmica /habit/[id].
+          Mas quando você concluía o hábito na tela de detalhe e voltava para a Home, a lista
+          continuava desatualizada — e se fechasse o app, tudo sumia! Hoje vamos dominar os Hooks,
+          criar uma store global com Zustand e gravar tudo no disco do aparelho."
+        </aside>
+      </section>
+
+      <!-- slide 2 -->
+      <section>
+        <h2>Agenda</h2>
+        <ol>
+          <li><strong><code>useState</code></strong>: ciclo de renderização, atualização funcional e imutabilidade</li>
+          <li><strong><code>useEffect</code></strong>: efeitos colaterais, dependências e limpeza (cleanup)</li>
+          <li>✋ Checkpoints 1 e 2 · ☕ Intervalo</li>
+          <li><strong><code>useContext</code></strong>: compartilhando contexto sem <em>prop drilling</em></li>
+          <li><strong><code>zustand</code></strong>: estado global simples, ações e seletores</li>
+          <li><strong>Persistência local em disco</strong>: <code>AsyncStorage</code>, middleware <code>persist</code> e <code>expo-sqlite</code></li>
+          <li>✋ Checkpoints 3, 4 e 5 · Atividade aplicada</li>
+        </ol>
+      </section>
+
+      <!-- slide 3 -->
+      <section>
+        <h2>Ao final da aula você deve conseguir</h2>
+        <ol>
+          <li>Atualizar arrays e objetos no <strong><code>useState</code></strong> respeitando a imutabilidade</li>
+          <li>Controlar quando um <strong><code>useEffect</code></strong> roda e limpar timers/listeners no <code>return</code></li>
+          <li>Criar um <strong>Contexto</strong> (<code>createContext</code> + <code>Provider</code> + custom hook) para tema global</li>
+          <li>Criar uma store global tipada com <strong><code>zustand</code></strong> e consumir com seletores</li>
+          <li>Persistir dados com <strong><code>AsyncStorage</code></strong> e o middleware <strong><code>persist</code></strong> do Zustand</li>
+          <li>Executar tabelas, inserções e consultas locais com <strong><code>expo-sqlite</code></strong></li>
+          <li>Decidir entre <code>useState</code>, <code>useContext</code>, <code>zustand + persist</code> e <code>expo-sqlite</code></li>
+        </ol>
+      </section>
+
+      <!-- slide 4 -->
+      <section>
+        <h2>O problema: telas isoladas e memória volátil</h2>
+        <table>
+          <thead>
+            <tr><th>Tela</th><th>Arquivo</th><th>O que precisa ler/alterar</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Home</strong></td><td><code>(tabs)/index.tsx</code></td><td>Listar hábitos, adicionar e marcar concluído</td></tr>
+            <tr><td><strong>Estatísticas</strong></td><td><code>(tabs)/stats.tsx</code></td><td>Contar total de hábitos e % concluída</td></tr>
+            <tr><td><strong>Detalhe</strong></td><td><code>habit/[id].tsx</code></td><td>Ver hábito <code>id</code>, cronometrar foco e excluir</td></tr>
+            <tr><td><strong>Configurações</strong></td><td><code>settings.tsx</code></td><td>Alternar e lembrar tema claro/escuro do app</td></tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p>Se cada tela cria seu próprio <code>useState</code>, elas não se enxergam — e se ficar só na memória RAM, fechar o app apaga tudo.</p>
+        </blockquote>
+      </section>
+
+      <!-- slide 5 -->
+      <section>
+        <h2>Do estado local ao armazenamento no disco</h2>
+        <pre class="mermaid mermaid-grande">
+flowchart LR
+  A["useState / useEffect&lt;br/&gt;Estado e ciclo local"] --&gt; B["useContext&lt;br/&gt;Tema na arvore"]
+  B --&gt; C["Zustand&lt;br/&gt;Store global entre rotas"]
+  C --&gt; D["Disco Local&lt;br/&gt;AsyncStorage · persist · SQLite"]
+        </pre>
+        <h3>Cada camada resolve um <strong>escopo</strong> e um <strong>tempo de vida</strong>.</h3>
+      </section>
+
+      <!-- slide 6 -->
+      <section class="centro slide-impacto">
+        <h1>Parte 1</h1>
+        <h2><code>useState</code> e Imutabilidade</h2>
+      </section>
+
+      <!-- slide 7 -->
+      <section>
+        <h2>As 2 Regras de Ouro dos Hooks</h2>
+        <ul>
+          <li><strong>1. Apenas no nível superior (top level):</strong> nunca chame um Hook dentro de <code>if</code>, <code>for</code> ou depois de um <code>return</code> antecipado.</li>
+          <li><strong>2. Apenas em funções do React:</strong> chame somente dentro de componentes React ou de Custom Hooks (<code>use...</code>).</li>
+        </ul>
+        <pre><code class="language-tsx">// ❌ ERRADO: se id for vazio, o número de hooks chamados muda!
+if (!id) return &lt;Text&gt;Carregando...&lt;/Text&gt;;
+const [seconds, setSeconds] = useState(0);
+
+// ✅ CORRETO: todos os hooks sempre no topo do componente
+const [seconds, setSeconds] = useState(0);
+if (!id) return &lt;Text&gt;Carregando...&lt;/Text&gt;;</code></pre>
+      </section>
+
+      <!-- slide 8 -->
+      <section>
+        <h2>Atualização funcional: <code>prev =&gt; ...</code></h2>
+        <p>O estado não muda instantaneamente na linha seguinte — o React agenda uma nova renderização. Quando o próximo valor depende do anterior, passe uma <strong>função</strong>:</p>
+        <pre><code class="language-tsx">const [streak, setStreak] = useState(0);
+
+// ❌ Lê o mesmo 'streak' congelado desta renderização
+const somarDoisErrado = () =&gt; {
+  setStreak(streak + 1);
+  setStreak(streak + 1); // Resultado: +1 em vez de +2
+};
+
+// ✅ Recebe o valor mais recente da fila de atualização
+const somarDoisCerto = () =&gt; {
+  setStreak((prev) =&gt; prev + 1);
+  setStreak((prev) =&gt; prev + 1); // Resultado: +2
+};</code></pre>
+      </section>
+
+      <!-- slide 9 -->
+      <section>
+        <h2>Imutabilidade em Arrays e Objetos</h2>
+        <p>O React compara a referência antiga com a nova (<code>novo !== antigo</code>). Usar <code>.push()</code> modifica o mesmo array e a tela <strong>não re-renderiza</strong>.</p>
+        <pre><code class="language-tsx">const [habits, setHabits] = useState&lt;Habit[]&gt;([]);
+
+// ✅ Adicionar item: espalhamento (...)
+setHabits((prev) =&gt; [...prev, novoHabito]);
+
+// ✅ Atualizar item: .map() devolvendo novo objeto
+setHabits((prev) =&gt;
+  prev.map((h) =&gt; (h.id === id ? { ...h, done: !h.done } : h))
+);
+
+// ✅ Remover item: .filter()
+setHabits((prev) =&gt; prev.filter((h) =&gt; h.id !== id));</code></pre>
+      </section>
+
+      <!-- slide 10 -->
+      <section>
+        <h2>✋ Checkpoint 1 — <code>useState</code></h2>
+        <ol>
+          <li>Por que <code>habits.push(novo); setHabits(habits)</code> não atualiza a lista na tela?</li>
+          <li>Quando é obrigatório usar <code>setCount(prev =&gt; prev + 1)</code>?</li>
+          <li>Por que não podemos colocar um <code>useState</code> dentro de um <code>if</code>?</li>
+          <li>O que acontece com o <code>useState</code> de uma tela quando fazemos <code>router.back()</code>?</li>
+        </ol>
+        <p class="fraco">⏱️ 60 segundos em duplas</p>
+        <aside class="notes">
+          Na 4: a tela sai da pilha (desmonta) e todo o estado local dela é destruído.
+        </aside>
+      </section>
+
+      <!-- slide 11 -->
+      <section class="centro slide-impacto">
+        <h1>Parte 2</h1>
+        <h2><code>useEffect</code> e Ciclo de Vida</h2>
+      </section>
+
+      <!-- slide 12 -->
+      <section>
+        <h2>Sincronizando com o mundo externo</h2>
+        <p>Renderizar deve ser um cálculo puro de <code>props</code> e <code>state</code>. Quando o componente precisa conversar com algo <strong>fora do React</strong> (timers, sensores, notificações, rede), usamos <code>useEffect</code>:</p>
+        <pre><code class="language-tsx">useEffect(() =&gt; {
+  // 1. Efeito: executa DEPOIS que a tela foi desenhada
+  console.log('Monitorando hábito:', id);
+
+  // 2. Cleanup (opcional): executa antes de re-executar ou ao desmontar
+  return () =&gt; {
+    console.log('Parando monitoramento de:', id);
+  };
+}, [id]); // 3. Array de dependências</code></pre>
+      </section>
+
+      <!-- slide 13 -->
+      <section>
+        <h2>Os 3 modos do array de dependências</h2>
+        <table>
+          <thead>
+            <tr><th>Sintaxe</th><th>Quando o efeito roda</th><th>Exemplo prático</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>useEffect(fn)</code> <em>(sem array)</em></td><td>Após <strong>toda</strong> renderização</td><td>Log de diagnóstico (cuidado!)</td></tr>
+            <tr><td><code>useEffect(fn, [])</code> <em>(vazio)</em></td><td>Só <strong>1 vez</strong> quando a tela monta</td><td>Registrar listener de notificação</td></tr>
+            <tr><td><code>useEffect(fn, [id])</code></td><td>Ao montar + quando <code>id</code> mudar</td><td>Carregar dados do hábito <code>id</code></td></tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p>Regra prática: toda variável do componente lida dentro do <code>useEffect</code> deve estar no array de dependências.</p>
+        </blockquote>
+      </section>
+
+      <!-- slide 14 -->
+      <section>
+        <h2>Fechando a torneira: função de Cleanup</h2>
+        <pre><code class="language-tsx">export default function FocusTimer() {
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
+
+  useEffect(() =&gt; {
+    if (!isRunning) return;
+
+    const timerId = setInterval(() =&gt; {
+      setSeconds((prev) =&gt; prev + 1);
+    }, 1000);
+
+    // Roda quando isRunning muda OU quando o usuário sai da tela!
+    return () =&gt; clearInterval(timerId);
+  }, [isRunning]);
+
+  return &lt;Text&gt;Foco: {seconds}s&lt;/Text&gt;;
+}</code></pre>
+      </section>
+
+      <!-- slide 15 -->
+      <section>
+        <h2>Armadilhas clássicas do <code>useEffect</code></h2>
+        <div class="colunas">
+          <div class="caixa-alerta">
+            <h3>❌ Loop infinito</h3>
+            <pre><code class="language-tsx">useEffect(() =&gt; {
+  // Altera a própria dependência!
+  setCount(count + 1);
+}, [count]);</code></pre>
+          </div>
+          <div class="caixa-ok">
+            <h3>✅ Estado derivado sem efeito</h3>
+            <pre><code class="language-tsx">// Não use useEffect para calcular
+// algo a partir de outro estado:
+const concluidos = habits.filter(
+  (h) =&gt; h.done
+).length;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- slide 16 -->
+      <section>
+        <h2>✋ Checkpoint 2 — <code>useEffect</code></h2>
+        <ol>
+          <li>Qual a diferença entre <code>useEffect(fn)</code> e <code>useEffect(fn, [])</code>?</li>
+          <li>Em quais dois momentos a função de <code>cleanup</code> (<code>return () =&gt; ...</code>) roda?</li>
+          <li>Preciso exibir quantos hábitos estão concluídos a partir de <code>habits</code>. Uso <code>useEffect</code>?</li>
+        </ol>
+        <p class="fraco">⏱️ 60 segundos em duplas · ☕ Intervalo a seguir</p>
+      </section>
+
+      <!-- slide 17 -->
+      <section class="centro slide-impacto">
+        <h1>Parte 3</h1>
+        <h2><code>useContext</code></h2>
+      </section>
+
+      <!-- slide 18 -->
+      <section>
+        <h2>Prop Drilling × Contexto</h2>
+        <div class="colunas">
+          <div>
+            <h3>Com Prop Drilling</h3>
+            <pre class="mermaid">
+flowchart TB
+  A["RootLayout (isDark)"] --&gt;|"prop"| B["TabsLayout"]
+  B --&gt;|"prop"| C["HomeScreen"]
+  C --&gt;|"prop"| D["HabitCard"]
+            </pre>
+          </div>
+          <div>
+            <h3>Com <code>useContext</code></h3>
+            <pre class="mermaid">
+flowchart TB
+  P["ThemeProvider"] -. "useTheme()" .-&gt; D2["HabitCard"]
+  P -. "useTheme()" .-&gt; S2["SettingsScreen"]
+  P --&gt; B2["TabsLayout"] --&gt; D2
+            </pre>
+          </div>
+        </div>
+        <p class="fraco">Componentes intermediários não precisam saber que o tema existe.</p>
+      </section>
+
+      <!-- slide 19 -->
+      <section>
+        <h2>Criando um Contexto em 3 passos</h2>
+        <pre><code class="language-tsx">// src/context/theme-context.tsx
+import { createContext, useContext, useState, type PropsWithChildren } from 'react';
+
+type ThemeContextData = { isDark: boolean; toggleTheme: () =&gt; void };
+
+// 1. Criar o contexto
+const ThemeContext = createContext&lt;ThemeContextData | undefined&gt;(undefined);
+
+// 2. Criar o Provider
+export function ThemeProvider({ children }: PropsWithChildren) {
+  const [isDark, setIsDark] = useState(false);
+  const toggleTheme = () =&gt; setIsDark((prev) =&gt; !prev);
+
+  return (
+    &lt;ThemeContext.Provider value={{ isDark, toggleTheme }}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+// 3. Criar custom hook para consumo seguro
+export function useTheme() {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme precisa estar dentro de ThemeProvider');
+  return ctx;
+}</code></pre>
+      </section>
+
+      <!-- slide 20 -->
+      <section>
+        <h2>Plugando o Provider no <code>_layout.tsx</code></h2>
+        <pre><code class="language-tsx">// src/app/_layout.tsx
+import { Stack } from 'expo-router';
+import { ThemeProvider } from '@/context/theme-context';
+
+export default function RootLayout() {
+  return (
+    &lt;ThemeProvider&gt;
+      &lt;Stack /&gt;
+    &lt;/ThemeProvider&gt;
+  );
+}
+
+// Em qualquer tela (ex: src/app/settings.tsx):
+export default function SettingsScreen() {
+  const { isDark, toggleTheme } = useTheme();
+  return &lt;Switch value={isDark} onValueChange={toggleTheme} /&gt;;
+}</code></pre>
+      </section>
+
+      <!-- slide 21 -->
+      <section>
+        <h2>Quando usar (e quando evitar) <code>useContext</code></h2>
+        <ul>
+          <li>✅ <strong>Excelente para:</strong> dados que mudam pouco e afetam muitas telas (Tema claro/escuro, Idioma, Usuário logado).</li>
+          <li>⚠️ <strong>Cuidado com:</strong> dados que mudam com alta frequência ou objetos gigantes.</li>
+        </ul>
+        <blockquote>
+          <p>Quando o <code>value</code> do Provider muda, <strong>todos os componentes que chamam <code>useContext</code> re-renderizam</strong> — não há seleção parcial de propriedades.</p>
+        </blockquote>
+      </section>
+
+      <!-- slide 22 -->
+      <section>
+        <h2>✋ Checkpoint 3 — <code>useContext</code></h2>
+        <ol>
+          <li>Quais são os 3 passos para criar e expor um Contexto com TypeScript?</li>
+          <li>Onde colocamos o <code>&lt;ThemeProvider&gt;</code> em um projeto com Expo Router?</li>
+          <li>Por que evitamos colocar toda a lógica de negócio do app num único Contexto?</li>
+        </ol>
+        <p class="fraco">⏱️ 45 segundos em duplas</p>
+      </section>
+
+      <!-- slide 23 -->
+      <section class="centro slide-impacto">
+        <h1>Parte 4</h1>
+        <h2>Estado Global com <code>zustand</code></h2>
+      </section>
+
+      <!-- slide 24 -->
+      <section>
+        <h2>Por que Zustand?</h2>
+        <p><strong>Zustand</strong> é uma biblioteca leve de gerenciamento de estado global para React e React Native:</p>
+        <ul>
+          <li>🪶 <strong>Sem <code>&lt;Provider&gt;</code>:</strong> a store existe fora da árvore e é acessada via hook</li>
+          <li>🎯 <strong>Seletores cirúrgicos:</strong> só re-renderiza o componente se a fatia selecionada mudar</li>
+          <li>📦 <strong>Estado + Ações juntos:</strong> sem reducers complexos nem actions espalhadas</li>
+        </ul>
+        <pre><code class="language-bash">npm install zustand</code></pre>
+      </section>
+
+      <!-- slide 25 -->
+      <section>
+        <h2>Criando a Store com <code>create</code></h2>
+        <pre><code class="language-tsx">// src/store/use-habit-store.ts
+import { create } from 'zustand';
+
+export type Habit = { id: string; title: string; done: boolean };
+
+type HabitStore = {
+  habits: Habit[];
+  addHabit: (title: string) =&gt; void;
+  toggleHabit: (id: string) =&gt; void;
+  removeHabit: (id: string) =&gt; void;
+};
+
+export const useHabitStore = create&lt;HabitStore&gt;((set) =&gt; ({
+  habits: [
+    { id: '1', title: 'Beber 2L de água', done: false },
+    { id: '2', title: 'Ler 15 páginas', done: true },
+  ],
+  addHabit: (title) =&gt;
+    set((state) =&gt; ({
+      habits: [...state.habits, { id: Date.now().toString(), title, done: false }],
+    })),
+  toggleHabit: (id) =&gt;
+    set((state) =&gt; ({
+      habits: state.habits.map((h) =&gt; (h.id === id ? { ...h, done: !h.done } : h)),
+    })),
+  removeHabit: (id) =&gt;
+    set((state) =&gt; ({
+      habits: state.habits.filter((h) =&gt; h.id !== id),
+    })),
+}));</code></pre>
+      </section>
+
+      <!-- slide 26 -->
+      <section>
+        <h2>Consumindo a Store com Seletores</h2>
+        <pre><code class="language-tsx">// src/app/(tabs)/index.tsx
+import { useHabitStore } from '@/store/use-habit-store';
+
+export default function HomeScreen() {
+  // ✅ Seletor: assina apenas a propriedade necessária
+  const habits = useHabitStore((state) =&gt; state.habits);
+  const toggleHabit = useHabitStore((state) =&gt; state.toggleHabit);
+
+  return (
+    &lt;FlatList
+      data={habits}
+      keyExtractor={(item) =&gt; item.id}
+      renderItem={({ item }) =&gt; (
+        &lt;Pressable onPress={() =&gt; toggleHabit(item.id)}&gt;
+          &lt;Text&gt;{item.done ? '✅' : '⬜'} {item.title}&lt;/Text&gt;
+        &lt;/Pressable&gt;
+      )}
+    /&gt;
+  );
+}</code></pre>
+      </section>
+
+      <!-- slide 27 -->
+      <section>
+        <h2>Sincronizando Aba Stats e Rota Dinâmica <code>[id]</code></h2>
+        <pre><code class="language-tsx">// src/app/(tabs)/stats.tsx
+export default function StatsScreen() {
+  const habits = useHabitStore((state) =&gt; state.habits);
+  const done = habits.filter((h) =&gt; h.done).length;
+  return &lt;Text&gt;Progresso: {done} / {habits.length} concluídos&lt;/Text&gt;;
+}
+
+// src/app/habit/[id].tsx
+export default function HabitDetailScreen() {
+  const { id } = useLocalSearchParams&lt;{ id: string }&gt;();
+  const habit = useHabitStore((state) =&gt; state.habits.find((h) =&gt; h.id === id));
+  const toggleHabit = useHabitStore((state) =&gt; state.toggleHabit);
+
+  if (!habit) return &lt;Text&gt;Hábito não encontrado&lt;/Text&gt;;
+  return (
+    &lt;Pressable onPress={() =&gt; toggleHabit(habit.id)}&gt;
+      &lt;Text&gt;{habit.title}: {habit.done ? 'Concluído ✅' : 'Pendente ⬜'}&lt;/Text&gt;
+    &lt;/Pressable&gt;
+  );
+}</code></pre>
+      </section>
+
+      <!-- slide 28 -->
+      <section>
+        <h2>Comparativo: qual escolher?</h2>
+        <table>
+          <thead>
+            <tr><th>Critério</th><th><code>useState</code></th><th><code>useContext</code></th><th><code>zustand</code></th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Escopo</strong></td><td>1 componente</td><td>Árvore abaixo do Provider</td><td>Global no app</td></tr>
+            <tr><td><strong>Precisa Provider?</strong></td><td>Não</td><td>Sim</td><td><strong>Não</strong></td></tr>
+            <tr><td><strong>Re-render</strong></td><td>Componente atual</td><td>Todos os consumidores</td><td>Só quem selecionou a fatia</td></tr>
+            <tr><td><strong>Uso ideal no app</strong></td><td>Input de texto, modal</td><td>Tema claro/escuro, Auth</td><td>Hábitos, filtros, estatísticas</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- slide 29 -->
+      <section>
+        <h2>✋ Checkpoint 4 — <code>zustand</code></h2>
+        <ol>
+          <li>Precisamos envolver o <code>_layout.tsx</code> com algum Provider para usar o Zustand?</li>
+          <li>Por que usamos <code>useHabitStore((s) =&gt; s.habits)</code> em vez de <code>useHabitStore()</code> vazio?</li>
+          <li>Marquei um hábito como concluído em <code>/habit/1</code>. O que acontece na aba Home e na aba Stats?</li>
+          <li>Se eu fechar o app agora e abrir de novo, os hábitos adicionados continuam lá?</li>
+        </ol>
+        <p class="fraco">⏱️ 45 segundos em duplas</p>
+        <aside class="notes">
+          Na 4: Ainda não! Por padrão o Zustand guarda em memória RAM. Vamos resolver isso agora
+          na Parte 5 com persistência local em disco.
+        </aside>
+      </section>
+
+      <!-- slide 30 -->
+      <section class="centro slide-impacto">
+        <h1>Parte 5</h1>
+        <h2>Persistência Local em Disco</h2>
+      </section>
+
+      <!-- slide 31 -->
+      <section>
+        <h2>Memória RAM × Disco do Aparelho</h2>
+        <p>Até agora, <code>useState</code>, <code>useContext</code> e <code>zustand</code> vivem apenas na <strong>memória RAM</strong>. Quando o usuário fecha o app, tudo volta para a estaca zero.</p>
+        <ul>
+          <li>🔑 <strong><code>AsyncStorage</code>:</strong> dicionário chave-valor assíncrono em JSON (preferências, flags, listas leves)</li>
+          <li>🔄 <strong>Middleware <code>persist</code> do Zustand:</strong> sincroniza a store do Zustand com o <code>AsyncStorage</code> automaticamente</li>
+          <li>🗄️ <strong><code>expo-sqlite</code>:</strong> banco de dados SQL relacional completo para grandes volumes e filtros complexos</li>
+        </ul>
+      </section>
+
+      <!-- slide 32 -->
+      <section>
+        <h2><code>AsyncStorage</code>: chave e valor assíncrono</h2>
+        <pre><code class="language-bash">npx expo install @react-native-async-storage/async-storage</code></pre>
+        <p>Guarda apenas <code>string</code> — use <code>JSON.stringify</code> ao salvar e <code>JSON.parse</code> ao ler:</p>
+        <pre><code class="language-tsx">import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Salvar preferência no disco
+export async function salvarTema(isDark: boolean) {
+  await AsyncStorage.setItem('@habits:theme', JSON.stringify(isDark));
+}
+
+// Ler preferência ao abrir o app (ex: num useEffect com [])
+export async function carregarTema(): Promise&lt;boolean&gt; {
+  const valor = await AsyncStorage.getItem('@habits:theme');
+  return valor !== null ? JSON.parse(valor) : false;
+}</code></pre>
+      </section>
+
+      <!-- slide 33 -->
+      <section>
+        <h2>Middleware <code>persist</code> do Zustand</h2>
+        <p>Em vez de chamar <code>AsyncStorage</code> manualmente em cada ação, o middleware <code>persist</code> grava e recarrega (hidrata) a store sozinho:</p>
+        <pre><code class="language-tsx">// src/store/use-habit-store.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+export const useHabitStore = create&lt;HabitStore&gt;()(
+  persist(
+    (set) =&gt; ({
+      habits: [],
+      addHabit: (title) =&gt;
+        set((s) =&gt; ({ habits: [...s.habits, { id: Date.now().toString(), title, done: false }] })),
+      toggleHabit: (id) =&gt;
+        set((s) =&gt; ({ habits: s.habits.map((h) =&gt; (h.id === id ? { ...h, done: !h.done } : h)) })),
+      removeHabit: (id) =&gt;
+        set((s) =&gt; ({ habits: s.habits.filter((h) =&gt; h.id !== id) })),
+    }),
+    {
+      name: '@habits:store', // Chave no AsyncStorage
+      storage: createJSONStorage(() =&gt; AsyncStorage),
+    }
+  )
+);</code></pre>
+        <p class="fraco">Atenção ao currying do TypeScript: <code>create&lt;HabitStore&gt;()(persist(...))</code>.</p>
+      </section>
+
+      <!-- slide 34 -->
+      <section>
+        <h2><code>expo-sqlite</code>: banco relacional no celular</h2>
+        <pre><code class="language-bash">npx expo install expo-sqlite</code></pre>
+        <pre><code class="language-tsx">import * as SQLite from 'expo-sqlite';
+
+const db = await SQLite.openDatabaseAsync('habits.db');
+
+// 1. Criar tabela (execAsync)
+await db.execAsync(`
+  CREATE TABLE IF NOT EXISTS habits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    done INTEGER DEFAULT 0
+  );
+`);
+
+// 2. Inserir ou atualizar com placeholders '?' (runAsync)
+await db.runAsync('INSERT INTO habits (title, done) VALUES (?, ?)', 'Beber água', 0);
+
+// 3. Consultar linhas tipadas (getAllAsync)
+const pendentes = await db.getAllAsync&lt;{ id: number; title: string; done: number }&gt;(
+  'SELECT * FROM habits WHERE done = ? ORDER BY id DESC',
+  0
+);</code></pre>
+      </section>
+
+      <!-- slide 35 -->
+      <section>
+        <h2><code>AsyncStorage</code> + <code>persist</code> × <code>expo-sqlite</code></h2>
+        <table>
+          <thead>
+            <tr><th>Critério</th><th><code>AsyncStorage</code></th><th>Zustand <code>persist</code></th><th><code>expo-sqlite</code></th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Formato</strong></td><td>Chave-valor (<code>string</code>)</td><td>Store JSON no AsyncStorage</td><td>Tabelas SQL relacionais</td></tr>
+            <tr><td><strong>Sincronização</strong></td><td>Manual (<code>getItem</code>/<code>setItem</code>)</td><td>Automática a cada <code>set()</code></td><td>Queries SQL (<code>runAsync</code>, <code>getAllAsync</code>)</td></tr>
+            <tr><td><strong>Volume ideal</strong></td><td>Flags e preferências</td><td>Dezenas a centenas de itens</td><td>Milhares de registros e histórico</td></tr>
+            <tr><td><strong>Consultas</strong></td><td>Chave exata</td><td>Em memória (<code>.filter()</code>)</td><td>SQL (<code>WHERE</code>, <code>JOIN</code>, índices)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- slide 36 -->
+      <section>
+        <h2>✋ Checkpoint 5 — Persistência em disco</h2>
+        <ol>
+          <li>Por que precisamos usar <code>JSON.stringify</code> e <code>JSON.parse</code> com o <code>AsyncStorage</code>?</li>
+          <li>Qual o papel de <code>createJSONStorage(() =&gt; AsyncStorage)</code> no middleware <code>persist</code>?</li>
+          <li>Quando vale a pena usar <code>expo-sqlite</code> em vez de salvar um array no Zustand com <code>persist</code>?</li>
+          <li>Qual a diferença entre <code>db.runAsync</code> e <code>db.getAllAsync</code> no <code>expo-sqlite</code>?</li>
+        </ol>
+        <p class="fraco">⏱️ 45 segundos em duplas</p>
+      </section>
+
+      <!-- slide 37 -->
+      <section>
+        <h2>Tudo junto no projeto de Hábitos</h2>
+        <pre class="mermaid">
+flowchart TB
+  subgraph Disco["Disco do Aparelho"]
+    AS["AsyncStorage / SQLite"]
+  end
+  subgraph Zustand["useHabitStore (Zustand + persist)"]
+    Z["habits[] · addHabit · toggleHabit · removeHabit"]
+  end
+  subgraph Contexto["ThemeProvider (useContext)"]
+    C["isDark · toggleTheme"]
+  end
+  Z &lt;--&gt;|"createJSONStorage"| AS
+  Home["(tabs)/index.tsx&lt;br/&gt;useState (input)"] &lt;--&gt; Zustand
+  Stats["(tabs)/stats.tsx&lt;br/&gt;contadores derivados"] &lt;-- Zustand
+  Detail["habit/[id].tsx&lt;br/&gt;useEffect (timer)"] &lt;--&gt; Zustand
+  Contexto -.-&gt; Home
+  Contexto -.-&gt; Stats
+  Contexto -.-&gt; Detail
+        </pre>
+      </section>
+
+      <!-- slide 38 -->
+      <section>
+        <h2>Próximos passos (não é aula)</h2>
+        <ul>
+          <li>Consumo de APIs remotas e sincronização com servidor (<code>fetch</code>, TanStack Query)</li>
+          <li>Arquitetura offline-first (sincronizando banco local com nuvem)</li>
+          <li>Hooks avançados de otimização (<code>useMemo</code>, <code>useCallback</code>, <code>useRef</code>)</li>
+        </ul>
+      </section>
+
+      <!-- slide 39 -->
+      <section class="centro slide-capa">
+        <h1>Suas telas <span class="destaque">conversam</span> e os dados <span class="destaque">permanecem</span></h1>
+        <h3>useState · useEffect · useContext · Zustand · Persistência Local</h3>
+        <p class="fraco">Aula 8 — Desenvolvimento Mobile · CESAR School 2026.2</p>
+        <aside class="notes">
+          Recapitulando: useState para o que é local, useEffect para conversar com timers e
+          listeners limpando na saída, useContext para tema na árvore, Zustand para a store
+          global entre rotas, e AsyncStorage / persist / expo-sqlite para gravar no disco!
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="vendor/reveal/reveal.js"></script>
+  <script src="vendor/reveal/plugin/highlight.js"></script>
+  <script src="vendor/reveal/plugin/notes.js"></script>
+  <script src="vendor/reveal/plugin/search.js"></script>
+  <script src="vendor/reveal/plugin/zoom.js"></script>
+  <script src="vendor/mermaid/mermaid.min.js"></script>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        fontSize: '18px',
+        fontFamily: 'Barlow, Helvetica, sans-serif',
+        primaryColor: '#FEF7EE',
+        primaryTextColor: '#191919',
+        primaryBorderColor: '#FF6002',
+        lineColor: '#232323',
+        secondaryColor: '#F3E9DC',
+        tertiaryColor: '#FFB132',
+        clusterBkg: '#F3E9DC',
+        clusterBorder: '#FF6002',
+        pie1: '#FF6002', pie2: '#232323', pie3: '#FFB132',
+        pie4: '#6b6459', pie5: '#FB6B00', pie6: '#E4D6C3',
+        pieOuterStrokeColor: '#FEF7EE',
+        pieSectionTextColor: '#FEF7EE',
+      },
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+    });
+
+    (async () => {
+      const estiloMedicao = document.createElement('style');
+      estiloMedicao.textContent = `
+      .reveal { opacity: 0 !important; }
+      .reveal .slides,
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+      }
+    `;
+      document.head.appendChild(estiloMedicao);
+
+      try {
+        for (const el of document.querySelectorAll('pre.mermaid')) {
+          try {
+            await mermaid.run({ nodes: [el] });
+          } catch (erro) {
+            console.error('Falha ao renderizar diagrama Mermaid:', erro, el.textContent.slice(0, 80));
+          }
+        }
+      } finally {
+        estiloMedicao.remove();
+      }
+
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controls: true,
+        progress: true,
+        overview: true,
+        center: false,
+        width: 1280,
+        height: 800,
+        margin: 0.06,
+        minScale: 0.2,
+        maxScale: 1.8,
+        pdfSeparateFragments: false,
+        plugins: [RevealHighlight, RevealNotes, RevealSearch, RevealZoom],
+      });
+
+      Reveal.on('ready', () => document.body.classList.add('pronto'));
+    })();
+  </script>
+</body>
+
+</html>

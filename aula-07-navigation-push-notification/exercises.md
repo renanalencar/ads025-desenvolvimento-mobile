@@ -4,10 +4,11 @@
 > **Fora do escopo:** composição complexa de navegadores (Drawer + Stack + Tabs), push remoto via Firebase/backend, persistência de estado com Context/Redux, deeplinks avançados.
 
 ---
+## Parte 1 - Exercícios Guiados
 
-## Exercício 1 — Rota dinâmica: abrir detalhe do hábito
+### Exercício 1 — Rota dinâmica: abrir detalhe do hábito
 
-**Tempo:** 5 min | **Nível:** ⭐
+**Nível:** ⭐
 
 Você tem uma lista de hábitos. Ao tocar em um, deve abrir uma tela de detalhe.
 
@@ -58,43 +59,11 @@ import { Pressable, Text } from 'react-native';
 </Pressable>
 ```
 
-### ✅ Gabarito
-
-<details>
-<summary>Clique para ver a solução completa</summary>
-
-```tsx
-// src/app/habit/[id].tsx
-import { useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function HabitDetail() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Detalhes do hábito</Text>
-      <Text style={styles.id}>ID: {id}</Text>
-      <Text style={styles.note}>Toque o botão de voltar para retornar à lista</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  id: { fontSize: 16, color: '#666', marginBottom: 16 },
-  note: { fontSize: 14, color: '#999', textAlign: 'center' },
-});
-```
-
-</details>
-
 ---
 
-## Exercício 2 — Tabs: telas com abas
+### Exercício 2 — Tabs: telas com abas
 
-**Tempo:** 7 min | **Nível:** ⭐⭐
+**Nível:** ⭐⭐
 
 Crie uma estrutura de abas com Home e Estatísticas.
 
@@ -124,87 +93,12 @@ export default function TabLayout() {
 }
 ```
 
-### ✅ Gabarito
-
-<details>
-<summary>Clique para ver a solução completa</summary>
-
-```tsx
-// src/app/(tabs)/_layout.tsx
-import { Tabs } from 'expo-router';
-import { Feather } from '@expo/vector-icons';
-
-export default function TabLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: '#999',
-        headerShown: true,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <Feather name="home" size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: 'Estatísticas',
-          tabBarIcon: ({ color }) => <Feather name="bar-chart-2" size={24} color={color} />,
-        }}
-      />
-    </Tabs>
-  );
-}
-```
-
-```tsx
-// src/app/(tabs)/index.tsx
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function HomeTab() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Meus Hábitos</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 18, fontWeight: 'bold' },
-});
-```
-
-```tsx
-// src/app/(tabs)/stats.tsx
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function StatsTab() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Estatísticas</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 18, fontWeight: 'bold' },
-});
-```
-
-</details>
 
 ---
 
-## Exercício 3 — Drawer: menu lateral
+### Exercício 3 — Drawer: menu lateral
 
-**Tempo:** 6 min | **Nível:** ⭐⭐
+**Nível:** ⭐⭐
 
 Crie um Drawer com menu:
 
@@ -236,95 +130,11 @@ export default function RootLayout() {
 }
 ```
 
-### ✅ Gabarito
-
-<details>
-<summary>Clique para ver a solução completa</summary>
-
-```tsx
-// src/app/_layout.tsx
-import { Drawer } from 'expo-router/drawer';
-import { MaterialIcons } from '@expo/vector-icons';
-
-export default function RootLayout() {
-  return (
-    <Drawer
-      screenOptions={{
-        drawerActiveTintColor: '#007AFF',
-        drawerInactiveTintColor: '#666',
-      }}
-    >
-      <Drawer.Screen
-        name="(tabs)"
-        options={{
-          drawerLabel: 'Home',
-          drawerIcon: ({ color }) => <MaterialIcons name="home" size={24} color={color} />,
-        }}
-      />
-      <Drawer.Screen
-        name="about"
-        options={{
-          drawerLabel: 'Sobre',
-          drawerIcon: ({ color }) => <MaterialIcons name="info" size={24} color={color} />,
-        }}
-      />
-      <Drawer.Screen
-        name="settings"
-        options={{
-          drawerLabel: 'Configurações',
-          drawerIcon: ({ color }) => <MaterialIcons name="settings" size={24} color={color} />,
-        }}
-      />
-    </Drawer>
-  );
-}
-```
-
-```tsx
-// src/app/about.tsx
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function AboutScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sobre este app</Text>
-      <Text style={styles.text}>Versão 1.0 — Aula 7</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 8 },
-  text: { fontSize: 14, color: '#666' },
-});
-```
-
-```tsx
-// src/app/settings.tsx
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function SettingsScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Configurações</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 18, fontWeight: 'bold' },
-});
-```
-
-</details>
-
 ---
 
-## Exercício 4 — Notificações: agendar e receber
+### Exercício 4 — Notificações: agendar e receber
 
-**Tempo:** 8 min | **Nível:** ⭐⭐⭐
+**Nível:** ⭐⭐⭐
 
 Implemente o fluxo de notificação local:
 
@@ -388,101 +198,12 @@ export default function NotificationScreen() {
 }
 ```
 
-### ✅ Gabarito
-
-<details>
-<summary>Clique para ver a solução completa</summary>
-
-```tsx
-import * as Notifications from 'expo-notifications';
-import { useEffect, useState } from 'react';
-import { Pressable, Text, View, StyleSheet } from 'react-native';
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-  }),
-});
-
-export default function NotificationScreen() {
-  const [permissionGranted, setPermissionGranted] = useState(false);
-  const [lastNotification, setLastNotification] = useState<string>('Nenhuma notificação recebida');
-
-  useEffect(() => {
-    async function requestPermission() {
-      const { status } = await Notifications.requestPermissionsAsync();
-      setPermissionGranted(status === 'granted');
-    }
-
-    requestPermission();
-
-    // Listener: notificação recebida
-    const notificationListener = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log('Notificação recebida:', notification);
-        setLastNotification('Notificação recebida: ' + notification.request.content.title);
-      }
-    );
-
-    // Listener: notificação tocada
-    const responseListener = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        console.log('Notificação tocada:', response);
-        setLastNotification('Notificação tocada: ' + response.notification.request.content.title);
-      }
-    );
-
-    return () => {
-      notificationListener.remove();
-      responseListener.remove();
-    };
-  }, []);
-
-  const handleSchedule = async () => {
-    if (!permissionGranted) {
-      console.log('Permissão não concedida');
-      return;
-    }
-
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Lembrete de hábito!',
-        body: 'Hora de fazer seu hábito diário.',
-        data: { habitId: '5' },
-      },
-      trigger: { seconds: 5 },
-    });
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Notificações</Text>
-      <Pressable style={styles.button} onPress={handleSchedule}>
-        <Text style={styles.buttonText}>Agendar notificação em 5s</Text>
-      </Pressable>
-      <Text style={styles.status}>{lastNotification}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
-  button: { backgroundColor: '#007AFF', paddingVertical: 12, paddingHorizontal: 24, borderRadius: 8, marginBottom: 16 },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  status: { fontSize: 14, color: '#666', textAlign: 'center' },
-});
-```
-
-</details>
-
 ---
 
-## Atividade aplicada — App com Drawer, Tabs, Rotas dinâmicas e Notificações
+## Parte 2 - Atividade aplicada
+### App com Drawer, Tabs, Rotas dinâmicas e Notificações
 
-**Tempo:** 30 min | **Nível:** ⭐⭐⭐
+**Nível:** ⭐⭐⭐
 
 Integre tudo que foi aprendido num único app funcional:
 
